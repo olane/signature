@@ -1,0 +1,197 @@
+\documentclass[12pt]{article}
+\usepackage{a4wide}
+
+\newcommand{\al}{$<$}
+\newcommand{\ar}{$>$}
+
+\parindent 0pt
+\parskip 6pt
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\rightline{\large\emph{Oliver Lane}}
+\medskip
+\rightline{\large\emph{Trinity Hall}}
+\medskip
+\rightline{\large\emph{ojgl2}}
+
+\vfil
+
+\centerline{\large Computer Science Part II Project Proposal}
+\vspace{0.4in}
+\centerline{\Large\bf Audio Fingerprinting for Song Recognition}
+\vspace{0.3in}
+\centerline{\large \today}
+
+\vfil
+
+{\bf Project Originator:} Oliver Lane
+
+\vspace{0.1in}
+
+{\bf Resources Required:} See Resources Required section below
+
+\vspace{0.5in}
+
+{\bf Project Supervisor:} Vaiva Imbrasait\'{e}
+
+\vspace{0.2in}
+
+{\bf Signature:}
+
+\vspace{0.5in}
+
+{\bf Director of Studies:}  Professor Simon Moore
+
+\vspace{0.2in}
+
+{\bf Signature:}
+
+\vspace{0.5in}
+
+{\bf Overseers:} Markus Kuhn and Neal Lathia
+
+\vspace{0.2in}
+
+{\bf Signatures:} 
+
+\vfil
+\eject
+
+
+\section*{Introduction and Description of the Work}
+
+Audio fingerprinting algorithms are a way of characterising the features of an audio file and using them to produce a condensed signature which summarises the content of the audio. They are best known for their ability to link unlabelled audio to corresponding metadata, regardless of the format of the audio. This project focuses on song identification against a predetermined library of music, and examines two audio fingerprinting algorithms to investigate their relative strengths and weaknesses.
+
+A source of difficulty for audio fingerprinting algorithms is the potentially high level of variance in audio data which is perceptually very similar. Lossy audio compression formats such as MP3 use this to their advantage by removing many details which are practically inaudible to the human ear. This means that direct comparison of waveforms or cryptographic hash values is not effective. For this reason, audio fingerprinting algorithms must take into account the content of the audio in the context of the human hearing system, instead of simply regarding the audio as digital data to be matched against.
+
+In general, the music identification task has a general form which is reasonably constant between current methods. There are two fundamental processes -- the fingerprinting algorithm, and the matching process. Firstly, a library of music is run through the fingerprinting algorithm to generate a database of fingerprints corresponding to songs. When an audio clip is to be matched, the fingerprinting algorithm is run on the clip, and the resulting fingerprint is compared against the database to find the closest match possible.
+
+The matching process is closely tied to the fingerprinting algorithm, since the method of calculating how similar or different two fingerprints are will vary on how the fingerprint is generated and structured.
+
+Several performance criteria used to assess music identification algorithms include:
+
+\begin{description}
+
+\item [Computational simplicity:] The time taken for both the fingerprinting process, and to take a clip of audio and match it against the database of known songs. Generally what is important is not the exact speed, but the complexity of the matching process as the database grows.
+
+\item [Robustness:] How well the matching process will work in the presence of background noise and other distortions in the input signal, such as compression or reformatting.
+
+\item [Compactness:] The size of each fingerprint. Keeping this small can keep the database compact.
+
+\item [Discrimination power over other fingerprints:] The fingerprints need to be distinct enough to give a suitably low probability of false positive matches.
+
+\end{description}
+
+In general, a lot of these criteria are a tradeoff between information loss and dimensionality reduction -- on the one hand, you want a small database, quick matching and robustness to insignificant changes to the input, but on the other hand if you throw away too much information you won't have the discrimination power to distinguish between similar but different audio clips.
+
+
+\section*{Starting Point}
+
+I have read a number of papers in the area over the summer and am familiar with the general concepts of the two algorithms to be investigated. 
+
+Due to the large proportion of the project which is signal processing, I intend to use MATLAB along with the MIRToolbox library to implement the algorithms.
+
+I am somewhat familiar with MATLAB due to an introduction at the end of the Unix Tools course, and the 3 MATLAB practicals included in the first year Mathematics module in the Natural Sciences Tripos. However, I haven't used it for over a year and a half, and I expect to require some time to re-familiarise myself with the language.
+
+I will also need to learn how to use MIRToolbox, which I am not familiar with. I will also need to learn to do more advanced things such as database access in MATLAB, which I haven't yet done.
+
+A music library will be required to test the algorithms against. I intend to use my own music library of around 700 songs, possibly supplemented with freely distributed music from various internet sites. 
+
+\section*{Substance and Structure of the Project}
+
+The aim of the project is to investigate the performance of several audio fingerprinting and identification algorithms, producing quantitative comparisons of their behaviour for different types of audio clips. 
+
+Although many fingerprinting algorithms have been proposed in the literature, this project will focus on comparing two, with the possibility of implementing others as an extension. 
+
+The two algorithms which will likely be implemented are:
+
+\begin{enumerate}
+
+\item An algorithm which extracts hash values for every few milliseconds by thresholding energy differences of several frequency bands, proposed in \emph{A Highly Robust Audio Fingerprinting System} by Jaap Haitsma and Ton Kalker in 
+
+\item An algorithm commercially deployed by the music identification application \emph{Shazam} and presented by Avery Li-Chun Wang in \emph{An Industrial-Strength Audio Search Algorithm}, which finds frequency peaks in the audio and hashes them combinatorially as ``constellations".
+
+\end{enumerate}
+
+The project has the following main sections:
+
+\begin{enumerate}
+
+\item Familiarisation with MATLAB and the surrounding software tools, including MIRToolbox. Detailed research of the current techniques in audio fingerprinting, and in particular the two algorithms to be implemented. 
+
+\item Assembly of a library of music to match against, and a set of clips from that library to test against, with various characteristics such as varying noise and distortion levels.
+
+\item Developing and testing the code for each of the matching algorithms.
+
+\item Evaluation of the algorithms: This will involve thorough testing using the library and set of test clips prepared in section 2. The algorithms should be tested on several different criteria such as matching accuracy in the presence of noise or distortions, compactness of the fingerprints and speed of matching against different sized music libraries.
+
+\item Writing the Dissertation.
+
+\end{enumerate}
+
+
+\section*{Success Criteria}
+
+The following should be achieved:
+
+\begin{itemize}
+
+\item Implement at least two song matching algorithms
+
+\item Assemble and/or create various clips and sets of clips to test the algorithms, as well as a music library to match against
+
+\item Compare the algorithms implemented against several criteria
+
+\end{itemize}
+
+
+\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Timetable and Milestones}
+
+\subsection*{Work package 1 (due 23rd Oct)}
+Study the core concepts behind audio fingerprinting algorithms. Read up on the two algorithms to be compared to ensure a good understanding before beginning implementation. Familiarisation with MATLAB and MIRToolbox, and any other tools to be used.
+
+Assemble a music library which which to test the algorithms, along with a small set of test clips covering basic test cases. These will be used during development to make sure the implementations are working, at least at a basic level. 
+
+\subsection*{Work package 2 (due 7th Dec)}
+Design a suitable structure for the implementations, and start work on the code that will be shared between them. For instance, there will be some common functionality to do with reading in audio data and returning matches. Make sure with my supervisor that I have a solid plan for implementation of the algorithms over Christmas.
+
+\subsection*{Work package 3 (due 9th Jan)}
+Implement the two algorithms and finish the shared code over the Christmas break. Test the implementations using the basic test set to make sure they work. Write a first draft of the implementation section of the dissertation.
+
+\subsection*{Work package 4 (due 23rd Jan)}
+Add to test clip set to build a full library of tests, to test as many criteria as possible.
+
+\subsection*{Work package 5 (due 30th Jan)}
+Write progress report and presentation.
+
+\emph{Milestone (30th Jan): Progress report due}
+
+\subsection*{Work package 6 (due 1st Mar)}
+Fully test the algorithms using the library of tests and produce diagrams to show the results. Write the introduction chapter of the dissertation, and a first draft of the evaluation section. Finish the implementation section.
+
+\subsection*{Work package 7 (due Mar 15th)}
+First draft of dissertation completed (to coincide with end of Lent term, so as to give time for my supervisor to give feedback and for me to concentrate mostly on revision over the Easter break).
+
+\subsection*{Work package 8 (due May 7th)}
+Keep the project ticking over, but exam preparation will take precedence at this point. Discuss dissertation with my supervisor, and review the whole project. Make any improvements possible in the time left.
+
+Hand in final draft of dissertation. 
+
+\emph{Milestone (15th May): Dissertation deadline}
+
+
+\section*{Resources Required}
+
+ MIRToolbox is available freely online, and MATLAB is available under the university license.
+
+I intend to use my own laptop for the project. It is a 13" MacBook Pro with 8GB of RAM and a 2.8GHz Intel Core i5, running OSX 10.9. In the case of its failure, I will use my desktop computer (a Windows desktop with 8GB of RAM and a 3GHz Intel Core i5). I accept full responsibility for both machines and I have made contingency plans to protect myself against hardware and/or software failure.
+
+I will use GitHub for backup and version control of the documents and code associated with my project. I will use Google Drive to back up the music library required for analysis of the algorithms, as well as a local backup stored on an external hard drive using OSX's Time Machine feature.
+
+\end{document}
+
