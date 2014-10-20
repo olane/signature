@@ -60,7 +60,7 @@ The two algorithms which will likely be implemented are:
 
 \begin{enumerate}
 
-\item An algorithm which extracts hash values for every few milliseconds by thresholding energy differences of several frequency bands, proposed in \emph{A Highly Robust Audio Fingerprinting System} by Jaap Haitsma and Ton Kalker in 
+\item An algorithm which extracts hash values for every few milliseconds by thresholding energy differences of several frequency bands, proposed in \emph{A Highly Robust Audio Fingerprinting System} by Jaap Haitsma and Ton Kalker.
 
 \item An algorithm commercially deployed by the music identification application \emph{Shazam} and presented by Avery Li-Chun Wang in \emph{An Industrial-Strength Audio Search Algorithm}, which finds frequency peaks in the audio and hashes them combinatorially as ``constellations".
 
@@ -72,7 +72,7 @@ The project has the following main sections:
 
 \item Familiarisation with MATLAB and the surrounding software tools, including MIRToolbox. Detailed research of the current techniques in audio fingerprinting, and in particular the two algorithms to be implemented. 
 
-\item Assembly of a library of music to match against, and a set of clips from that library to test against, with various characteristics such as varying noise and distortion levels.
+\item Assembly of a library of music to match against, and a set of clips from that library to test against, with various characteristics such as varying levels of noise and distortion. Distortions should include the effects of mild to severe compression, and background noise tests should include the addition of both random white noise and common background audio such as voices or traffic noise. This background audio can be added to clean clips of audio at different volumes to provide different signal to noise ratios.
 
 \item Developing and testing the code for each of the matching algorithms.
 
