@@ -3,13 +3,12 @@ filename = 'heartbeat.mp3';
 
 inf = audioinfo(filename);
 
-sample = [160 180];
+sample = [0 18];
 
 sample = sample * inf.SampleRate + 1;
 
-
 [D, sample_rate] = audioread(filename, sample);
-sound(D, sample_rate)
+
 D = mean(D, 2); %stereo to mono
 
 target_sample_rate = 44100;
@@ -37,9 +36,14 @@ ylabel('Frequency (Hz)');
  
 %%
 % % with MIRtoolbox
-% 
-% a = miraudio('heartbeat.mp3', 'Extract', 120, 130);
-% x = mirspectrum(a, 'Frame', 0.05, 'Max', 20000, 'Res', 0.2, 'Min', 20);
-% mirpeaks(x, 'Contrast', 0.04);
+
+a = miraudio('Design');
+
+b = miraudio(a, 'Extract', 120, 121);
+x = mirspectrum(b, 'Frame', 0.05, 'Max', 20000, 'Res', 0.2, 'Min', 20);
+r = mirpeaks(x, 'Contrast', 0.04);
+
+a = mireval(r, 'jackson5.mp3');
+a{1,1}
 
 
