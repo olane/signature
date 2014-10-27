@@ -2,3 +2,7 @@
 *.log
 *.synctex.gz
 docs/*.pdf
+*.mp3
+*.wav
+*.au
+*.m4a
