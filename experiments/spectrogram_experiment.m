@@ -1,4 +1,4 @@
-foldername = '/Users/olane/proj/experiments/music/';
+foldername = './music/';
 files = dir(foldername);
 
 for file = files'
@@ -10,7 +10,7 @@ end
 %%
 % % with MIRtoolbox
 
-foldername = '/Users/olane/proj/experiments/music/';
+foldername = './music/';
 files = dir(foldername);
 
 for file = files'
