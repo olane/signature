@@ -18,7 +18,7 @@ function drawspectrogram(filename, sample)
     number_samples_overlap = 256;
     fft_length = 2^14;
 
-    [transform, frequencies, times] = spectrogram(D, ...
+    [~, frequencies, times, powers] = spectrogram(D, ...
                                                   window, ...
                                                   number_samples_overlap, ...
                                                   fft_length, ...
@@ -26,7 +26,7 @@ function drawspectrogram(filename, sample)
 
     figure;
 
-    imagesc(times,frequencies,20*log10(abs(transform)));
+    imagesc(times,frequencies,10*log10(powers));
 
     set(gca,'YDir','normal')
     xlabel('Time (s)');
