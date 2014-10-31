@@ -1,8 +1,12 @@
 function drawspectrogram(filename, sample)
 
-    inf = audioinfo(filename);
+    try
+        inf = audioinfo(filename);
+        sample = sample * inf.SampleRate + 1;
+    catch 
+        sample = [0 20];
+    end
 
-    sample = sample * inf.SampleRate + 1;
 
     [D, sample_rate] = audioread(filename, sample);
 
@@ -26,7 +30,7 @@ function drawspectrogram(filename, sample)
 
     figure;
 
-    imagesc(times,frequencies,10*log10(powers));
+    imagesc(times,frequencies,10*log10(abs(powers)));
 
     set(gca,'YDir','normal')
     xlabel('Time (s)');

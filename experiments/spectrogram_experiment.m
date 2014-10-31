@@ -1,5 +1,5 @@
 foldername = './music/';
-files = dir(foldername);
+files = dir([foldername '*.mp3']);
 
 for file = files'
     if ~file.isdir
