@@ -6,3 +6,4 @@ docs/*.pdf
 *.wav
 *.au
 *.m4a
+library/*
