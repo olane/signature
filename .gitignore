@@ -4,6 +4,7 @@
 docs/*.pdf
 *.mp3
 *.wav
+*.ogg
 *.au
 *.m4a
 library/*
