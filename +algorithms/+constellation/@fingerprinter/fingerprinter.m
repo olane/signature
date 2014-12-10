@@ -6,8 +6,9 @@ classdef fingerprinter
     
     
     methods (Static)
-      [ hash ] = get_fingerprint( audio )
+      hash = get_fingerprint( audio )
       [ times, frequencies, powers ] = get_spectrogram( audio )
+      H = landmark_pair_to_hash( L )
    end
     
 end

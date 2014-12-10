@@ -28,13 +28,18 @@ function [ hashes ] = get_fingerprint( audio )
     % will be taken as pairs
     
     % The furthest ahead in time the target zone extends to (in samples)
+    % (note that this is packed into 10 bits, so can't be higher than 63)
     target_dt = 32;
     
     % The furthest up or down the target zone extends to (in frequency
     % bins). Note the height of the target zone is 2*target_df, whilst the
     % length is simply target_dt because no points are taken from behind
     % the anchor point.
+    % (note that this is packed into 10 bits, so can't be higher than 63)
     target_df = 16;
+    
+    % The maximum number of points to pair with each anchor point
+    max_fan_out = 10;
     
     landmark_pairs = [];
     
@@ -52,7 +57,7 @@ function [ hashes ] = get_fingerprint( audio )
         target_times = peak_times(target);
         target_freqs = peak_freqs(target);
         
-        for j = 1:length(target_times)
+        for j = 1:min(length(target_times), max_fan_out)
             landmark_pairs(end+1, :) = [anchor_time, ...
                                         anchor_freq, ...
                                         target_times(j) - anchor_time, ...
@@ -62,12 +67,17 @@ function [ hashes ] = get_fingerprint( audio )
     end
     
     
-    % pack hashes?
+    % Pack the hashes to pairs of the form [hash, time]
     
-    % Return hashes
+    hashes = zeros(length(landmark_pairs(:, 1)), 2);
+    
+    for i = 1:length(landmark_pairs(:, 1))
+        hashes(i,:) = landmark_pair_to_hash(landmark_pairs(i,:));
+    end
     
     
     
+    % Optionally draw debugging graphs
     
     drawplots = true;
     
