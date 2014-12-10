@@ -72,14 +72,15 @@ function [ hashes ] = get_fingerprint( audio )
     hashes = zeros(length(landmark_pairs(:, 1)), 2);
     
     for i = 1:length(landmark_pairs(:, 1))
-        hashes(i,:) = landmark_pair_to_hash(landmark_pairs(i,:));
+        hashes(i,:) = algorithms.constellation.fingerprinter...
+            .landmark_pair_to_hash(landmark_pairs(i,:));
     end
     
     
     
     % Optionally draw debugging graphs
     
-    drawplots = true;
+    drawplots = false;
     
     if(drawplots)
         

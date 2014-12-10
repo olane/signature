@@ -4,7 +4,10 @@ function H = landmark_pair_to_hash( L )
 %form [time, hash] where hash is a packed uint32 representing the pair, and
 %time is a uint32.
 
-    [anchor_time, anchor_freq, time_delta, frequency_delta] = uint32(L(1,:));
+    anchor_time = L(1,1);
+    anchor_freq = L(1,2);
+    time_delta = L(1,3);
+    frequency_delta= L(1,4);
     
     % 12 bits for anchor frequency
     anchor_freq = rem(anchor_freq, 2^12);
@@ -15,9 +18,9 @@ function H = landmark_pair_to_hash( L )
     % 10 bits for frequency delta
     frequency_delta = rem(frequency_delta, 2^10);
     
-    packed = uint32(anchor_freq * 2^20 + time_delta * 2^10 + frequency_delta);
+    packed = anchor_freq * 2^20 + time_delta * 2^10 + frequency_delta;
     
-    H = [anchor_time, packed];
+    H = [uint32(anchor_time), uint32(packed)];
     
 end
 
