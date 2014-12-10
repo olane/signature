@@ -1,10 +1,10 @@
 function [ hashes ] = get_fingerprint( audio )
 %GET_FINGERPRINT Creates a fingerprint of a mono audio clip. Assumes a
 %sample rate of 16 kHz.
-%   The returned array contains all of the hashes that make up a fingerprint.
+%   The returned array contains all of the hashes that make up a
+%   fingerprint, as a list of [time, hash] pairs
     
-    [times, frequencies, powers] = ...
-        algorithms.constellation.fingerprinter.get_spectrogram(audio);
+    [times, frequencies, powers] = get_spectrogram(audio);
     
     
     % PEAK FIND PARAMETERS
@@ -67,13 +67,12 @@ function [ hashes ] = get_fingerprint( audio )
     end
     
     
-    % Pack the hashes to pairs of the form [hash, time]
+    % Pack the hashes to pairs of the form [time, hash]
     
     hashes = zeros(length(landmark_pairs(:, 1)), 2);
     
     for i = 1:length(landmark_pairs(:, 1))
-        hashes(i,:) = algorithms.constellation.fingerprinter...
-            .landmark_pair_to_hash(landmark_pairs(i,:));
+        hashes(i,:) = landmark_pair_to_hash(landmark_pairs(i,:));
     end
     
     

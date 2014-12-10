@@ -8,3 +8,5 @@ docs/*.pdf
 *.au
 *.m4a
 library/*
+*.db
+*.db-journal
