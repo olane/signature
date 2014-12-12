@@ -4,7 +4,7 @@ function [ hashes ] = get_fingerprint( audio )
 %   The returned array contains all of the hashes that make up a
 %   fingerprint, as a list of [time, hash] pairs
     
-    [times, frequencies, powers] = get_spectrogram(audio);
+    [times, frequencies, powers] = algorithms.constellation.fingerprinter.get_spectrogram(audio);
     
     
     % PEAK FIND PARAMETERS
@@ -72,7 +72,7 @@ function [ hashes ] = get_fingerprint( audio )
     hashes = zeros(length(landmark_pairs(:, 1)), 2);
     
     for i = 1:length(landmark_pairs(:, 1))
-        hashes(i,:) = landmark_pair_to_hash(landmark_pairs(i,:));
+        hashes(i,:) = algorithms.constellation.fingerprinter.landmark_pair_to_hash(landmark_pairs(i,:));
     end
     
     

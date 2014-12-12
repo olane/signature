@@ -1,4 +1,4 @@
-function register_song( audio, song_name )
+function register_song( database_filename, audio, song_name )
 %REGISTER_SONG Registers a song in the database.
 %   Calculates a fingerprint and inserts it into the database.
 
@@ -8,7 +8,7 @@ function register_song( audio, song_name )
 
     %% Database initialisation
     
-    sqlite3.open('constellation.db');
+    sqlite3.open(database_filename);
     
     exists = sqlite3.execute(['SELECT count(*) FROM sqlite_master '...
                               'WHERE type=''table'' AND name=''hashes''']);

@@ -26,7 +26,7 @@ h = algorithms.constellation.fingerprinter.get_fingerprint(D);
 
 %% register song
 
-
+database_filename = 'constellation.db';
 filename = 'library/01 - Love Me Again.mp3';
 
 inf = audioinfo(filename);
@@ -44,6 +44,6 @@ if(sample_rate ~= target_sample_rate)
     D = resample(D,target_sample_rate/srgcd, sample_rate/srgcd); 
 end
 
-algorithms.constellation.register_song(D, 'Love Me Again');
+algorithms.constellation.register_song(database_filename, D, 'Love Me Again');
 
-delete('constellation.db');
+delete(database_filename);
