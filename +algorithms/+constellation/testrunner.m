@@ -47,3 +47,19 @@ end
 algorithms.constellation.register_song(database_filename, D, 'Love Me Again');
 
 delete(database_filename);
+
+
+%% Register all songs
+
+foldername = './library/';
+files = dir([foldername '*.mp3']);
+
+disp(['Found ' num2str(length(files)) ' mp3 files in library.']);
+
+for file = files'
+    if ~file.isdir
+        algorithms.constellation.register_song(database_filename, D, file.name);
+        disp(['Registered song ' file.name]);
+    end
+end
+
