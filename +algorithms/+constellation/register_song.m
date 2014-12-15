@@ -29,9 +29,9 @@ function register_song( database_filename, audio, song_name )
     
     %% Database insertion
     
-    sqlite3.execute(['INSERT INTO songs(song_name) VALUES (''' song_name ''')']);
+    sqlite3.execute('INSERT INTO songs(song_name) VALUES (?)', song_name);
     
-    id = sqlite3.execute(['SELECT song_id FROM songs WHERE song_name=''' song_name '''']);
+    id = sqlite3.execute('SELECT song_id FROM songs WHERE song_name=?', song_name);
     
     id = id(1).song_id;
     
