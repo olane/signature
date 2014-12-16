@@ -60,3 +60,26 @@ foldername = './library/';
 
 algorithms.constellation.register_all_songs(foldername, database_filename);
 
+
+
+%% Match clip
+
+
+
+database_filename = 'constellation.db';
+filename = './testing/basic_test_clips/(01) - Calvin Harris - Faith_sample_60-70.ogg';
+
+[D, sample_rate] = audioread(filename);
+
+D = mean(D, 2); %stereo to mono
+
+target_sample_rate = 16000;
+
+if(sample_rate ~= target_sample_rate)
+    %resample to target rate
+    srgcd = gcd(sample_rate, target_sample_rate);
+    D = resample(D,target_sample_rate/srgcd, sample_rate/srgcd); 
+end
+
+r = algorithms.constellation.match_clip(D, database_filename);
+
