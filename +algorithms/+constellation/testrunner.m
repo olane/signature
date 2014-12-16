@@ -65,9 +65,10 @@ algorithms.constellation.register_all_songs(foldername, database_filename);
 %% Match clip
 
 
+addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
 database_filename = 'constellation.db';
-filename = './testing/basic_test_clips/(01) - Calvin Harris - Faith_sample_60-70.ogg';
+filename = './testing/basic_test_clips/(11) - Calvin Harris - Pray to God  (feat. Haim)_sample_60-70.ogg';
 
 [D, sample_rate] = audioread(filename);
 
@@ -81,5 +82,5 @@ if(sample_rate ~= target_sample_rate)
     D = resample(D,target_sample_rate/srgcd, sample_rate/srgcd); 
 end
 
-r = algorithms.constellation.match_clip(D, database_filename);
+r = algorithms.constellation.match_clip(D, database_filename)
 

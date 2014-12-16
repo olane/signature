@@ -17,7 +17,7 @@ function register_song( database_filename, audio, song_name )
                           
     if(exists.count ~= 1)
          sqlite3.execute(['CREATE TABLE IF NOT EXISTS '...
-                          'songs (song_id INTEGER PRIMARY KEY, '...
+                          'songs (song_id INTEGER PRIMARY KEY AUTOINCREMENT, '...
                                  'song_name VARCHAR)']);
                       
          sqlite3.execute(['CREATE TABLE IF NOT EXISTS '...
@@ -32,13 +32,13 @@ function register_song( database_filename, audio, song_name )
     
     %% Database insertion
     
-    sqlite3.execute('INSERT INTO songs(song_name) VALUES (?)', song_name);
+    sqlite3.execute('INSERT INTO songs VALUES (NULL, ?)', song_name);
     
     id = sqlite3.execute('SELECT song_id FROM songs WHERE song_name=?', song_name);
     
     id = id(1).song_id;
     
-    disp('Inserted song and got song ID');
+    disp(['Inserted song and got song ID ' num2str(id)]);
     
     sqlite3.execute('BEGIN TRANSACTION;');
     
