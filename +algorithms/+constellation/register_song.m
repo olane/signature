@@ -1,10 +1,12 @@
 function register_song( database_filename, audio, song_name )
 %REGISTER_SONG Registers a song in the database.
-%   Calculates a fingerprint and inserts it into the database.
+%   Calculates a fingerprint and inserts it into the database. Takes mono,
+%   16kHz audio (to match the sample rate that the matcher expects, since
+%   all times are in samples, not seconds).
 
     hlist = algorithms.constellation.fingerprinter.get_fingerprint(audio);
-
-    addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
+    
+    disp('Analysed song');
 
     %% Database initialisation
     
@@ -26,6 +28,7 @@ function register_song( database_filename, audio, song_name )
          sqlite3.execute('CREATE INDEX hash_index ON hashes(hash)');
     end
     
+    disp('Checked database');
     
     %% Database insertion
     
@@ -35,10 +38,18 @@ function register_song( database_filename, audio, song_name )
     
     id = id(1).song_id;
     
+    disp('Inserted song and got song ID');
+    
+    sqlite3.execute('BEGIN TRANSACTION;');
+    
     for i = 1:length(hlist(:,1))
        sqlite3.execute('INSERT INTO hashes(song_id, time, hash) VALUES (?, ?, ?)', ...
                        id, hlist(i, 1), hlist(i, 2));
     end
+    
+    sqlite3.execute('END TRANSACTION;');
+    
+    disp('Inserted hashes');
     
     %% Cleanup
     

@@ -1,6 +1,6 @@
 function [ hashes ] = get_fingerprint( audio )
-%GET_FINGERPRINT Creates a fingerprint of a mono audio clip. Assumes a
-%sample rate of 16 kHz.
+%GET_FINGERPRINT Creates a fingerprint of a mono audio clip. All times are
+%in samples, not seconds.
 %   The returned array contains all of the hashes that make up a
 %   fingerprint, as a list of [time, hash] pairs
     

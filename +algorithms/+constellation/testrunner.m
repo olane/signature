@@ -51,17 +51,12 @@ delete(database_filename);
 
 %% Register all songs
 
+    
+addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
+
 database_filename = 'constellation.db';
 
 foldername = './library/';
-files = dir([foldername '*.mp3']);
 
-disp(['Found ' num2str(length(files)) ' mp3 files in library.']);
-
-for file = files'
-    if ~file.isdir
-        algorithms.constellation.register_song(database_filename, D, file.name);
-        disp(['Registered song ' file.name]);
-    end
-end
+algorithms.constellation.register_all_songs(foldername, database_filename);
 
