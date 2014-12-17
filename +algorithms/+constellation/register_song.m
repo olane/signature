@@ -4,10 +4,12 @@ function register_song( database_filename, audio, song_name )
 %   16kHz audio (to match the sample rate that the matcher expects, since
 %   all times are in samples, not seconds).
 
+    tic
     hlist = algorithms.constellation.fingerprinter.get_fingerprint(audio);
     
     disp('Analysed song');
-
+    toc
+    
     %% Database initialisation
     
     sqlite3.open(database_filename);
@@ -31,7 +33,6 @@ function register_song( database_filename, audio, song_name )
     disp('Checked database');
     
     %% Database insertion
-    
     sqlite3.execute('INSERT INTO songs VALUES (NULL, ?)', song_name);
     
     id = sqlite3.execute('SELECT song_id FROM songs WHERE song_name=?', song_name);
@@ -40,6 +41,8 @@ function register_song( database_filename, audio, song_name )
     
     disp(['Inserted song and got song ID ' num2str(id)]);
     
+    
+    tic
     sqlite3.execute('BEGIN TRANSACTION;');
     
     for i = 1:length(hlist(:,1))
@@ -50,6 +53,7 @@ function register_song( database_filename, audio, song_name )
     sqlite3.execute('END TRANSACTION;');
     
     disp('Inserted hashes');
+    toc
     
     %% Cleanup
     

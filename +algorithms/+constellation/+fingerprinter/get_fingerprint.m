@@ -41,7 +41,12 @@ function [ hashes ] = get_fingerprint( audio )
     % The maximum number of points to pair with each anchor point
     max_fan_out = 10;
     
-    landmark_pairs = [];
+    
+    start_block_size = round(length(audio) / 200);
+    n = 0;
+    allocated = start_block_size;
+    
+    landmark_pairs = zeros(start_block_size, 4);
     
     % Find landmark pairs
     for i = 1:length(peak_times)
@@ -58,14 +63,25 @@ function [ hashes ] = get_fingerprint( audio )
         target_freqs = peak_freqs(target);
         
         for j = 1:min(length(target_times), max_fan_out)
-            landmark_pairs(end+1, :) = [anchor_time, ...
+            
+            landmark_pairs(n+1, :) = [anchor_time, ...
                                         anchor_freq, ...
                                         target_times(j) - anchor_time, ...
                                         target_freqs(j) - anchor_freq];
+                                    
+            n = n + 1;
+            
+            if(allocated == n)
+                % We need more space, double the size
+                landmark_pairs = [landmark_pairs; zeros(allocated, 4)];
+                allocated = allocated * 2;
+            end
+            
         end
-               
+        
     end
     
+    landmark_pairs((n+1):end, :) = [];
     
     % Pack the hashes to pairs of the form [time, hash]
     
