@@ -9,6 +9,8 @@ function [ songScores ] = match_clip( audio, database_filename )
 
     sqlite3.open(database_filename);
     
+    sqlite3.execute(db_handle, 'CREATE INDEX IF NOT EXISTS hash_index ON hashes(hash)');
+    
     songMatches = containers.Map('KeyType','int32','ValueType','any');
     
     for h = hlist'

@@ -24,9 +24,11 @@ function register_all_songs( foldername, database_filename )
                                   'hash INTEGER, '...
                                   'time INTEGER)']);
                       
+         % Drop our hash index to improve speed (we'll re-make it at the
+         % end)
          sqlite3.execute(db_handle, ...
-                         'CREATE INDEX hash_index ON hashes(hash)');
-                     
+                         'DROP INDEX IF EXISTS hash_index');
+                
          sqlite3.execute(db_handle, ...
                          'CREATE INDEX songname_index ON songs(song_name)');
     end
@@ -43,10 +45,22 @@ function register_all_songs( foldername, database_filename )
 
     for file = files'
         if (~file.isdir)
+    
             
             filepath = [foldername file.name];
             
             disp(['Analysing song (' num2str(counter) '/' num2str(length(files)) '): ' filepath]);
+            
+            
+            c = sqlite3.execute(db_handle, ...
+                                'SELECT song_id FROM songs WHERE song_name=?', ...
+                                filepath);
+
+            if(~isempty(c))
+                disp('Not inserting, name already exists in database');
+                counter = counter + 1;
+                continue;
+            end
 
             [D, sample_rate] = audioread(filepath);
 
@@ -68,6 +82,12 @@ function register_all_songs( foldername, database_filename )
             
         end
     end
+    
+    tic
+    disp('Remaking index')
+    sqlite3.execute(db_handle, 'CREATE INDEX IF NOT EXISTS hash_index ON hashes(hash)');
+    disp('Remade index')
+    toc
     
     sqlite3.close(db_handle);
     

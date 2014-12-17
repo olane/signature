@@ -5,17 +5,6 @@ function register_song( db_handle, audio, song_name )
 %   all times are in samples, not seconds).
 
 
-    %% Duplicate check
-    
-    c = sqlite3.execute(db_handle, ...
-                        'SELECT song_id FROM songs WHERE song_name=?', ...
-                        song_name);
-    
-    if(~isempty(c))
-        disp('Not inserting, name already exists in database');
-        return;
-    end
-    
     %% Analysis
     
     tic
