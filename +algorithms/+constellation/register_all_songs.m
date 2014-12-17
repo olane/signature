@@ -3,6 +3,8 @@ function register_all_songs( foldername, database_filename )
 %folder. Outputs a message after each registered song.
 %   Currently downsamples 
 
+    db_handle = sqlite3.open(database_filename);
+    
     files = dir([foldername '*.mp3']);
 
     disp(['Found ' num2str(length(files)) ' mp3 files in library.']);
@@ -28,7 +30,7 @@ function register_all_songs( foldername, database_filename )
                 D = resample(D,target_sample_rate/srgcd, sample_rate/srgcd); 
             end
             
-            algorithms.constellation.register_song(database_filename, D, filepath);
+            algorithms.constellation.register_song(db_handle, D, filepath);
             
             disp('-----');
             
@@ -36,6 +38,8 @@ function register_all_songs( foldername, database_filename )
             
         end
     end
+    
+    sqlite3.close(db_handle);
     
 end
 

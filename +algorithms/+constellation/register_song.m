@@ -1,16 +1,16 @@
-function register_song( database_filename, audio, song_name )
+function register_song( database_handle, audio, song_name )
 %REGISTER_SONG Registers a song in the database.
 %   Calculates a fingerprint and inserts it into the database. Takes mono,
 %   16kHz audio (to match the sample rate that the matcher expects, since
 %   all times are in samples, not seconds).
 
-    sqlite3.open(database_filename);
     
-    c = sqlite3.execute('SELECT song_id FROM songs WHERE song_name=?', song_name);
+    c = sqlite3.execute(database_handle, ...
+                        'SELECT song_id FROM songs WHERE song_name=?', ...
+                        song_name);
     
     if(~isempty(c))
         disp('Not inserting, name already exists in database');
-        sqlite3.close();
         return;
     end
     
@@ -23,29 +23,39 @@ function register_song( database_filename, audio, song_name )
     %% Database initialisation
     
     
-    exists = sqlite3.execute(['SELECT count(*) FROM sqlite_master '...
+    exists = sqlite3.execute(database_handle, ...
+                             ['SELECT count(*) FROM sqlite_master '...
                               'WHERE type=''table'' AND name=''hashes''']);
                           
     if(exists.count ~= 1)
-         sqlite3.execute(['CREATE TABLE IF NOT EXISTS '...
+         sqlite3.execute(database_handle, ...
+                         ['CREATE TABLE IF NOT EXISTS '...
                           'songs (song_id INTEGER PRIMARY KEY AUTOINCREMENT, '...
                                  'song_name VARCHAR)']);
                       
-         sqlite3.execute(['CREATE TABLE IF NOT EXISTS '...
+         sqlite3.execute(database_handle, ...
+                         ['CREATE TABLE IF NOT EXISTS '...
                           'hashes (song_id INTEGER, '...
                                   'hash INTEGER, '...
                                   'time INTEGER)']);
                       
-         sqlite3.execute('CREATE INDEX hash_index ON hashes(hash)');
+         sqlite3.execute(database_handle, ...
+                         'CREATE INDEX hash_index ON hashes(hash)');
+                     
+         sqlite3.execute(database_handle, ...
+                         'CREATE INDEX songname_index ON songs(song_name)');
     end
     
     disp('Checked database');
     
     %% Database insertion
     
-    sqlite3.execute('INSERT INTO songs VALUES (NULL, ?)', song_name);
+    sqlite3.execute(database_handle, ...
+                    'INSERT INTO songs VALUES (NULL, ?)', song_name);
     
-    id = sqlite3.execute('SELECT song_id FROM songs WHERE song_name=?', song_name);
+    id = sqlite3.execute(database_handle, ...
+                         'SELECT song_id FROM songs WHERE song_name=?', ...
+                         song_name);
     
     id = id(1).song_id;
     
@@ -53,21 +63,20 @@ function register_song( database_filename, audio, song_name )
     
     
     tic
-    sqlite3.execute('BEGIN TRANSACTION;');
+    sqlite3.execute(database_handle, 'BEGIN TRANSACTION;');
     
     for i = 1:length(hlist(:,1))
-       sqlite3.execute('INSERT INTO hashes(song_id, time, hash) VALUES (?, ?, ?)', ...
+       sqlite3.execute(database_handle, ...
+                       'INSERT INTO hashes(song_id, time, hash) VALUES (?, ?, ?)', ...
                        id, hlist(i, 1), hlist(i, 2));
     end
     
-    sqlite3.execute('END TRANSACTION;');
+    sqlite3.execute(database_handle, 'END TRANSACTION;');
     
     disp('Inserted hashes');
     toc
     
     %% Cleanup
-    
-    sqlite3.close();
     
     disp('Song successfully registered.');
     
