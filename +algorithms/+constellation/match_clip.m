@@ -37,6 +37,11 @@ function [ songScores ] = match_clip( audio, database_filename )
         
     end
     
+    % If a song matches less than this number of hashes, it is not
+    % considered for matching. Gives speed at the cost of increased
+    % probability of false negatives
+    match_threshold = 400;
+    
     songScores = zeros(length(keys(songMatches)), 2);
     
     i = 1;
@@ -44,6 +49,10 @@ function [ songScores ] = match_clip( audio, database_filename )
     for songid = cell2mat(keys(songMatches))
         
         matches = songMatches(songid);
+        
+        if(length(matches) < match_threshold)
+            continue;
+        end
         
         hist = [];
         
@@ -70,6 +79,7 @@ function [ songScores ] = match_clip( audio, database_filename )
         i =  i + 1;
     end
 
+    songScores(i:end, :) = [];
     
     sqlite3.close();
     
