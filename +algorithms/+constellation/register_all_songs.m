@@ -24,15 +24,16 @@ function register_all_songs( foldername, database_filename )
                                   'hash INTEGER, '...
                                   'time INTEGER)']);
                       
-         % Drop our hash index to improve speed (we'll re-make it at the
-         % end)
-         sqlite3.execute(db_handle, ...
-                         'DROP INDEX IF EXISTS hash_index');
                 
          sqlite3.execute(db_handle, ...
                          'CREATE INDEX songname_index ON songs(song_name)');
     end
     
+     % Drop our hash index to improve speed (we'll re-make it at the
+     % end)
+     sqlite3.execute(db_handle, ...
+                     'DROP INDEX IF EXISTS hash_index');
+
     disp('Checked database');
     
     %% Registration
