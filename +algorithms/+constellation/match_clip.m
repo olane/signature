@@ -1,5 +1,5 @@
 function [ songScores ] = match_clip( audio, database_filename )
-%MATCH_SONG Takes some (mono, 16kHz) audio and matches it against the
+%MATCH_SONG Takes some (mono, 12kHz) audio and matches it against the
 %database. Returns a matrix where each row is a [songid, score] pair where
 %a higher score means a closer match.
 %   What constitutes a 'good' score is dependent on the input audio, the
@@ -40,7 +40,7 @@ function [ songScores ] = match_clip( audio, database_filename )
     % If a song matches less than this number of hashes, it is not
     % considered for matching. Gives speed at the cost of increased
     % probability of false negatives
-    match_threshold = 400;
+    match_threshold = 200;
     
     songScores = zeros(length(keys(songMatches)), 2);
     

@@ -1,7 +1,7 @@
 function register_song( db_handle, audio, song_name )
 %REGISTER_SONG Registers a song in the database.
 %   Calculates a fingerprint and inserts it into the database. Takes mono,
-%   16kHz audio (to match the sample rate that the matcher expects, since
+%   12kHz audio (to match the sample rate that the matcher expects, since
 %   all times are in samples, not seconds).
 
 
