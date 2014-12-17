@@ -1,9 +1,39 @@
 function register_all_songs( foldername, database_filename )
 %REGISTER_ALL_SONGS calls register_song on all mp3 files in the given
 %folder. Outputs a message after each registered song.
-%   Currently downsamples 
+%   Currently downsamples to 16kHz.
 
+    
+    %% Database initialisation
+    
     db_handle = sqlite3.open(database_filename);
+    
+    exists = sqlite3.execute(db_handle, ...
+                             ['SELECT count(*) FROM sqlite_master '...
+                              'WHERE type=''table'' AND name=''hashes''']);
+                          
+    if(exists.count ~= 1)
+         sqlite3.execute(db_handle, ...
+                         ['CREATE TABLE IF NOT EXISTS '...
+                          'songs (song_id INTEGER PRIMARY KEY AUTOINCREMENT, '...
+                                 'song_name VARCHAR)']);
+                      
+         sqlite3.execute(db_handle, ...
+                         ['CREATE TABLE IF NOT EXISTS '...
+                          'hashes (song_id INTEGER, '...
+                                  'hash INTEGER, '...
+                                  'time INTEGER)']);
+                      
+         sqlite3.execute(db_handle, ...
+                         'CREATE INDEX hash_index ON hashes(hash)');
+                     
+         sqlite3.execute(db_handle, ...
+                         'CREATE INDEX songname_index ON songs(song_name)');
+    end
+    
+    disp('Checked database');
+    
+    %% Registration
     
     files = dir([foldername '*.mp3']);
 
