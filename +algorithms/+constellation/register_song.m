@@ -4,6 +4,16 @@ function register_song( database_filename, audio, song_name )
 %   16kHz audio (to match the sample rate that the matcher expects, since
 %   all times are in samples, not seconds).
 
+    sqlite3.open(database_filename);
+    
+    c = sqlite3.execute('SELECT song_id FROM songs WHERE song_name=?', song_name);
+    
+    if(~isempty(c))
+        disp('Not inserting, name already exists in database');
+        sqlite3.close();
+        return;
+    end
+    
     tic
     hlist = algorithms.constellation.fingerprinter.get_fingerprint(audio);
     
@@ -12,7 +22,6 @@ function register_song( database_filename, audio, song_name )
     
     %% Database initialisation
     
-    sqlite3.open(database_filename);
     
     exists = sqlite3.execute(['SELECT count(*) FROM sqlite_master '...
                               'WHERE type=''table'' AND name=''hashes''']);
@@ -33,6 +42,7 @@ function register_song( database_filename, audio, song_name )
     disp('Checked database');
     
     %% Database insertion
+    
     sqlite3.execute('INSERT INTO songs VALUES (NULL, ?)', song_name);
     
     id = sqlite3.execute('SELECT song_id FROM songs WHERE song_name=?', song_name);
@@ -58,6 +68,8 @@ function register_song( database_filename, audio, song_name )
     %% Cleanup
     
     sqlite3.close();
+    
+    disp('Song successfully registered.');
     
 end
 

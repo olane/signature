@@ -10,7 +10,7 @@ function register_all_songs( foldername, database_filename )
     counter = 1;
 
     for file = files'
-        if ~file.isdir
+        if (~file.isdir)
             
             filepath = [foldername file.name];
             
@@ -30,7 +30,6 @@ function register_all_songs( foldername, database_filename )
             
             algorithms.constellation.register_song(database_filename, D, filepath);
             
-            disp('Song successfully registered.');
             disp('-----');
             
             counter = counter + 1;
