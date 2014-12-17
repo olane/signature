@@ -1,4 +1,4 @@
-function [ songScores ] = match_clip( audio, database_filename )
+function [ songScores ] = match_clip( audio, db_handle )
 %MATCH_SONG Takes some (mono, 12kHz) audio and matches it against the
 %database. Returns a matrix where each row is a [songid, score] pair where
 %a higher score means a closer match.
@@ -7,9 +7,10 @@ function [ songScores ] = match_clip( audio, database_filename )
     
     hlist = algorithms.constellation.fingerprinter.get_fingerprint(audio);
 
-    sqlite3.open(database_filename);
-    
+    disp('Creating index if not exists');
+    tic
     sqlite3.execute(db_handle, 'CREATE INDEX IF NOT EXISTS hash_index ON hashes(hash)');
+    toc
     
     songMatches = containers.Map('KeyType','int32','ValueType','any');
     
@@ -18,7 +19,7 @@ function [ songScores ] = match_clip( audio, database_filename )
         hashtime = h(1);
         hashval = h(2);
         
-        hash_matches = sqlite3.execute('SELECT * FROM hashes WHERE hash=?', hashval);
+        hash_matches = sqlite3.execute(db_handle, 'SELECT * FROM hashes WHERE hash=?', hashval);
         
         for hash_match = hash_matches
             
@@ -83,7 +84,6 @@ function [ songScores ] = match_clip( audio, database_filename )
 
     songScores(i:end, :) = [];
     
-    sqlite3.close();
     
 end
 

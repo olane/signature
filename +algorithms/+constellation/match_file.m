@@ -1,4 +1,4 @@
-function out = match_file( filename, database_filename )
+function out = match_file( filename, db_handle )
 %MATCH_FILE Reads an audio file, then calls match_clip on it
 
     [D, sample_rate] = audioread(filename);
@@ -13,7 +13,8 @@ function out = match_file( filename, database_filename )
         D = resample(D,target_sample_rate/srgcd, sample_rate/srgcd); 
     end
 
-    out = algorithms.constellation.match_clip(D, database_filename);
+    
+    out = algorithms.constellation.match_clip(D, db_handle);
     
 end
 
