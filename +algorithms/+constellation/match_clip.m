@@ -5,7 +5,7 @@ function [ songScores ] = match_clip( audio, db_handle )
 %   What constitutes a 'good' score is dependent on the input audio, the
 %   song and particularly on the length of the input clip.
     
-
+    
     disp('Creating index if not exists');
     tic
     sqlite3.execute(db_handle, 'CREATE INDEX IF NOT EXISTS hash_index ON hashes(hash)');

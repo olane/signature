@@ -14,7 +14,10 @@ function out = match_file( filename, db_handle )
     end
 
     
+    sound(D);
+    
     out = algorithms.constellation.match_clip(D, db_handle);
+    
     
 end
 
