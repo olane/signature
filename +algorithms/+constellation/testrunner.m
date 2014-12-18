@@ -68,12 +68,15 @@ algorithms.constellation.register_all_songs(foldername, database_filename);
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
 database_filename = 'constellation.db';
-filename = './test_clips/basic/(11) - Calvin Harris - Pray to God  (feat. Haim)_sample_60-70.ogg';
+filename = './test_clips/basic/Silvio Ecomo - Standing - General Midi Remix_sample_60-70.ogg';
 
 db_handle = sqlite3.open(database_filename);
 
-tic
-r = algorithms.constellation.match_file(filename, db_handle)
-toc
+r = algorithms.constellation.match_file(filename, db_handle);
+
+[val, ind] = max(r(:, 2));
+
+track = algorithms.constellation.get_song_name(r(ind,1), db_handle)
+score = val
 
 sqlite3.close(db_handle);

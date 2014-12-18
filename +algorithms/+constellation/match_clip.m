@@ -5,14 +5,23 @@ function [ songScores ] = match_clip( audio, db_handle )
 %   What constitutes a 'good' score is dependent on the input audio, the
 %   song and particularly on the length of the input clip.
     
-    hlist = algorithms.constellation.fingerprinter.get_fingerprint(audio);
 
     disp('Creating index if not exists');
     tic
     sqlite3.execute(db_handle, 'CREATE INDEX IF NOT EXISTS hash_index ON hashes(hash)');
     toc
     
-    songMatches = containers.Map('KeyType','int32','ValueType','any');
+    
+    disp('Getting fingerprint for clip');
+    tic
+    hlist = algorithms.constellation.fingerprinter.get_fingerprint(audio);
+    toc
+    
+    
+    disp('Getting matching hashes and binning according to song id');
+    tic
+    
+    songsToHashMatches = containers.Map('KeyType','int32','ValueType','any');
     
     for h = hlist'
         
@@ -23,15 +32,15 @@ function [ songScores ] = match_clip( audio, db_handle )
         
         for hash_match = hash_matches
             
-            if(songMatches.isKey(hash_match.song_id))
+            if(songsToHashMatches.isKey(hash_match.song_id))
                 
-                songMatches(hash_match.song_id) = ...
-                    [songMatches(hash_match.song_id) ...
+                songsToHashMatches(hash_match.song_id) = ...
+                    [songsToHashMatches(hash_match.song_id) ...
                      struct('songtime', hash_match.time, 'cliptime', hashtime)];
             
             else
                 
-                songMatches(hash_match.song_id) = ...
+                songsToHashMatches(hash_match.song_id) = ...
                     [struct('songtime', hash_match.time, 'cliptime', hashtime)];
             
             end
@@ -40,18 +49,25 @@ function [ songScores ] = match_clip( audio, db_handle )
         
     end
     
+    toc
+    
+    
+    disp('Calculating scores from hashes');
+    tic
+    
     % If a song matches less than this number of hashes, it is not
     % considered for matching. Gives speed at the cost of increased
     % probability of false negatives
-    match_threshold = 200;
+    match_threshold = 300;
     
-    songScores = zeros(length(keys(songMatches)), 2);
+    songScores = zeros(length(keys(songsToHashMatches)), 2);
     
     i = 1;
     
-    for songid = cell2mat(keys(songMatches))
+    
+    for songid = cell2mat(keys(songsToHashMatches))
         
-        matches = songMatches(songid);
+        matches = songsToHashMatches(songid);
         
         if(length(matches) < match_threshold)
             continue;
@@ -84,6 +100,7 @@ function [ songScores ] = match_clip( audio, db_handle )
 
     songScores(i:end, :) = [];
     
+    toc
     
 end
 
