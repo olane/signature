@@ -58,7 +58,7 @@ function [ songScores ] = match_clip( audio, db_handle )
     % If a song matches less than this number of hashes, it is not
     % considered for matching. Gives speed at the cost of increased
     % probability of false negatives
-    match_threshold = 300;
+    match_threshold = 50;
     
     songScores = zeros(length(keys(songsToHashMatches)), 2);
     

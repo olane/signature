@@ -67,7 +67,7 @@ function register_all_songs( foldername, database_filename )
 
             D = mean(D, 2); %stereo to mono
 
-            target_sample_rate = 12000;
+            target_sample_rate = 8000;
 
             if(sample_rate ~= target_sample_rate)
                 %resample to target rate
