@@ -6,7 +6,7 @@ input_folder = './library/';
 
 test_clips_folder = './test_clips/basic/';
 
-basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder);
+%basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder);
 
 
 database_filename = 'constellation-8000.db';
@@ -16,7 +16,7 @@ db_handle = sqlite3.open(database_filename);
 
 i = 0;
 s = 0;
-n = length(basic_clips(:,1));
+n = length(basic_clips);
 results = repmat(struct('original', [], 'matched', [], ...
                         'score', [], 'correct', []), ...
                  n, ...
