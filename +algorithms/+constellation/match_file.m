@@ -12,9 +12,6 @@ function out = match_file( filename, db_handle )
         srgcd = gcd(sample_rate, target_sample_rate);
         D = resample(D,target_sample_rate/srgcd, sample_rate/srgcd); 
     end
-
-    
-    sound(D);
     
     out = algorithms.constellation.match_clip(D, db_handle);
     
