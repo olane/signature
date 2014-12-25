@@ -1,14 +1,16 @@
 
 function F = get_fingerprint( audio, fs )
 %GET_FINGERPRINT Creates a fingerprint of a mono audio clip. 
-%   http://www.nhchau.com/files/AudioFingerprint-02-FP04-2.pdf
+%   Based on http://www.nhchau.com/files/AudioFingerprint-02-FP04-2.pdf
+%   Returns an array of 32 bit sub-fingerprints, which together represent
+%   the full fingerprint.
     
     %% Framing and Fourier Transform
     L = round(0.37 * fs);
     window = hann(L);
     increment = round(L/32); %31/32 frame overlap
     
-    [frames, frame_centres] = utils.enframe(audio, window, increment);
+    [frames, ~] = utils.enframe(audio, window, increment);
 
     fourier_frames = abs(fft(frames')');
     
