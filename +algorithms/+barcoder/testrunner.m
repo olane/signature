@@ -1,10 +1,11 @@
 
-addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
-
-database_filename = 'barcoder.db';
 
 
 %% Database initialisation
+
+addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
+
+database_filename = 'barcoder.db';
 
 db_handle = sqlite3.open(database_filename);
 
@@ -35,8 +36,14 @@ end
                  'DROP INDEX IF EXISTS hash_index');
 
                  
-%% Fingerprinter 
+%% register_song 
 
+
+addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
+
+database_filename = 'barcoder.db';
+
+db_handle = sqlite3.open(database_filename);
 
 filename = 'library/01 - Love Me Again.mp3';
 

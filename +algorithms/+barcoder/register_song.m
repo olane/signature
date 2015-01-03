@@ -43,7 +43,7 @@ function register_song( db_handle, audio, sample_rate, song_name )
     for i = 1:length(F_int)
        sqlite3.execute(db_handle, ...
                        'INSERT INTO hashes(song_id, hash, hash_number) VALUES (?, ?, ?)', ...
-                       id, F(i), i);
+                       id, F_int(i), i);
     end
     
     sqlite3.execute(db_handle, 'END TRANSACTION;');
