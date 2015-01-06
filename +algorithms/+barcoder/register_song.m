@@ -6,19 +6,11 @@ function register_song( db_handle, song_filename )
     %% Reading and resampling
     
     tic
-    disp('Reading and resampling audio');
     
-    [audio, sample_rate] = audioread(song_filename);
-
-    audio = mean(audio, 2); %stereo to mono
-
-    target_sample_rate = 5000;
-
-    if(sample_rate ~= target_sample_rate)
-        %resample to target rate
-        srgcd = gcd(sample_rate, target_sample_rate);
-        audio = resample(audio, target_sample_rate/srgcd, sample_rate/srgcd); 
-    end
+    disp('Reading and resampling audio');
+    sample_rate = 5000;
+    audio = utils.read_audio_as_mono(filename, sample_rate);
+    
     toc
 
     %% Analysis
