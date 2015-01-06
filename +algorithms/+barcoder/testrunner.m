@@ -26,8 +26,6 @@ addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
 database_filename = 'barcoder.db';
 
-db_handle = sqlite3.open(database_filename);
-
 folder = './library/';
 
 utils.register_all_songs(database_filename, folder, ...
