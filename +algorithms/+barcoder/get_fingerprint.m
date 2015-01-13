@@ -3,7 +3,8 @@ function F = get_fingerprint( audio, fs )
 %GET_FINGERPRINT Creates a fingerprint of a mono audio clip. 
 %   Based on http://www.nhchau.com/files/AudioFingerprint-02-FP04-2.pdf
 %   Returns an array of 32 bit sub-fingerprints, which together represent
-%   the full fingerprint.
+%   the full fingerprint. Each sub-fingerprint is represented as a vector
+%   of bits.
     
     %% Framing and Fourier Transform
     L = round(0.37 * fs);

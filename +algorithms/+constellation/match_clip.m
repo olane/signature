@@ -1,7 +1,8 @@
 function [ songScores ] = match_clip( audio, db_handle )
-%MATCH_SONG Takes some (mono, 12kHz) audio and matches it against the
-%database. Returns a matrix where each row is a [songid, score] pair where
-%a higher score means a closer match.
+%MATCH_SONG Takes some audio (mono, at the same sample rate as was
+%registered to the database) and matches it against the database. Returns a
+%matrix where each row is a [songid, score] pair where a higher score means
+%a closer match. 
 %   What constitutes a 'good' score is dependent on the input audio, the
 %   song and particularly on the length of the input clip.
     
