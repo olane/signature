@@ -45,3 +45,11 @@ filename = './test_clips/basic/(11) - Calvin Harris - Pray to God  (feat. Haim)_
 db_handle = sqlite3.open(database_filename);
 
 r = algorithms.barcoder.match_file(filename, db_handle);
+
+
+[val, ind] = max(r(:, 2));
+
+track = algorithms.constellation.get_song_name(r(ind,1), db_handle)
+score = val
+
+sqlite3.close(db_handle);

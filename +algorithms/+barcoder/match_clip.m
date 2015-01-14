@@ -1,6 +1,7 @@
 function [ songScores ] = match_clip( audio, db_handle )
 %MATCH_CLIP Takes some (mono, 5kHz) audio and matches it against the
-%database. 
+%database. Returns a set of [song_id, start_hash, score] rows. Lower scores
+%are better.
 
     %% Make sure index exists
     
@@ -72,8 +73,9 @@ function [ songScores ] = match_clip( audio, db_handle )
     disp('Scoring candidate positions');
     tic
     
+    scores = zeros(length(candidates(:,1)), 3);
     
-    for i = 1:length(candidates(:, 1))
+    for i = 1:length(candidates(:,1))
         
         song_id = candidates(i, 1);
         start_hash = candidates(i, 2);
@@ -83,8 +85,40 @@ function [ songScores ] = match_clip( audio, db_handle )
                                                       song_id, ...
                                                       start_hash, ...
                                                       end_hash); 
+        
+        hashes_bi = zeros(length(hashes(:,1)), 32);
+        
+        for j = 1:length(hashes)
+            hashes_bi(j, :) = utils.dec2bi(uint32(hashes(j)), 32);
+        end
                                                   
-        % todo: calc hamming distance 
+        distance = algorithms.barcoder.hamming_distance(hashes_bi, F);
+        
+        scores(i, 1) = song_id;
+        scores(i, 2) = start_hash;
+        scores(i, 3) = distance;
+        
+    end
+    
+    toc
+    
+    
+    disp('Finding best score for each song');
+    tic
+    
+    songScores = [];
+    
+    for song_id = unique(scores(:,1))
+        
+        min = scores(1, 3);
+        
+        for k = 2:length(scores(:,1))
+            if(min > scores(k, 3))
+                min = scores(k, 3);
+            end
+        end
+        
+        songScores(end+1, :) = [song_id, min];
         
     end
     
