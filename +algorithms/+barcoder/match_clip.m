@@ -89,7 +89,7 @@ function [ songScores ] = match_clip( audio, db_handle )
         hashes_bi = zeros(length(hashes(:,1)), 32);
         
         for j = 1:length(hashes)
-            hashes_bi(j, :) = bitget(hashes(j), 1:32);
+            hashes_bi(j, :) = bitget(hashes(j), 32:-1:1);
         end
                                                   
         distance = algorithms.barcoder.hamming_distance(hashes_bi, F);
