@@ -32,3 +32,16 @@ utils.register_all_songs(database_filename, folder, ...
                          @algorithms.barcoder.initialise_db, ...
                          @algorithms.barcoder.register_song, ...
                          @algorithms.barcoder.cleanup_db)
+
+                     
+%% match clip
+
+addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
+
+database_filename = 'barcoder.db';
+filename = './test_clips/basic/(11) - Calvin Harris - Pray to God  (feat. Haim)_sample_60-70.ogg';
+
+
+db_handle = sqlite3.open(database_filename);
+
+r = algorithms.barcoder.match_file(filename, db_handle);

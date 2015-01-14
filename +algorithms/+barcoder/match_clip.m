@@ -19,7 +19,7 @@ function [ songScores ] = match_clip( audio, db_handle )
     
     F = algorithms.barcoder.get_fingerprint(audio, 5000);
 
-    F_int = zeros(length(F(:,1)));
+    F_int = zeros(length(F(:,1)), 1);
     for i=1:length(F(:,1))
         F_int(i) = utils.bi2dec(F(i,:));
     end
@@ -72,6 +72,21 @@ function [ songScores ] = match_clip( audio, db_handle )
     disp('Scoring candidate positions');
     tic
     
+    
+    for i = 1:length(candidates(:, 1))
+        
+        song_id = candidates(i, 1);
+        start_hash = candidates(i, 2);
+        end_hash = start_hash + length(F_int);
+        
+        hashes = algorithms.barcoder.get_hash_section(db_handle, ...
+                                                      song_id, ...
+                                                      start_hash, ...
+                                                      end_hash); 
+                                                  
+        % todo: calc hamming distance 
+        
+    end
     
     
     toc
