@@ -9,7 +9,7 @@ function register_song( db_handle, song_filename )
     
     disp('Reading and resampling audio');
     sample_rate = 5000;
-    audio = utils.read_audio_as_mono(filename, sample_rate);
+    audio = utils.read_audio_as_mono(song_filename, sample_rate);
     
     toc
 
@@ -17,7 +17,7 @@ function register_song( db_handle, song_filename )
     
     tic
     disp('Analysing song');
-    F = algorithms.barcoder.get_fingerprint(audio, target_sample_rate);
+    F = algorithms.barcoder.get_fingerprint(audio, sample_rate);
     toc
     
     
