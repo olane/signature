@@ -52,7 +52,7 @@ function [ songScores ] = match_clip( audio, db_handle )
             
             if(allocated == n)
                 % We need more space, double the size
-                candidates = [candidates; zeros(allocated, 4)];
+                candidates = [candidates; zeros(allocated, 2)];
                 allocated = allocated * 2;
             end
             
@@ -107,18 +107,20 @@ function [ songScores ] = match_clip( audio, db_handle )
     tic
     
     songScores = [];
+    song_ids = unique(scores(:,1));
     
-    for song_id = unique(scores(:,1))
+    for n = 1:length(song_ids)
         
-        min = scores(1, 3);
+        min = 1e100;
         
-        for k = 2:length(scores(:,1))
-            if(min > scores(k, 3))
+        for k = 1:length(scores(:,1))
+            if(scores(k, 1) == song_ids(n) && min > scores(k, 3)) 
                 min = scores(k, 3);
             end
         end
         
-        songScores(end+1, :) = [song_id, min];
+        songScores(n, 1) = song_ids(n);
+        songScores(n, 2) = min;
         
     end
     

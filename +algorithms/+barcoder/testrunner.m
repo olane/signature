@@ -39,7 +39,7 @@ utils.register_all_songs(database_filename, folder, ...
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
 database_filename = 'barcoder.db';
-filename = './test_clips/basic/(11) - Calvin Harris - Pray to God  (feat. Haim)_sample_60-70.ogg';
+filename = './test_clips/basic/(01) - Calvin Harris - Faith_sample_60-70.ogg';
 
 
 db_handle = sqlite3.open(database_filename);
@@ -47,7 +47,7 @@ db_handle = sqlite3.open(database_filename);
 r = algorithms.barcoder.match_file(filename, db_handle);
 
 
-[val, ind] = max(r(:, 2));
+[val, ind] = min(r(:, 2));
 
 track = algorithms.constellation.get_song_name(r(ind,1), db_handle)
 score = val
