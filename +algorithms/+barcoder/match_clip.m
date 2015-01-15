@@ -71,12 +71,12 @@ function [ songScores ] = match_clip( audio, db_handle )
     %% Retrieve candidate position hashes and calculate scores
     
     disp('Scoring candidate positions');
-    
+    tic
     
     scores = zeros(length(candidates(:,1)), 3);
     
     for i = 1:length(candidates(:,1))
-        tic
+
         song_id = candidates(i, 1);
         start_hash = candidates(i, 2);
         end_hash = start_hash + length(F_int);
@@ -98,10 +98,9 @@ function [ songScores ] = match_clip( audio, db_handle )
         scores(i, 2) = start_hash;
         scores(i, 3) = distance;
         
-    toc
     end
     
-    
+    toc
     
     disp('Finding best score for each song');
     tic
