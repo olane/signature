@@ -24,7 +24,7 @@ algorithms.barcoder.cleanup_db(db_handle);
 
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
-database_filename = 'barcoder.db';
+database_filename = 'barcoder_full.db';
 
 folder = './library/';
 
@@ -38,8 +38,8 @@ utils.register_all_songs(database_filename, folder, ...
 
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
-database_filename = 'barcoder.db';
-filename = './test_clips/basic/(01) - Calvin Harris - Faith_sample_60-70.ogg';
+database_filename = 'barcoder_full.db';
+filename = './test_clips/basic/Toots and the Maytals - Monkey Man_sample_60-70.ogg';
 
 
 db_handle = sqlite3.open(database_filename);

@@ -5,10 +5,11 @@ function [ songScores ] = match_clip( audio, db_handle )
 
     %% Make sure index exists
     
-    disp('Creating index if not exists');
+    disp('Creating indexes if they don''t exist');
     tic
     
     sqlite3.execute(db_handle, 'CREATE INDEX IF NOT EXISTS hash_index ON hashes(hash)');
+    sqlite3.execute(db_handle, 'CREATE INDEX IF NOT EXISTS hash_number_index ON hashes(hash_number)');
     
     toc
 
@@ -70,13 +71,16 @@ function [ songScores ] = match_clip( audio, db_handle )
     
     %% Retrieve candidate position hashes and calculate scores
     
-    disp('Scoring candidate positions');
+    disp(['----- Scoring ' num2str(length(candidates(:,1))) ' candidate positions -----']);
     tic
     
     scores = zeros(length(candidates(:,1)), 3);
     
     for i = 1:length(candidates(:,1))
-
+        
+%         disp('Getting hash values for candidate position');
+%         tic
+        
         song_id = candidates(i, 1);
         start_hash = candidates(i, 2);
         end_hash = start_hash + length(F_int);
@@ -85,23 +89,34 @@ function [ songScores ] = match_clip( audio, db_handle )
                                                       song_id, ...
                                                       start_hash, ...
                                                       end_hash); 
+                                                  
+%         toc
+%         disp('Unpacking hashes');
+%         tic                                      
         
         hashes_bi = zeros(length(hashes(:,1)), 32);
         
         for j = 1:length(hashes)
             hashes_bi(j, :) = bitget(hashes(j), 32:-1:1);
         end
+        
+%         toc
+%         disp('Calculating hamming distance');
+%         tic 
                                                   
         distance = algorithms.barcoder.hamming_distance(hashes_bi, F);
         
         scores(i, 1) = song_id;
         scores(i, 2) = start_hash;
         scores(i, 3) = distance;
+%         
+%         toc
+%         disp('-');
         
     end
     
     toc
-    
+%     disp('-------');
     disp('Finding best score for each song');
     tic
     

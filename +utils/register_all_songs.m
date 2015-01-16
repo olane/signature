@@ -8,7 +8,7 @@ function register_all_songs( database_filename, input_foldername, initialise, re
     
     initialise(db_handle);
     
-    disp('Checked database');
+    disp('Checked and intialized database');
     
     
     files = dir([input_foldername '*.mp3']);
@@ -33,10 +33,8 @@ function register_all_songs( database_filename, input_foldername, initialise, re
         end
     end
     
-    tic
     disp('Cleaning up database');
     cleanup(db_handle);
-    toc
     
     sqlite3.close(db_handle);
 
