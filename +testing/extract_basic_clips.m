@@ -1,4 +1,4 @@
-function clips = extract_basic_clips(input_foldername, output_foldername)
+function clips = extract_basic_clips(input_foldername, output_foldername, clipstart, clipend)
 
     input_files = dir([input_foldername '*.mp3']);
 
@@ -18,7 +18,7 @@ function clips = extract_basic_clips(input_foldername, output_foldername)
         disp(['Sampling "' file.name '"...']);
 
         path = testing.take_basic_clip(input_foldername, file, ...
-                                       output_foldername, 60, 70);
+                                       output_foldername, clipstart, clipend);
 
         i = i + 10;
         c = c + 1;

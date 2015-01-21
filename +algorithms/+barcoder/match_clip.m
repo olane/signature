@@ -71,7 +71,7 @@ function [ songScores ] = match_clip( audio, db_handle )
     
     %% Retrieve candidate position hashes and calculate scores
     
-    disp(['----- Scoring ' num2str(length(candidates(:,1))) ' candidate positions -----']);
+    disp(['Scoring ' num2str(length(candidates(:,1))) ' candidate positions']);
     tic
     
     scores = zeros(length(candidates(:,1)), 3);

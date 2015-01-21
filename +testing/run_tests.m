@@ -4,12 +4,14 @@ addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
 input_folder = './library/';
 
-test_clips_folder = './test_clips/basic/';
+test_clips_folder = './test_clips/basic/5/';
 
-%basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder);
+basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder, 45, 50);
 
+% 'min' or 'max' corresponding to which is the best score
+scoring = 'min';
 
-database_filename = 'constellation-8000.db';
+database_filename = 'barcoder_full.db';
 
 db_handle = sqlite3.open(database_filename);
 
@@ -29,9 +31,13 @@ for test = basic_clips
     disp([num2str(i) '/' num2str(n)]);
     disp(['Matching ' test.clip])
     
-    r = algorithms.constellation.match_file(test.clip, db_handle);
-
-    [val, ind] = max(r(:, 2));
+    r = algorithms.barcoder.match_file(test.clip, db_handle);
+    
+    if(strcomp(scoring, 'min'))
+        [val, ind] = min(r(:, 2));
+    else
+        [val, ind] = max(r(:, 2));
+    end
 
     results(i).original = test.original;
     results(i).matched = algorithms.constellation.get_song_name(r(ind,1), db_handle);
@@ -41,8 +47,14 @@ for test = basic_clips
     
     if(results(i).correct)
         s = s + 1;
+        disp('-----MATCH-----');
+        disp(['Matched as  ' results(i).matched ...
+              ' with score ' num2str(results(i).score) ]);
     else
-        disp('MISMATCH');
+        disp('-----MISMATCH-----');
+        disp(['Matched as  ' results(i).matched ...
+              ' with score ' num2str(results(i).score) ...
+              ' but should have been ' results(i).original ]);
     end
     
 end
