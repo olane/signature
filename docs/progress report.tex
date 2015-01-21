@@ -45,13 +45,82 @@
 \cleardoublepage
 \setcounter{page}{1}
 
-\section*{Achievements to date}
+\section*{Achievements To Date}
+
+Broadly, I have achieved almost everything that was outlined in the first 4 work packages in my original proposal.
+
+I began by researching several different music recognition algorithms, focussing mostly on the two referenced in the proposal. I spent 2-3 weeks familiarising myself with MATLAB and MIRToolbox, which were the technologies I chose to use to implement my project. I also investigated how to use MATLAB to connect to a database, since all of the algorithms I looked at required one.
+
+Once I was reasonably comfortable with the technologies, I drew up a basic system structure for the implementations, and began implementation of the first algorithm. Over the Christmas holidays I finished implementations of both algorithms, which included some shared code for features such as reading audio from files and running a set of tests against an implementation.
+
+Some very basic testing has been carried out, using unmodified clips of songs in the library of lengths 3, 5 and 10 seconds (TODO). 
+
+- Most test clips (to do!)
+
+\section*{Unexpected Difficulties and Changes}
+
+\subsection*{MIRToolbox}
+
+Although I originally anticipated that MIRToolbox, a music information retrieval library, would be useful in the implementation of the algorithms, I found it to be difficult to use and not very useful anyway. 
+
+The library was difficult to use for two reasons. Firstly, it has not been updated to work with the latest version of MATLAB, which is the only version which is supported for my laptop's operating system. To get most functions working, I had to resort to editing their source, which was time consuming and error-prone, since no tests are included.
+
+Secondly, even once the functions were working, I found the API for the two functions I wanted to use not to be particularly well-suited to my purposes. In many places the interface didn't give me control over parameters which I wanted to modify, particularly when trying to find peaks in a spectrogram of audio data.
+
+I found replacements for my two main planned uses of the library -- namely, calculating spectrograms and finding peaks in them -- in the MATLAB Signal Processing Toolbox and an open source function called Fast Peak Finder (REFERENCE????), respectively. In light of this, I decided not to use MIRToolbox.
+
+\subsection*{Database integration}
+
+Originally, I assumed that database integration with MATLAB would be trivial to set up, but I overlooked the fact that the standard solution for this is within a toolbox which isn't included under the university's license. 
+
+Luckily, I found an alternative open source solution based on SQLite 3, which meant that I did not have to pay for the toolbox or find a way to obtain a license for it through the university. It's possible that a solution based on a more fully featured SQL implementation would speed my implementations up a little, but I deemed this unimportant since all of the algorithms I am comparing will use the SQLite implementation, and these speed improvements wouldn't be guaranteed anyway.
+
+\section*{Timetable Evaluation}
+
+I have mostly stuck to the timetable stated in my proposal, but I have made a couple of changes as I have progressed.
+
+Firstly, it turned out to be easier to write the code which is shared between the implementations in parallel with the implementations themselves, since some subtleties didn't become apparent until I was writing the implementations. 
+
+Secondly, I fell 1-2 weeks behind my schedule on writing my dissertation, and have decided to restructure this part of my plan based on a conversation with my Director of Studies and where I think I am at the moment in the project.
+
+I now intend to write the preparation section first, followed by the introduction and conclusion, followed by the other sections. I hope that this will help me structure the dissertation better, and avoid some later restructuring and rewriting. 
+
+An updated timetable for the remainder of the project is included below. I don't see these changes as introducing any major added time pressure, since I structured the whole timetable to give me time at the end in case of setbacks and to make optional improvements.
 
 
-\section*{Unexpected difficulties}
+\section*{New Timetable and Milestones}
 
 
-\section*{Comparison to timetable}
+\subsection*{Work package 4 (due 23rd Jan)}
+Finish creation of the set of test clips started in work package 1, with clips included to test as many criteria as possible. (TODO)
+
+\emph{Deliverables: Full set of test clips}
+
+\subsection*{Work package 5 (due 30th Jan)}
+Write progress report and presentation.
+
+\emph{Deliverables: Progress report and presentation}
+
+\emph{Deadline (30th Jan): Progress report}
+
+\subsection*{Work package 6 (due 1st Mar)}
+Fully test the algorithms using the library of tests and produce diagrams to show the results. Write first drafts of the preparation, introduction and conclusion sections of the dissertation, and a first draft of the evaluation section. Finish the implementation section.
+
+\emph{Deliverables: Results of thorough tests. Drafts of preparation, introduction and conclusion sections. Finished implementation sections.}
+
+\subsection*{Work package 7 (due Mar 15th)}
+First draft of dissertation completed (to coincide with end of Lent term, so as to give time for my supervisor to give feedback and for me to concentrate mostly on revision over the Easter break).
+
+\emph{Deliverables: First draft of full dissertation (previously completed drafts plus implementation and evaluation sections)}
+
+\subsection*{Work package 8 (due May 7th)}
+Keep the project ticking over, but exam preparation will take precedence at this point. Discuss dissertation with my supervisor, and review the whole project. Make any improvements possible in the time left.
+
+Hand in final draft of dissertation. 
+
+\emph{Deliverables: Final draft of dissertation}
+
+\emph{Deadline (15th May): Dissertation}
 
 \end{document}
 
