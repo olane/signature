@@ -53,9 +53,7 @@ I began by researching several different music recognition algorithms, focussing
 
 Once I was reasonably comfortable with the technologies, I drew up a basic system structure for the implementations, and began implementation of the first algorithm. Over the Christmas holidays I finished implementations of both algorithms, which included some shared code for features such as reading audio from files and running a set of tests against an implementation.
 
-Some very basic testing has been carried out, using unmodified clips of songs in the library of lengths 3, 5 and 10 seconds (TODO). 
-
-- Most test clips (to do!)
+Some basic testing has been carried out, using unmodified clips of songs in the library of lengths 3, 5 and 10 seconds. I have also started to create some more complex test cases including adding white noise to the unmodified clips at different levels.
 
 \section*{Unexpected Difficulties and Changes}
 
@@ -67,13 +65,13 @@ The library was difficult to use for two reasons. Firstly, it has not been updat
 
 Secondly, even once the functions were working, I found the API for the two functions I wanted to use not to be particularly well-suited to my purposes. In many places the interface didn't give me control over parameters which I wanted to modify, particularly when trying to find peaks in a spectrogram of audio data.
 
-I found replacements for my two main planned uses of the library -- namely, calculating spectrograms and finding peaks in them -- in the MATLAB Signal Processing Toolbox and an open source function called Fast Peak Finder (REFERENCE????), respectively. In light of this, I decided not to use MIRToolbox.
+I found replacements for my two main planned uses of the library -- namely, calculating spectrograms and finding peaks in them -- in the MATLAB Signal Processing Toolbox and an open source function called Fast 2D Peak Finder, respectively. In light of this, I decided not to use MIRToolbox.
 
 \subsection*{Database integration}
 
 Originally, I assumed that database integration with MATLAB would be trivial to set up, but I overlooked the fact that the standard solution for this is within a toolbox which isn't included under the university's license. 
 
-Luckily, I found an alternative open source solution based on SQLite 3, which meant that I did not have to pay for the toolbox or find a way to obtain a license for it through the university. It's possible that a solution based on a more fully featured SQL implementation would speed my implementations up a little, but I deemed this unimportant since all of the algorithms I am comparing will use the SQLite implementation, and these speed improvements wouldn't be guaranteed anyway.
+Luckily, I found an alternative open source solution based on SQLite 3, which meant that I did not have to pay for the toolbox or find a way to obtain a license for it through the university. It's possible that a solution based on a more fully featured SQL implementation would speed my implementations up a little, but I deemed this unimportant since all of the algorithms I am comparing will use the SQLite implementation, and any speed improvements wouldn't be guaranteed anyway.
 
 \section*{Timetable Evaluation}
 
@@ -85,16 +83,12 @@ Secondly, I fell 1-2 weeks behind my schedule on writing my dissertation, and ha
 
 I now intend to write the preparation section first, followed by the introduction and conclusion, followed by the other sections. I hope that this will help me structure the dissertation better, and avoid some later restructuring and rewriting. 
 
+Finally, although I have started work on my full set of test clips as outlined in work package 4 from the proposal, I have realised that the process of running and analysing the tests will inform the process of creating more clips, so I have pushed back delivery of the full set to work package 6 (due 1st March).
+
 An updated timetable for the remainder of the project is included below. I don't see these changes as introducing any major added time pressure, since I structured the whole timetable to give me time at the end in case of setbacks and to make optional improvements.
 
 
 \section*{New Timetable and Milestones}
-
-
-\subsection*{Work package 4 (due 23rd Jan)}
-Finish creation of the set of test clips started in work package 1, with clips included to test as many criteria as possible. (TODO)
-
-\emph{Deliverables: Full set of test clips}
 
 \subsection*{Work package 5 (due 30th Jan)}
 Write progress report and presentation.
@@ -104,9 +98,9 @@ Write progress report and presentation.
 \emph{Deadline (30th Jan): Progress report}
 
 \subsection*{Work package 6 (due 1st Mar)}
-Fully test the algorithms using the library of tests and produce diagrams to show the results. Write first drafts of the preparation, introduction and conclusion sections of the dissertation, and a first draft of the evaluation section. Finish the implementation section.
+Fully test the algorithms and produce diagrams to show the results. Write first drafts of the preparation, introduction and conclusion sections of the dissertation, and a first draft of the evaluation section. Finish the implementation section.
 
-\emph{Deliverables: Results of thorough tests. Drafts of preparation, introduction and conclusion sections. Finished implementation sections.}
+\emph{Deliverables: Results of thorough tests, and a full set of test clips. Drafts of preparation, introduction and conclusion sections. Finished implementation sections.}
 
 \subsection*{Work package 7 (due Mar 15th)}
 First draft of dissertation completed (to coincide with end of Lent term, so as to give time for my supervisor to give feedback and for me to concentrate mostly on revision over the Easter break).
