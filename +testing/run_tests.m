@@ -6,7 +6,7 @@ input_folder = './library/';
 
 test_clips_folder = './test_clips/basic/3/';
 
-basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder, 40, 43);
+basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder, 40, 43, 9);
 
 % 'min' or 'max' corresponding to which is the best score
 scoring = 'min';

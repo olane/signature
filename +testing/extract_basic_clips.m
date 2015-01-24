@@ -1,4 +1,6 @@
-function clips = extract_basic_clips(input_foldername, output_foldername, clipstart, clipend)
+function clips = extract_basic_clips(input_foldername, output_foldername, clipstart, clipend, m)
+% Takes every mth song from input_foldername, extracts a clip from
+% clipstart to clipend, and saves it in output_foldername.
 
     input_files = dir([input_foldername '*.mp3']);
 
@@ -20,7 +22,7 @@ function clips = extract_basic_clips(input_foldername, output_foldername, clipst
         path = testing.take_basic_clip(input_foldername, file, ...
                                        output_foldername, clipstart, clipend);
 
-        i = i + 10;
+        i = i + m;
         c = c + 1;
         
         clips(c).original = [input_foldername file.name];
