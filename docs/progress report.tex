@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{a4wide}
+\usepackage{graphicx}
 
 
 \parindent 0pt
@@ -51,23 +52,31 @@ Broadly, I have achieved almost everything that was outlined in the first 4 work
 
 I began by researching several different music recognition algorithms, focussing mostly on the two referenced in the proposal. I spent 2-3 weeks familiarising myself with MATLAB and MIRToolbox, which were the technologies I chose to use to implement my project. I also investigated how to use MATLAB to connect to a database, since all of the algorithms I looked at required one.
 
-Once I was reasonably comfortable with the technologies, I drew up a basic system structure for the implementations, and began implementation of the first algorithm. Over the Christmas holidays I finished implementations of both algorithms, which included some shared code for features such as reading audio from files and running a set of tests against an implementation.
+Once I was reasonably comfortable with the technologies, I drew up a basic system structure for the implementations, and began implementation of the two algorithms in my original proposal. The system structure is included below in Figure 1.
+
+I began with the algorithm used by \emph{Shazam} and presented by Avery Li-Chun Wang in \emph{An Industrial-Strength Audio Search Algorithm}, which I had started by the end of Michaelmas term and finished implementing in the first two weeks of the Christmas break. This algorithm has a few parameters which aren't fully specified in the paper and may need some experimentation once I have tested it on more challenging test cases, in particular to do with its peak detection stage.
+
+I used the rest of the break to fully implement the algorithm proposed in \emph{A Highly Robust Audio Fingerprinting System} by Jaap Haitsma and Ton Kalker. This algorithm was more concretely specified in the paper than the first algorithm was, so there is less to experiment with here.
+
+The work over the Christmas break included some shared code for features such as reading audio from files and running a set of tests against an implementation.
 
 Some basic testing has been carried out, using unmodified clips of songs in the library of lengths 3, 5 and 10 seconds. I have also started to create some more complex test cases including adding white noise to the unmodified clips at different levels.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{architecture}
+  \caption{Structure of the system. Methods with dotted borders are algorithm-specific, and are swapped out to test different algorithms.}
+\end{figure}
+
+
+\newpage
+
+
 \section*{Unexpected Difficulties and Changes}
 
-\subsection*{MIRToolbox}
+Although I originally anticipated that MIRToolbox, a music information retrieval library, would be useful in the implementation of the algorithms, I found it to be difficult to use and not particularly useful anyway. It also has not been updated to work with the latest version of MATLAB. 
 
-Although I originally anticipated that MIRToolbox, a music information retrieval library, would be useful in the implementation of the algorithms, I found it to be difficult to use and not very useful anyway. 
-
-The library was difficult to use for two reasons. Firstly, it has not been updated to work with the latest version of MATLAB, which is the only version which is supported for my laptop's operating system. To get most functions working, I had to resort to editing their source, which was time consuming and error-prone, since no tests are included.
-
-Secondly, even once the functions were working, I found the API for the two functions I wanted to use not to be particularly well-suited to my purposes. In many places the interface didn't give me control over parameters which I wanted to modify, particularly when trying to find peaks in a spectrogram of audio data.
-
-I found replacements for my two main planned uses of the library -- namely, calculating spectrograms and finding peaks in them -- in the MATLAB Signal Processing Toolbox and an open source function called Fast 2D Peak Finder, respectively. In light of this, I decided not to use MIRToolbox.
-
-\subsection*{Database integration}
+I found replacements for my two main planned uses of the library in the MATLAB Signal Processing Toolbox and an open source function called Fast 2D Peak Finder, respectively. In light of this, I decided not to use MIRToolbox.
 
 Originally, I assumed that database integration with MATLAB would be trivial to set up, but I overlooked the fact that the standard solution for this is within a toolbox which isn't included under the university's license. 
 
@@ -86,6 +95,8 @@ I now intend to write the preparation section first, followed by the introductio
 Finally, although I have started work on my full set of test clips as outlined in work package 4 from the proposal, I have realised that the process of running and analysing the tests will inform the process of creating more clips, so I have pushed back delivery of the full set to work package 6 (due 1st March).
 
 An updated timetable for the remainder of the project is included below. I don't see these changes as introducing any major added time pressure, since I structured the whole timetable to give me time at the end in case of setbacks and to make optional improvements.
+
+I don't currently plan to implement a third algorithm for comparison, but this may change if one of the work packages takes significantly less time than anticipated.
 
 
 \section*{New Timetable and Milestones}
