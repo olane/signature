@@ -65,7 +65,7 @@ Some basic testing has been carried out, using unmodified clips of songs in the 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{architecture}
-  \caption{Structure of the system. Methods with dotted borders are algorithm-specific, and are swapped out to test different algorithms.}
+  \caption{Structure of the two main shared parts of the system -- song registration, and the testing process. Methods with dotted borders are algorithm-specific, and are swapped out to test different algorithms.}
 \end{figure}
 
 
@@ -80,7 +80,7 @@ I found replacements for my two main planned uses of the library in the MATLAB S
 
 Originally, I assumed that database integration with MATLAB would be trivial to set up, but I overlooked the fact that the standard solution for this is within a toolbox which isn't included under the university's license. 
 
-Luckily, I found an alternative open source solution based on SQLite 3, which meant that I did not have to pay for the toolbox or find a way to obtain a license for it through the university. It's possible that a solution based on a more fully featured SQL implementation would speed my implementations up a little, but I deemed this unimportant since all of the algorithms I am comparing will use the SQLite implementation, and any speed improvements wouldn't be guaranteed anyway.
+Fortunately, I found an alternative open source solution based on SQLite, meaning that I didn't have to pay for the toolbox or find a way to obtain a license for it through the University. It's possible that a solution based on a more fully featured SQL implementation would speed my implementations up a little, but I deemed this unimportant since all of the algorithms I am comparing will use the same SQLite implementation, and any speed improvements wouldn't be guaranteed anyway.
 
 \section*{Timetable Evaluation}
 
@@ -96,27 +96,20 @@ Finally, although I have started work on my full set of test clips as outlined i
 
 An updated timetable for the remainder of the project is included below. I don't see these changes as introducing any major added time pressure, since I structured the whole timetable to give me time at the end in case of setbacks and to make optional improvements.
 
-I don't currently plan to implement a third algorithm for comparison, but this may change if one of the work packages takes significantly less time than anticipated.
+I don't currently plan to implement a third algorithm for comparison, but this may change if one of the work packages takes less time than anticipated. I'll re-evaluate whether it will be feasible once the bulk of the testing and analysis work is done for the first two algorithms.
 
 
 \section*{New Timetable and Milestones}
 
-\subsection*{Work package 5 (due 30th Jan)}
-Write progress report and presentation.
-
-\emph{Deliverables: Progress report and presentation}
-
-\emph{Deadline (30th Jan): Progress report}
-
 \subsection*{Work package 6 (due 1st Mar)}
-Fully test the algorithms and produce diagrams to show the results. Write first drafts of the preparation, introduction and conclusion sections of the dissertation, and a first draft of the evaluation section. Finish the implementation section.
+Fully test the algorithms and produce diagrams to show the results. Write first drafts of the preparation, introduction and conclusion sections of the dissertation, and a first draft of the evaluation section.
 
-\emph{Deliverables: Results of thorough tests, and a full set of test clips. Drafts of preparation, introduction and conclusion sections. Finished implementation sections.}
+\emph{Deliverables: Results of thorough tests, and a full set of test clips (or scripts to generate them from the song library). Drafts of preparation, introduction and conclusion sections.}
 
 \subsection*{Work package 7 (due Mar 15th)}
 First draft of dissertation completed (to coincide with end of Lent term, so as to give time for my supervisor to give feedback and for me to concentrate mostly on revision over the Easter break).
 
-\emph{Deliverables: First draft of full dissertation (previously completed drafts plus implementation and evaluation sections)}
+\emph{Deliverables: First draft of full dissertation (previously completed drafts, plus implementation and evaluation sections.)}
 
 \subsection*{Work package 8 (due May 7th)}
 Keep the project ticking over, but exam preparation will take precedence at this point. Discuss dissertation with my supervisor, and review the whole project. Make any improvements possible in the time left.
