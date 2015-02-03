@@ -10,7 +10,7 @@ function register_song( db_handle, song_filename )
     
     disp('Reading and resampling audio');
     sample_rate = 8000;
-    audio = utils.read_audio_as_mono(filename, sample_rate);
+    audio = utils.read_audio_as_mono(song_filename, sample_rate);
     
     toc
 

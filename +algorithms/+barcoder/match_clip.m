@@ -123,6 +123,8 @@ function [ songScores ] = match_clip( audio, db_handle )
     songScores = [];
     song_ids = unique(scores(:,1));
     
+    
+    
     for n = 1:length(song_ids)
         
         min = 1e100;

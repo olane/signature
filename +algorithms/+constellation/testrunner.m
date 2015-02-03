@@ -4,7 +4,7 @@
     
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
-database_filename = 'constellation-8000-2.db';
+database_filename = 'constellation.db';
 
 folder = './library/';
 
@@ -20,7 +20,7 @@ utils.register_all_songs(database_filename, folder, ...
 
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
-database_filename = 'constellation-8000.db';
+database_filename = 'constellation.db';
 filename = './test_clips/basic/(01) - Calvin Harris - Faith_sample_60-70.ogg';
 
 db_handle = sqlite3.open(database_filename);
