@@ -1,6 +1,6 @@
 function [ songScores ] = match_clip( audio, db_handle )
 %MATCH_CLIP Takes some (mono, 5kHz) audio and matches it against the
-%database. Returns a set of [song_id, start_hash, score] rows. Lower scores
+%database. Returns a set of [song_id, score] rows. Lower scores
 %are better.
 
     %% Make sure index exists
