@@ -4,14 +4,16 @@ addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
 input_folder = './library/';
 
-test_clips_folder = './test_clips/basic/3/';
+test_clips_folder = './test_clips/basic/5sec/';
 
-basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder, 40, 43, 9);
+basic_clips = testing.extract_basic_clips(input_folder, test_clips_folder, ...
+                                          40, 45, 9, ...
+                                          @(a) a);
 
 % 'min' or 'max' corresponding to which is the best score
-scoring = 'min';
+scoring = 'max';
 
-database_filename = 'barcoder_full.db';
+database_filename = 'constellation-8000.db';
 
 db_handle = sqlite3.open(database_filename);
 
@@ -31,7 +33,13 @@ for test = basic_clips
     disp([num2str(i) '/' num2str(n)]);
     disp(['Matching ' test.clip])
     
-    r = algorithms.barcoder.match_file(test.clip, db_handle);
+    r = algorithms.constellation.match_file(test.clip, db_handle);
+    
+    if(isempty(r))
+        disp('NO MATCHES');
+        disp('---------');
+        continue;
+    end
     
     if(strcmp(scoring, 'min'))
         [val, ind] = min(r(:, 2));
