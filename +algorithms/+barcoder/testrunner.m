@@ -53,3 +53,24 @@ track = algorithms.constellation.get_song_name(r(ind,1), db_handle)
 score = val
 
 sqlite3.close(db_handle);
+
+
+%% run basic tests
+
+
+input_folder = './library/';
+test_clips_folder = './test_clips/basic/5sec/';
+database_filename = 'barcoder.db'
+scoring_mode = 'min';
+clip_length = 5;
+m = 4;
+    
+testing.run_basic_tests(@algorithms.barcoder.match_file, ...
+                        @algorithms.barcoder.get_song_name, ...
+                        database_filename, ...
+                        test_clips_folder, ...
+                        input_folder, ...
+                        scoring_mode, ...
+                        clip_length, ...
+                        m);
+

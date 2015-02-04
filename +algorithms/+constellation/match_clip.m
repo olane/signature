@@ -92,10 +92,13 @@ function [ songScores ] = match_clip( audio, db_handle )
             end
         end
         
-        score = max(hist);
+        if(~isempty(hist))
+            score = max(hist);
+            songScores(i, 1) = songid;
+            songScores(i, 2) = score;
+        end
         
-        songScores(i, 1) = songid;
-        songScores(i, 2) = score;
+        
         i =  i + 1;
     end
 
