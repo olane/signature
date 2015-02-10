@@ -1,12 +1,17 @@
 
+cliplength = 5;
+snr = 0; % dB
+m = 5;
+
+
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 input_folder = './library/';
-test_clips_folder = './test_clips/gaussian_noise/3sec/3db/';
-database_filename = 'constellation-8000.db';
+test_clips_folder = ['./test_clips/gaussian_noise/' num2str(cliplength) 'sec/' num2str(snr) 'db/'];
+database_filename = 'constellation.db';
 
 clips = testing.extract_basic_clips(input_folder, test_clips_folder, ...
-                                    40, 43, 9, ...
-                                    @(a) utils.add_gaussian_noise(a, 3, true));
+                                    40, 40+cliplength, m, ...
+                                    @(a) utils.add_gaussian_noise(a, snr, true));
 
 
 db_handle = sqlite3.open(database_filename);
