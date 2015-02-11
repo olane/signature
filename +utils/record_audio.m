@@ -1,6 +1,6 @@
 function audiodata = record_audio( sample_rate, bits_per_sample, length )
 %RECORD_AUDIO records some audio from the microphone and returns it as an
-%array. Length given in seconds. 
+%array. Length given in seconds. Blocks for the length of the recording.
 
     recObj = audiorecorder(sample_rate, bits_per_sample, 1);
     
