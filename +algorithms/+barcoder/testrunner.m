@@ -24,7 +24,7 @@ algorithms.barcoder.cleanup_db(db_handle);
 
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
-database_filename = 'barcoder_full.db';
+database_filename = 'barcoder-new.db';
 
 folder = './library/';
 
@@ -63,7 +63,7 @@ test_clips_folder = './test_clips/basic/5sec/';
 database_filename = 'barcoder.db'
 scoring_mode = 'min';
 clip_length = 5;
-m = 4;
+m = 1;
     
 testing.run_basic_tests(@algorithms.barcoder.match_file, ...
                         @algorithms.barcoder.get_song_name, ...

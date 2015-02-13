@@ -1,4 +1,4 @@
-function clips = extract_basic_clips(input_foldername, output_foldername, clipstart, clipend, m, transform)
+function clips = extract_clips(input_foldername, output_foldername, clipstart, clipend, m, transform)
 % Takes every mth song from input_foldername, extracts a clip from
 % clipstart to clipend, runs it through the given transform function and
 % saves it in output_foldername. 
@@ -20,9 +20,9 @@ function clips = extract_basic_clips(input_foldername, output_foldername, clipst
 
         disp(['Sampling "' file.name '"...']);
 
-        path = testing.take_basic_clip(input_foldername, file, ...
-                                       output_foldername, clipstart, clipend, ...
-                                       transform);
+        path = testing.take_clip(input_foldername, file, ...
+                                 output_foldername, clipstart, clipend, ...
+                                 transform);
 
         i = i + m;
         c = c + 1;

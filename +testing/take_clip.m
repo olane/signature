@@ -1,4 +1,4 @@
-function output_path = take_basic_clip(input_foldername, file, output_foldername, start_time, end_time, transform )
+function output_path = take_clip(input_foldername, file, output_foldername, start_time, end_time, transform )
 %take_basic_clip Extracts a basic test clip
 %   Takes the audio from start_time to end_time and saves it to a new file
 %   in the output folder after running it through the passed transform
