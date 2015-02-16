@@ -4,7 +4,7 @@ function result = run_passthrough_tests(match_file_function, get_song_name_funct
 
     clips = testing.extract_clips(input_folder, test_clips_folder, ...
                                   40, 40+clip_length, m, ...
-                                  @(a) utils.microphone_passthrough(a, 8000, 8000, clip_length));
+                                  @(a, Fs) utils.microphone_passthrough(a, Fs, Fs, clip_length));
 
     db_handle = sqlite3.open(database_filename);
 

@@ -5,7 +5,7 @@ function output_audio = microphone_passthrough( input_audio, input_Fs, output_Fs
 %in seconds.
 
     sound(input_audio, input_Fs);
-    output_audio = record_audio(output_Fs, 16, length);
+    output_audio = utils.record_audio(output_Fs, 16, length);
 
 end
 

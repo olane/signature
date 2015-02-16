@@ -8,7 +8,7 @@ function audiodata = record_audio( sample_rate, bits_per_sample, length )
     audiodata = getaudiodata(recObj);
     
     % Normalise, with 1% headroom
-    audiodata = audiodata ./ max(audiodata) .* 0.99;
+    audiodata = audiodata ./ max(abs(audiodata)) .* 0.99;
     
 end
 

@@ -4,7 +4,7 @@ function result = run_basic_tests(match_file_function, get_song_name_function, d
 
     clips = testing.extract_clips(input_folder, test_clips_folder, ...
                                   40, 40+clip_length, m, ...
-                                  @(a) a);
+                                  @(a, Fs) a);
 
     db_handle = sqlite3.open(database_filename);
 
