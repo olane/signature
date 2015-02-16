@@ -4,6 +4,7 @@ function output_path = take_clip(input_foldername, file, output_foldername, star
 %   in the output folder after running it through the passed transform
 %   function. Saves in the .ogg format. Skips if the destination file
 %   already exists. 
+%   transform should take and return some mono 8kHz audio as an array.
 
     input_path = [input_foldername file.name];
     

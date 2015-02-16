@@ -2,6 +2,7 @@ function clips = extract_clips(input_foldername, output_foldername, clipstart, c
 % Takes every mth song from input_foldername, extracts a clip from
 % clipstart to clipend, runs it through the given transform function and
 % saves it in output_foldername. 
+% transform should take and return some mono 8kHz audio as an array.
 
     input_files = dir([input_foldername '*.mp3']);
 
