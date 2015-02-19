@@ -20,3 +20,5 @@ library/*
 
 *.db
 *.db-journal
+
+*.mat
