@@ -70,7 +70,7 @@ Finally, I aimed to compare these implementations against several criteria, incl
 
 \section*{Work Completed}
 
-Two implementations for audio fingerprinting algorithms were created, with corresponsing matching algorithms. These were the algorithms proposed by Avery Wang in 2003 \cite{Wang03} and Jaap Haitsma in 2002 \cite{Haitsma02}. A library of songs was assembled, and corresponding test cases made by taking different length clips from the library and adding distortions.
+Two implementations for audio fingerprinting algorithms were created, with corresponsing matching algorithms. These were the algorithms proposed by Avery Wang in 2003 \cite{Wang03} and Haitsma et al. in 2002 \cite{Haitsma02}. A library of songs was assembled, and corresponding test cases made by taking different length clips from the library and adding distortions.
 
 The implementations were tested and evaluated against the test cases and each other.
 
@@ -103,6 +103,27 @@ I, Oliver Lane of Trinity Hall, being a candidate for Part II of the Computer Sc
 \chapter{Introduction}
 
 
+This project concerns the implementation and comparison of two algorithms for audio fingerprinting. Each algorithms consists of a fingerprinter, which generates an audio fingerprint from a given piece of audio, and a matcher, which matches a fingerprint against a precomputed database of fingerprints for a library of known songs.
+
+I have successfully implemented two algorithms and evaluated them against a library of over 700 songs. The algorithms have been evaluated against each other for several different criteria, including robustness to several types of audio distortion and the size of the resulting database.
+
+
+\section{Background}
+
+An audio fingerprint is a compact representation of some audio, which summarises its content. It can be thought of as a kind of hash, where the aim is that perceptually similar pieces of audio -- that is, audio which sounds the same or very similar to the human ear -- have similar hash values.
+
+One of the principal uses of this technology is to retrieve metadata for songs based on a short clip. For example, a user might want to identify a song's name and artist by recording a clip of it from their mobile phone. Music labels might use the technology to automatically monitor radio stations to ensure the correct song royalties are being paid.
+
+Audio fingerprinting algorithms need to work independently to the representation of the audio signal. For instance, two instances of the same song encoded at different rates of compression will have quite different representations but are very perceptually similar, and so should have similar fingerprints. As a result, the algorithms need to be robust to distortions. 
+
+The specific distortions an algorithm tries to be robust towards are often dependent on the intended use cases, but most algorithms try to be resistant to background noise, cropping, and compression artefacts as a minimum.
+
+There are a number of algorithms for audio fingerprinting which have been proposed in the literature, some of which have been used extensively for commercial applications. This project implements two algorithms from the literature and attempts to compare their strengths and weaknesses.
+
+
+\section{Algorithms implemented}
+
+Two algorithms were implemented for the project. The first of these is a commercially deployed algorithm developed by Avery Wang from Shazam \cite{Wang03}. The second is an algorithm proposed by Philips researchers Haitsma et al. in 2002 \cite{Haitsma02}.
 
 
 \chapter{Preparation}
