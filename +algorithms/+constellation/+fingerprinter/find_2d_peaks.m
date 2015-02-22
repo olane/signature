@@ -8,7 +8,7 @@ function peaks = find_2d_peaks( d, thresh, filt_size, edge )
 %   edge        A border around the edge of the array in which no peaks
 %               will be detected.
 
-    filt = (fspecial('gaussian', ceil(filt_size * 3), filt_size));
+    filt = (fspecial('gaussian', ceil(filt_size * 5), filt_size));
 
     % If the image is floating point, recast to uint16 for speed
     if isfloat(d) 
@@ -26,7 +26,7 @@ function peaks = find_2d_peaks( d, thresh, filt_size, edge )
         d = medfilt2(d, [3, 3]);
         
         % Threshold
-        d = d .* unit16(d > thresh);
+        d = d .* uint16(d > thresh);
         
         if any(d(:))
             
@@ -42,12 +42,12 @@ function peaks = find_2d_peaks( d, thresh, filt_size, edge )
                 for j = (edge):(w - edge)
                     
                     if ((d(i,j) >= d(i-1, j-1)) &&...
-                        (d(i,j) >= d(i,   j-1)) &&...
+                        (d(i,j) >  d(i,   j-1)) &&...
                         (d(i,j) >= d(i+1, j-1)) &&...
                         (d(i,j) >= d(i-1, j  )) &&...
-                        (d(i,j) >= d(i+1, j  )) &&...
+                        (d(i,j) >  d(i+1, j  )) &&...
                         (d(i,j) >= d(i-1, j+1)) &&...
-                        (d(i,j) >= d(i,   j+1)) &&...
+                        (d(i,j) >  d(i,   j+1)) &&...
                         (d(i,j) >= d(i+1, j+1)))
                     
                         peaks = [peaks, j, i]; 

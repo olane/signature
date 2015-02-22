@@ -11,13 +11,13 @@ function [ hashes ] = get_fingerprint( audio )
     % The threshold of the high pass filter used before peak detection
     thres = 0;
     
-    % A filter used to smooth the signal before finding peaks
-    filt = (fspecial('gaussian', 15, 3));
+    % Size of the filter used to smooth the signal before finding peaks
+    filt_size = 3;
     
     % Border on the edge of the signal for which peaks will not be detected
     edge = 3;
     
-    p = FastPeakFind(powers, thres, filt, edge);
+    p = algorithms.constellation.fingerprinter.find_2d_peaks(powers, thres, filt_size, edge);
     
     peak_times = p(1:2:end);
     peak_freqs = p(2:2:end);
@@ -95,7 +95,7 @@ function [ hashes ] = get_fingerprint( audio )
     
     % Optionally draw debugging graphs
     
-    drawplots = false;
+    drawplots = true;
     
     if(drawplots)
         
