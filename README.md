@@ -11,8 +11,6 @@ This project will focus on song identification against a predetermined library o
 Requirements
 ------------
 
-[Fast Peak Finder](http://www.mathworks.com/matlabcentral/fileexchange/37388-fast-2d-peak-finder)
-
 [matlab-sqlite3-driver](https://github.com/kyamagu/matlab-sqlite3-driver)
 
 License

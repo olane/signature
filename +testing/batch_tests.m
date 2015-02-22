@@ -71,7 +71,7 @@ lengths                 = [5, 10, 15];
  save('gaussian_barcoder_results.mat', 'snr', 'len', 'succ', 'tot');
                   
                   
-% Gaussian constellation
+%% Gaussian constellation
 
 scoring_mode            = 'max';
 m                       = 10;

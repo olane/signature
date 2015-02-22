@@ -103,7 +103,7 @@ function [ hashes ] = get_fingerprint( audio )
     
     % Optionally draw debugging graphs
     
-    drawplots = true;
+    drawplots = false;
     
     if(drawplots)
         
