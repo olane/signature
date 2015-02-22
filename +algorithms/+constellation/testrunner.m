@@ -2,7 +2,7 @@
 %% Fingerprinter 
 
 
-filename = 'library/01 - Love Me Again.mp3';
+filename = 'library/Backstreet Boys - Everybody (Backstreets Back) - Radio Edit.mp3';
 
 inf = audioinfo(filename);
 sample = [0 100] * inf.SampleRate + 1;
@@ -18,7 +18,6 @@ if(sample_rate ~= target_sample_rate)
     srgcd = gcd(sample_rate, target_sample_rate);
     D = resample(D,target_sample_rate/srgcd, sample_rate/srgcd); 
 end
-
 
 
 h = algorithms.constellation.fingerprinter.get_fingerprint(D);

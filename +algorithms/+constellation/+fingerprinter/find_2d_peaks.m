@@ -36,7 +36,9 @@ function peaks = find_2d_peaks( d, thresh, filt_size, edge )
             % Find the peaks
             [h, w] = size(d);
             
-            peaks = [];
+            n = 0;
+            alloc = 1024;
+            peaks = zeros(alloc);
             
             for i = (edge):(h - edge)
                 for j = (edge):(w - edge)
@@ -50,16 +52,22 @@ function peaks = find_2d_peaks( d, thresh, filt_size, edge )
                         (d(i,j) >  d(i,   j+1)) &&...
                         (d(i,j) >= d(i+1, j+1)))
                     
-                        peaks = [peaks, j, i]; 
+                        if n > alloc
+                            peaks(2 * alloc) = 0;
+                            alloc = alloc * 2;
+                        end
                         
-                        % TODO check if i and j are the right way around
-                        % TODO preallocate in blocks
+                        peaks(n + 1) = j;
+                        peaks(n + 2) = i;
+                        
+                        n = n + 2;
                     
                     end
                     
                 end
             end
             
+            peaks((n+1):end) = [];
             
         end
         
