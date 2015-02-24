@@ -1,6 +1,16 @@
 function plot_gaussian_test_batch_results( snr, len, succ, tot, plotname )
 
-    figure('Name', plotname, 'NumberTitle', 'off');
+    width = 1200;
+    height = 750;
+    x0 = 0;
+    y0 = 0;
+    
+    figure('Name', plotname, ...
+           'NumberTitle', 'off', ...
+           'Units','pixels',...
+           'Position',[x0 y0 width height],...
+           'PaperPositionMode','auto');
+       
     hold on;
     
     percentages = succ ./ tot * 100;
@@ -33,14 +43,17 @@ function plot_gaussian_test_batch_results( snr, len, succ, tot, plotname )
     ax = gca;
     ax.XTick = unique(snr);
     
-    ax.FontSize = 12;
+    ax.FontSize = 20;
+    ax.Units = 'normalized';
+    ax.Position = [.15 .2 .75 .7];
+    ax.YGrid = 'on';
     
     xlabel('Signal to Noise ratio (dB)');
     ylabel('Percentage match rate');
     
     legend('String', legend_entries, ...
            'Location', 'southeast', ...
-           'FontSize', 12);
+           'FontSize', 20);
     
     hold off;
 end
