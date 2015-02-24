@@ -40,8 +40,8 @@ function [ songScores ] = match_clip( audio, db_handle )
     candidates = zeros(start_block_size, 2);
     
     for i = 1:length(F_int)
+        % i is our current hashtime
         
-        hashtime = i;
         hashval = F_int(i);
         hash_matches = sqlite3.execute(db_handle, 'SELECT * FROM hashes WHERE hash=?', hashval);
 
