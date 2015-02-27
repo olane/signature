@@ -1,0 +1,43 @@
+function [set, len, succ, tot] = run_basic_tests_batch(match_file_function, ...
+                                                       get_song_name_function, ...
+                                                       database_filename, ...
+                                                       test_clips_folder, ...
+                                                       input_folder_base, ...
+                                                       scoring_mode, ...
+                                                       clip_lengths)
+
+    m = 1;
+    i = 1;
+    files = dir(input_folder_base);
+    
+    for folder = files'
+        if(folder.isdir && ~strcmp(folder.name, '.') && ~strcmp(folder.name, '..'))
+            
+            foldername = [input_folder_base folder.name '/'];
+            filecount = length(dir([foldername '*.mp3']));
+            
+            for clip_length = clip_lengths
+                
+                s = testing.run_basic_tests(match_file_function, ...
+                                            get_song_name_function, ...
+                                            database_filename, ...
+                                            test_clips_folder, ...
+                                            foldername, ...
+                                            scoring_mode, ...
+                                            clip_length, ...
+                                            m);
+                                    
+                len(i) = clip_length;
+                succ(i) = s;
+                tot(i) = filecount;
+                set(i) = folder.name;
+                
+                i = i + 1;
+                
+            end
+            
+        end
+    end
+
+end
+
