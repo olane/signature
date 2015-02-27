@@ -41,8 +41,8 @@ function num_matched = test_clips(clip_filenames, match_function, id_to_songname
         end
 
 
-        results(i).original = test.original;
-        results(i).matched = id_to_songname(r(ind,1), db_handle);
+        results(i).original = utils.strip_folder(test.original);
+        results(i).matched = utils.strip_folder(id_to_songname(r(ind,1), db_handle));
         results(i).score = val;
 
         results(i).correct = strcmp(results(i).original, results(i).matched);
@@ -50,13 +50,13 @@ function num_matched = test_clips(clip_filenames, match_function, id_to_songname
         if(results(i).correct)
             s = s + 1;
             disp('MATCH');
-            disp(['Matched correctly as  ' results(i).matched ...
+            disp(['Matched correctly as  ' char(results(i).matched) ...
                   ' with score ' num2str(results(i).score) ]);
         else
             disp('MISMATCH');
-            disp(['Matched as  ' results(i).matched ...
+            disp(['Matched as  ' char(results(i).matched) ...
                   ' with score ' num2str(results(i).score) ...
-                  ' but should have been ' results(i).original ]);
+                  ' but should have been ' char(results(i).original) ]);
         end
 
         disp('---------');

@@ -7,7 +7,7 @@ get_song_name_function  = @algorithms.barcoder.get_song_name;
 database_filename       = 'barcoder.db';
 clip_length             = 10;
 test_clips_folder       = ['./test_clips/passthrough/' num2str(clip_length) 'sec/'];
-input_folder            = './library/';
+input_folder            = './test_clips/sets/1/';
 scoring_mode            = 'min';
 m                       = 9;
 
@@ -30,7 +30,7 @@ get_song_name_function  = @algorithms.constellation.get_song_name;
 database_filename       = 'constellation.db';
 clip_length             = 10;
 test_clips_folder       = ['./test_clips/passthrough/' num2str(clip_length) 'sec/'];
-input_folder            = './library/';
+input_folder            = './test_clips/sets/1/';
 scoring_mode            = 'max';
 m                       = 9;
 
@@ -49,7 +49,7 @@ cop = testing.run_passthrough_tests(match_file_function, ...
                              
 scoring_mode            = 'min';
 m                       = 10;
-input_folder            = './library/';
+input_folder            = './test_clips/sets/1/';
 test_clips_base_folder  = './test_clips/gaussian_noise/';
 database_filename       = 'barcoder.db';
 match_file_function     = @algorithms.barcoder.match_file;
@@ -75,7 +75,7 @@ lengths                 = [5, 10, 15];
 
 scoring_mode            = 'max';
 m                       = 10;
-input_folder            = './library/';
+input_folder            = './test_clips/sets/1/';
 test_clips_base_folder  = './test_clips/gaussian_noise/';
 database_filename       = 'constellation.db';
 match_file_function     = @algorithms.constellation.match_file;
@@ -127,9 +127,9 @@ get_song_name_function  = @algorithms.constellation.get_song_name;
 database_filename       = 'constellation.db';
 clip_length             = 5;
 test_clips_folder       = ['./test_clips/basic/' num2str(clip_length) 'sec/'];
-input_folder            = './library/';
+input_folder            = './test_clips/sets/1/';
 scoring_mode            = 'max';
-m                       = 5;
+m                       = 1;
 
 testing.run_basic_tests(match_file_function, ...
                         get_song_name_function, ...
