@@ -106,9 +106,9 @@ get_song_name_function  = @algorithms.barcoder.get_song_name;
 database_filename       = 'barcoder.db';
 clip_length             = 5;
 test_clips_folder       = ['./test_clips/basic/' num2str(clip_length) 'sec/'];
-input_folder            = './library/';
+input_folder            = './test_clips/sets/1/';
 scoring_mode            = 'min';
-m                       = 5;
+m                       = 1;
 
 testing.run_basic_tests(match_file_function, ...
                         get_song_name_function, ...
