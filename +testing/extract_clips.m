@@ -15,7 +15,7 @@ function clips = extract_clips(input_foldername, output_foldername, clipstart, c
     
     clips = [];
 
-    while i < length(input_files)
+    while i <= length(input_files)
 
         file = input_files(i);
 
