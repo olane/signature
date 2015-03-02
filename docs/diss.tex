@@ -126,23 +126,63 @@ There are a number of algorithms for audio fingerprinting which have been propos
 Two algorithms were implemented for the project. The first of these is a commercially deployed algorithm developed by Avery Wang from Shazam \cite{Wang03}. The second is an algorithm proposed by Philips researchers Haitsma et al. in 2002 \cite{Haitsma02}.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \chapter{Preparation}
 
+\section{Review of audio fingerprinting techniques}
+
+The first step undertaken was to review the current literature around the area. One particularly useful paper was \textit{A review of algorithms for audio fingerprinting} \cite{Cano02}, which gives a good overview of the general structure of most audio fingerprinting algorithms. This gave me a good starting point for my system design.
+
+I also focussed on fully understanding the two algorithms which I had considered during my proposal \cite{Haitsma02} \cite{Wang03}. Both use many of the techniques I have learnt in Part II courses, particularly from Digital Signal Processing, which meant I was well placed to implement them well. However, they also have interesting differences in their approaches, and so they were chosen as the two algorithms to be implemented for this project.
+
+
+\section{Testing}
+
+\subsection{Library}
+
+To test the audio fingerprinting algorithms, a reasonably large library of songs was required to match against. Both of the papers I was focussing on tested their algorithms on databases of 10,000 songs, but a library this size would be difficult for me to obtain for this project. A library size of at least 500 songs was decided, as a compromise between time constraints and the quality of the testing.
+
+Ideally, the library would also need to be fairly diverse in terms of song genres and styles, in order to reduce biases in the testing process. 
+
+My own local music library was used as the basis for my test set (around 600 songs). Luckily I have a fairly diverse music taste, but I also supplemented the library with more songs from the Free Music Archive to increase the representation of less common genres in my local collection. The full test library consists of 720 songs.
+
+\subsection{Test types}
+
+Testing the algorithms consists of inputting clips of known songs in the library, and recording whether each clip was matched to the correct song. Different distortions are applied to these clips so as to test the algorithms' resilience to different types of distortions in the input signal.
+
+
+- Decided on types of tests
+
+
+\section{Technology choice}
+
 - Learnt MATLAB
-- Read around (review of fingerprinting techniques)
-- Planned structure
-- Decided on testing system and test methods
 - Database stuff, MIRToolbox
+
+
+\section{System design}
+
+- Planned structure of code
+
+
+\section{Starting point}
+
 - Existing stuff used (see starting point in proposal)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Implementation}
 
+- remember to include thoughts about testing at this point
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Evaluation}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Conclusion}
 
