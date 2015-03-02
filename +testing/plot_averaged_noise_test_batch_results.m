@@ -1,4 +1,39 @@
-function plot_gaussian_test_batch_results( snr, len, succ, tot, plotname )
+function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotname )
+
+    % Calculate the averages
+    
+    param_matrix = horzcat(snr', len');
+    
+    param_vals = unique(param_matrix, 'rows');
+    
+    new_snr = zeros(length(param_vals(:,1)), 1);
+    new_len = zeros(length(param_vals(:,1)), 1);
+    new_succ = zeros(length(param_vals(:,1)), 1);
+    new_tot = zeros(length(param_vals(:,1)), 1);
+    
+    for i = 1:length(param_vals(:, 1));
+        
+        this_snr = param_matrix(i, 1);
+        this_len = param_matrix(i, 2);
+        
+        indices = (param_matrix(:,1) == this_snr & param_matrix(:,2) == this_len);
+        
+        new_snr(i) = this_snr;
+        new_len(i) = this_len;
+        
+        new_tot(i) = mean(tot(indices));
+        new_succ(i) = mean(succ(indices));
+        
+    end
+
+    
+    snr = new_snr';
+    len = new_len';
+    succ = new_succ';
+    tot = new_tot';
+
+    
+    % Plot the results
 
     width = 1200;
     height = 750;
