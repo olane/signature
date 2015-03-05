@@ -1,4 +1,4 @@
-% Template for a Computer Science Tripos Part II project dissertation
+
 \documentclass[12pt,a4paper,twoside,openright]{report}
 \usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
 \usepackage[margin=25mm]{geometry}  % adjusts page layout
@@ -70,9 +70,9 @@ Finally, I aimed to compare these implementations against several criteria, incl
 
 \section*{Work Completed}
 
-Two implementations for audio fingerprinting algorithms were created, with corresponsing matching algorithms. These were the algorithms proposed by Avery Wang in 2003 \cite{Wang03} and Haitsma et al. in 2002 \cite{Haitsma02}. A library of songs was assembled, and corresponding test cases made by taking different length clips from the library and adding distortions.
+Two implementations for audio fingerprinting algorithms were created, with corresponsing matching algorithms. These algorithms were proposed by Avery Wang in 2003 \cite{Wang03} and Haitsma et al. in 2002 \cite{Haitsma02}. A library of songs was assembled, and corresponding test cases made by taking different length clips from the library and adding distortions.
 
-The implementations were tested and evaluated against the test cases and each other.
+The two implementations were tested and evaluated against the test cases and each other.
 
 \section*{Special Difficulties}
 
@@ -96,7 +96,7 @@ I, Oliver Lane of Trinity Hall, being a candidate for Part II of the Computer Sc
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% now for the chapters
+%                              CHAPTERS
 
 \pagestyle{headings}
 
@@ -105,7 +105,7 @@ I, Oliver Lane of Trinity Hall, being a candidate for Part II of the Computer Sc
 
 This project concerns the implementation and comparison of two algorithms for audio fingerprinting. Each algorithms consists of a fingerprinter, which generates an audio fingerprint from a given piece of audio, and a matcher, which matches a fingerprint against a precomputed database of fingerprints for a library of known songs.
 
-I have successfully implemented two algorithms and evaluated them against a library of over 700 songs. The algorithms have been evaluated against each other for several different criteria, including robustness to several types of audio distortion and the size of the resulting database.
+Two algorithms were successfully implemented and evaluated against a library of over 700 songs. The algorithms were evaluated against each other for several different criteria, including robustness to several types of audio distortion and the size of the resulting database.
 
 
 \section{Background}
@@ -130,14 +130,17 @@ Two algorithms were implemented for the project. The first of these is a commerc
 
 \chapter{Preparation}
 
+This section will summarise the work that was done before implementation of any code began. Broadly, this encompasses research on the literature around the topic, learning of new skills to be used during implementation, and planning of the implementation and evaluation portions of the project.
+
+
 \section{Review of audio fingerprinting techniques}
 
-The first step undertaken was to review the current literature around the area. One particularly useful paper was \textit{A review of algorithms for audio fingerprinting} \cite{Cano02}, which gives a good overview of the general structure of most audio fingerprinting algorithms. This gave me a good starting point for my system design.
+The first step undertaken was to review the current literature around the area. One particularly useful review was given by Cano et al. \cite{Cano02}, which gives a good overview of the general structure of most audio fingerprinting algorithms. This gave me a good starting point for my system design.
 
 I also focussed on fully understanding the two algorithms which I had considered during my proposal \cite{Haitsma02} \cite{Wang03}. Both use many of the techniques I have learnt in Part II courses, particularly from Digital Signal Processing, which meant I was well placed to implement them well. However, they also have interesting differences in their approaches, and so they were chosen as the two algorithms to be implemented for this project.
 
 
-\section{Testing}
+\section{Evaluation}
 
 \subsection{Library}
 
@@ -151,30 +154,75 @@ My own local music library was used as the basis for my test set (around 600 son
 
 Testing the algorithms consists of inputting clips of known songs in the library, and recording whether each clip was matched to the correct song. Different distortions are applied to these clips so as to test the algorithms' resilience to different types of distortions in the input signal.
 
-Three main categories of test clips were chosen:
+Three main categories of test clips were chosen, which are summarised below.
 
-\begin{itemize}
-  \item Plain clips
-  \item Clips with added noise
-  \item Re-recorded clips
-\end{itemize}
+\subsubsection{Plain clips}
 
 Plain clips are simply generated by cropping original song audio files to the required length, and are used as a first check during development to make sure the algorithm is functioning at a basic level. The match rate for these should be 100\%.
 
+\subsubsection{Clips with added noise}
+
 Clips with added noise are generated by taking plain clips and overlaying noise at different signal to noise ratios. The noise added might be generated, such as gaussian noise, or taken from a pre-recorded noise file. An example of pre-recorded noise might be a clip of ambient noise in a busy restaurant.
+
+\subsubsection{Re-recorded clips}
 
 Finally, a re-recorded clip is generated by playing a plain clip out of some speakers and re-recording the audio through a microphone. This captures more naturalistic distortions such as echo and reverb, as well as any inaccuracies, frequency biases or clipping introduced by the microphone or speakers.
 
 
-\section{Technology choice}
+\section{Software engineering principles}
 
-- Learnt MATLAB
-- Database stuff, MIRToolbox
+\subsection{Technology choices}
+
+One of my early focusses was deciding on the technologies to be used for the project. My main considerations when making these decisions were ease of development, ease of evaluation, and my own familiarity.
+
+To make development as easy as possible, I decided to make sure there was strong library support for operations which would be useful but could take a disproportionate amount of time to implement well myself, such as audio file manipulation. For example, a fast and accurate Discrete Fourier Transform implementation was essential.
+
+I investigated several toolkits for music information retrieval, including in particular the C++ library OpenSMILE \cite{Eyben10} and the MATLAB library MIRToolbox \cite{Lartillot07}.
+
+Ease of evaluation was also important. Although there wouldn't be much difference in writing test scripts in most programming languages, some languages, such as MATLAB, provide inbuilt support for plotting graphs, which could speed up my workflow significantly.
+
+I was already somewhat familiar with MATLAB, having written a little for the Part 1A NST Mathematics course, and for various exercises in Part 1B. I was also familiar with C++ through the Part 1B course. However, I would not have described myself as experienced with either language.
+
+On balance, I decided that MATLAB was the better choice, mainly on the merit of its strong inbuilt library support for both graph output and common signal processing operations. The toolkits for the two language appeared to be roughly comparable for my needs.
 
 
-\section{System design}
+\subsection{Technology familiarisation}
+
+\subsubsection{MATLAB}
+
+Since I had limited experience using MATLAB, particularly for larger programs, I began by re-familiarising myself with the language. I did this mainly by working through small textbook-style exercises -- for example, implementing bubble sort -- and reading documentation for areas of the language I hadn't previously been exposed to such as namespacing, first-class functions and anonymous functions.
+
+\subsubsection{MIRToolbox}
+
+I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an mp3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the perfromance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
+
+After consulting the operations available in the MATLAB standard library, I decided it would probably be possible to implement the algorithms just as easily without the use of MIRToolbox. Since, based on my preliminary tests, the MIRToolbox code might also be slower, I decided not to use MIRToolbox for my implementations.
+
+\subsubsection{Database access}
+
+Early on, I identified database access as a possible difficulty with my algorithm implementations. To ensure this would not be a problem, I decided to finish my familiarisation period by setting up a small database and making sure I could read and write to it.
+
+Although MATLAB has an official Database Toolbox for database access, it is not included under the University's blanket license, so I investigated alternatives before attempting to obtain a license by other means.
+
+I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked well, and supported the full SQLite feature set, including batching multiple operations into transactions. After reading and writing to a small test database, I decided to use this database system for both my algorithm implementations.
+
+
+\subsection{Version control}
+
+Git was used as my version control system during development and writeup. This provided a backup of all code via GitHub, as well as the ability to roll back changes and develop new features on separate branches. The commit history was also very useful as a supplement to my written notes when writing up the project.
+
+
+\subsection{Backup strategy}
+
+Development was carried out on my laptop. Regular full disk backups of the machine were taken using Time Machine onto an external drive, in case of corruption or malfunction. In addition, in case of theft or loss of both the laptop and hard drive, all data was backed up remotely. This was achieved using Google Drive for the music library, and a private GitHub repository for code and documentation.
+
+
+\subsection{System design}
 
 - Planned structure of code
+
+
+\subsection{Development strategy}
 
 
 \section{Starting point}
