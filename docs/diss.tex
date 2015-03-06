@@ -186,25 +186,7 @@ I was already somewhat familiar with MATLAB, having written a little for the Par
 On balance, I decided that MATLAB was the better choice, mainly on the merit of its strong inbuilt library support for both graph output and common signal processing operations. The toolkits for the two language appeared to be roughly comparable for my needs.
 
 
-\subsection{Technology familiarisation}
 
-\subsubsection{MATLAB}
-
-Since I had limited experience using MATLAB, particularly for larger programs, I began by re-familiarising myself with the language. I did this mainly by working through small textbook-style exercises -- for example, implementing bubble sort -- and reading documentation for areas of the language I hadn't previously been exposed to such as namespacing, first-class functions and anonymous functions.
-
-\subsubsection{MIRToolbox}
-
-I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an mp3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the perfromance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
-
-After consulting the operations available in the MATLAB standard library, I decided it would probably be possible to implement the algorithms just as easily without the use of MIRToolbox. Since, based on my preliminary tests, the MIRToolbox code might also be slower, I decided not to use MIRToolbox for my implementations.
-
-\subsubsection{Database access}
-
-Early on, I identified database access as a possible difficulty with my algorithm implementations. To ensure this would not be a problem, I decided to finish my familiarisation period by setting up a small database and making sure I could read and write to it.
-
-Although MATLAB has an official Database Toolbox for database access, it is not included under the University's blanket license, so I investigated alternatives before attempting to obtain a license by other means.
-
-I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked well, and supported the full SQLite feature set, including batching multiple operations into transactions. After reading and writing to a small test database, I decided to use this database system for both my algorithm implementations.
 
 
 \subsection{Version control}
@@ -220,6 +202,25 @@ Development was carried out on my laptop. Regular full disk backups of the machi
 \subsection{Development strategy}
 
 
+\section{Technology familiarisation}
+
+\subsection{MATLAB}
+
+Since I had limited experience using MATLAB, particularly for larger programs, I began by re-familiarising myself with the language. I did this mainly by working through small textbook-style exercises -- for example, implementing bubble sort -- and reading documentation for areas of the language I hadn't previously been exposed to such as namespacing, first-class functions and anonymous functions.
+
+\subsection{MIRToolbox}
+
+I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an mp3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the perfromance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
+
+After consulting the operations available in the MATLAB standard library, I decided it would probably be possible to implement the algorithms just as easily without the use of MIRToolbox. Since, based on my preliminary tests, the MIRToolbox code might also be slower, I decided not to use MIRToolbox for my implementations.
+
+\subsection{Database access}
+
+Early on, I identified database access as a possible difficulty with my algorithm implementations. To ensure this would not be a problem, I decided to finish my familiarisation period by setting up a small database and making sure I could read and write to it.
+
+Although MATLAB has an official Database Toolbox for database access, it is not included under the University's blanket license, so I investigated alternatives before attempting to obtain a license by other means.
+
+I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked well, and supported the full SQLite feature set, including batching multiple operations into transactions. After reading and writing to a small test database, I decided to use this database system for both my algorithm implementations.
 
 %TODO? \section{Starting point}
 
