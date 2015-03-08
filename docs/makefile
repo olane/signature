@@ -40,7 +40,7 @@ help:
 view-%: %.pdf
 	( okular --unique $< || evince $< ) &
 
-diss.pdf: figs/cuarms.pdf figs/diagram.pdf makefile.txt proposal.tex diss.bbl
+diss.pdf: makefile.txt proposal.tex diss.bbl
 
 makefile.txt: makefile
 	expand makefile >makefile.txt
