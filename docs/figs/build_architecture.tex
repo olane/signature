@@ -21,7 +21,7 @@
 
 \tikzset{blue dashed/.style={draw=blue!50!white, line width=1pt,
                            dash pattern=on 2pt off 2pt,
-                            inner sep=3mm, rectangle, rounded corners}}
+                            inner sep=4mm, rectangle, rounded corners}}
 
 \begin{tikzpicture}[auto, node distance=3cm,>=latex']
 
@@ -29,29 +29,21 @@
 
     % Vertical column
     \node [block, name=library] (library) {Library};
-    \node [block, name=test_producer, below of=library, fill=gray!30] (test_producer) {Test producer};
-    \node [block, name=tester, below of=test_producer] (tester) {Tester};
-    \node [below of=tester, node distance=2cm] (output) {Test results};
+    \node [block, name=reader, below of=library] (reader) {Reader};
 
     % Breakout bit
-    \node [block, name=matcher, right of=tester, node distance=6cm, fill=gray!30] (matcher) {Matcher};
-    \node [database, name=db, right of=matcher, node distance=3cm, fill=gray!30] (db) {Database};
+    \node [block, name=songadder, right of=reader, node distance=6cm, fill=gray!30] (songadder) {Song registrar};
+    \node [database, name=db, below of=songadder, node distance=3cm, fill=gray!30] (db) {Database};
 
 
     % Now we connect the lines
- 	\draw [->] (library) -- node {Song audio files} (test_producer);
- 	\draw [->] (test_producer) -- node {Test clips} (tester);
- 	\draw [->] (tester) -- (output);
+    \draw [->] (library) -- node {Song audio} (reader);
+
+    \draw [->] (reader) -- node {Song audio} (songadder);
+ 	\draw [->] (songadder) -- node (f) {Fingerprints} (db);
 
 
- 	\draw [->] (tester.10) -- node {Test clips} (matcher.170);
- 	\draw [<-] (tester.350) -- node[swap] {Matches} (matcher.190);
-
- 	\draw [<->] (matcher) -- (db);
-
-
- 	\node[draw, blue dashed, fit=(matcher) (db)] {};
-
+ 	\node[draw, blue dashed, fit=(songadder) (db) (f)] {};
 \end{tikzpicture}
 
 \end{document}
