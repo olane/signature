@@ -1,0 +1,56 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,fit}
+\begin{document}
+
+
+\tikzstyle{block} = [draw, fill=blue!20, rectangle, 
+    minimum height=4em, minimum width=8em]
+\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzstyle{database} = [cylinder,
+				        fill=blue!20,
+				        shape border rotate=90,
+        				minimum height=2.0cm,
+        				minimum width=1.5cm,
+				        aspect=0.25,
+				        draw]
+
+\tikzset{blue dashed/.style={draw=blue!50!white, line width=1pt,
+                           dash pattern=on 2pt off 2pt,
+                            inner sep=4mm, rectangle, rounded corners}}
+
+\begin{tikzpicture}[auto, node distance=3cm,>=latex']
+
+    % We start by placing the blocks
+
+    % Vertical column
+    \node [block, name=library] (library) {Library};
+    \node [block, name=test_producer, below of=library] (test_producer) {Test producer};
+    \node [block, name=tester, below of=test_producer] (tester) {Tester};
+    \node [below of=tester, node distance=2cm] (output) {Test results};
+
+    % Breakout bit
+    \node [block, name=matcher, right of=tester, node distance=6cm, fill=gray!30] (matcher) {Matcher};
+    \node [database, name=db, right of=matcher, node distance=3cm, fill=gray!30] (db) {Database};
+
+
+    % Now we connect the lines
+ 	\draw [->] (library) -- node {Song audio files} (test_producer);
+ 	\draw [->] (test_producer) -- node {Test clips} (tester);
+ 	\draw [->] (tester) -- (output);
+
+
+ 	\draw [->] (tester.10) -- node {Test clips} (matcher.170);
+ 	\draw [<-] (tester.350) -- node[swap] {Matches} (matcher.190);
+
+ 	\draw [<->] (matcher) -- (db);
+
+
+ 	\node[draw, blue dashed, fit=(matcher) (db)] {};
+\end{tikzpicture}
+
+\end{document}
