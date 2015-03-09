@@ -6,6 +6,10 @@
 \usepackage{verbatim}
 \usepackage{docmute}   % only needed to allow inclusion of proposal.tex
 
+% TikZ is used for diagrams
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,fit}
+
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
 \clubpenalty1000%
@@ -232,7 +236,29 @@ I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked wel
 
 \section{System design}
 
-- Planned structure of code
+The first step of implementation was thorough planning in order to ensure a smooth development process. 
+
+Audio fingerprinting naturally divides into two processes: building a database of song fingerprints, and matching unlabelled audio against this database. I will refer to the former as `registration', and the latter as `matching'.
+
+Since matching also involves calculating a fingerprint, the fingerprinting algorithm can be extracted conveniently into its own module, which can be called by both the matching and registration processes.
+
+The code for actual registration, matching and fingerprinting is specific to each of the algorithms implemented, due to significant differences in their approaches to the problem. However, a significant amount of shared code was also required to feed data into the algorithms and collect results.
+
+\begin{figure}[h]
+  \centering
+  \input{figs/build_architecture}
+  \caption{Block level design of the song registration system.}
+  \medskip \small
+  Blue blocks represent shared code, and grey blocks algorithm-specific code.
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \input{figs/test_architecture}
+  \caption{Block level design of the testing system}
+  \medskip \small
+  Blue blocks represent shared code, and grey blocks algorithm-specific code.
+\end{figure}
 
 
 

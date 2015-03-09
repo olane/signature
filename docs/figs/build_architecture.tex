@@ -1,9 +1,3 @@
-\documentclass{article}
-
-\usepackage{tikz}
-\usetikzlibrary{shapes,arrows,fit}
-\begin{document}
-
 
 \tikzstyle{block} = [draw, fill=blue!20, rectangle, 
     minimum height=4em, minimum width=8em]
@@ -32,7 +26,7 @@
     \node [block, name=reader, below of=library] (reader) {Reader};
 
     % Breakout bit
-    \node [block, name=songadder, right of=reader, node distance=6cm, fill=gray!30] (songadder) {Song registrar};
+    \node [block, name=songadder, right of=reader, node distance=8cm, fill=gray!30] (songadder) {Song registrar};
     \node [database, name=db, below of=songadder, node distance=3cm, fill=gray!30] (db) {Database};
 
 
@@ -45,5 +39,3 @@
 
  	\node[draw, blue dashed, fit=(songadder) (db) (f)] {};
 \end{tikzpicture}
-
-\end{document}

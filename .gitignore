@@ -16,6 +16,8 @@
 *.au
 *.m4a
 
+docs/makefile.txt
+
 library/*
 
 *.db

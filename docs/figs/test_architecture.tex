@@ -1,10 +1,3 @@
-\documentclass{article}
-
-\usepackage{tikz}
-\usetikzlibrary{shapes,arrows,fit}
-\begin{document}
-
-
 \tikzstyle{block} = [draw, fill=blue!20, rectangle, 
     minimum height=4em, minimum width=8em]
 \tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
@@ -34,8 +27,9 @@
     \node [below of=tester, node distance=2cm] (output) {Test results};
 
     % Breakout bit
-    \node [block, name=matcher, right of=tester, node distance=6cm, fill=gray!30] (matcher) {Matcher};
-    \node [database, name=db, right of=matcher, node distance=3cm, fill=gray!30] (db) {Database};
+    \node [block, name=matcher, right of=tester, node distance=7cm, fill=gray!30] (matcher) {Matcher};
+    \node [block, name=fingerprinter, above of=matcher, node distance=2.5cm, fill=gray!30] (fingerprinter) {Fingerprinter};
+    \node [database, name=db, right of=matcher, node distance=3.5cm, fill=gray!30] (db) {Database};
 
 
     % Now we connect the lines
@@ -48,10 +42,9 @@
  	\draw [<-] (tester.350) -- node[swap] {Matches} (matcher.190);
 
  	\draw [<->] (matcher) -- (db);
+ 	\draw [<->] (matcher) -- (fingerprinter);
 
 
- 	\node[draw, blue dashed, fit=(matcher) (db)] {};
+ 	\node[draw, blue dashed, fit=(fingerprinter) (matcher) (db), label=Matching] {};
 
 \end{tikzpicture}
-
-\end{document}
