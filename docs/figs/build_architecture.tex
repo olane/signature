@@ -27,6 +27,7 @@
 
     % Breakout bit
     \node [block, name=songadder, right of=reader, node distance=8cm, fill=gray!30] (songadder) {Song registrar};
+    \node [block, name=fingerprinter, above of=songadder, node distance=3cm, fill=gray!30] (fingerprinter) {Fingerprinter};
     \node [database, name=db, below of=songadder, node distance=3cm, fill=gray!30] (db) {Database};
 
 
@@ -36,6 +37,9 @@
     \draw [->] (reader) -- node {Song audio} (songadder);
  	\draw [->] (songadder) -- node (f) {Fingerprints} (db);
 
+    \draw [->] (songadder.100) -- node {Audio} (fingerprinter.260);
+    \draw [<-] (songadder.80) -- node[swap] {Fingerprints} (fingerprinter.280);
 
- 	\node[draw, blue dashed, fit=(songadder) (db) (f)] {};
+
+ 	\node[draw, blue dashed, fit=(songadder) (db) (f) (fingerprinter), label=Registration] {};
 \end{tikzpicture}
