@@ -1,0 +1,59 @@
+
+\tikzstyle{block} = [draw, 
+                     fill=gray!30, 
+                     rectangle, 
+                     minimum height=4em, 
+                     text width=8em,
+                     text centered]
+\tikzstyle{database} = [cylinder,
+				        fill=gray!30,
+				        shape border rotate=90,
+        				minimum height=2.0cm,
+        				minimum width=1.5cm,
+				        aspect=0.25,
+				        draw]
+
+\tikzset{blue dashed/.style={draw=blue!50!white, line width=1pt,
+                           dash pattern=on 2pt off 2pt,
+                            inner sep=4mm, rectangle, rounded corners}}
+
+\begin{tikzpicture}[auto, node distance=4.2cm,>=latex']
+
+    % Matching half
+
+    \node [name=input] (input) {Audio signal};
+    \node [block, name=fingerprinter, right of=input] (fingerprinter) {Fingerprint extraction};
+
+    \node [block, name=lookup, right of=fingerprinter] (lookup) {Database look-up};
+    \node [block, name=distance, below of=lookup, node distance=0.7cm, text width=4em, minimum height=1.5em, xshift=0.7cm] (distance) {Distance};
+    \node [database, name=db, above of=lookup, node distance=3cm] (db) {Database};
+
+    \node [name=output, right of=lookup] (output) {Audio metadata};
+
+
+    \draw [->] (input) -- (fingerprinter);
+
+    \draw [->] (fingerprinter) -- (lookup);
+ 	\draw [->] (lookup) -- (output);
+
+    \draw [->] (db.260) -- (lookup.100);
+    \draw [<-] (db.280) -- (lookup.80);
+
+
+    % Building half
+
+
+    \node [block, name=songadder, above of=db, node distance=3cm] (songadder) {Song registration};
+    \node [block, name=fingerprinter2, left of=songadder] (fingerprinter2) {Fingerprint extraction};
+    \node [name=library, left of=fingerprinter2] (library) {Library};
+
+
+    \draw [->] (library) -- (fingerprinter2);
+
+    \draw [->] (fingerprinter2) -- (songadder);
+
+    \draw [->] (songadder) -- (db);
+
+
+
+\end{tikzpicture}
