@@ -165,6 +165,7 @@ Given that the matcher needs to search the database for close matches, some noti
 
 
 \subsection{System parameters}
+\label{section:systemparams}
 
 Audio fingerprinting systems can be evaluated over a variety of parameters, which vary in importance based on the application. The main parameters are summarised below.
 
@@ -172,7 +173,7 @@ Audio fingerprinting systems can be evaluated over a variety of parameters, whic
 
 Robustness to signal degradations is one of the most important parameters. Ideally, we would prefer that even severly degraded audio gives a very similar fingerprint. All algorithms require some robustness to resampling and mild compression, since there is no guarantee that the input audio will be in the same format and coded at the same compression rate as the original copy in the library.
 
-Most algorithms will try to be as robust as possible to other distortions such as echo, reverb, severe compression, background noise and equalisation.
+Most algorithms will also try to be as robust as possible to other distortions such as echo, reverb, severe compression, background noise and equalisation.
 
 In order to remain robust to distortions, algorithms must base their fingerprints on features of the audio which are reasonably invariant to the distortions in question. Usually these are perceptual features such as frequency peaks.
 
@@ -199,18 +200,11 @@ The granularity will often depend on the types of degradation applied to the aud
 Scalability refers to how easily the system can be extended for larger and larger library sizes. A larger library means a larger fingerprint database, and therefore longer search times. Efficient database search strategies are usually employed to keep search times as low as possible.
 
 
-\subsection{Distortions}
-
-The specific distortions that an algorithm needs to be robust towards are somewhat dependent on the intended use cases. For example, a system intented for radio broadcast monitoring might need to be robust against radio noise or compression, but wouldn't need to worry about reverb or matching using very short clips. However, a system intended to match songs from a smartphone app would require robustness to background noise (such as ambient crowd noise) and reverb, and would benefit from being able to work using clips which were as short as possible.
-
-The latter use case imposes more constraints on the problem in terms of severity of distortion, and so is generally more interesting from a signal processing perspective. As such, both algorithms selected for this project try to tackle this use case.
-
-
 \section{This project}
 
 There are a many algorithms for audio fingerprinting which have been proposed in the literature, some of which have been used extensively for commercial applications. 
 
-Two such algorithms were selected and implemented for the project. The first of these is an algorithm developed by Avery Wang \cite{Wang03}, which has been commercially deployed in the popular Shazam smartphone app. The second is an algorithm proposed by Philips researchers Haitsma et al. in 2002 \cite{Haitsma02}.
+Two such algorithms were selected and implemented for the project.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,7 +218,28 @@ This section will summarise the work that was done before implementation of any 
 
 The first step undertaken was to review the current literature around the area. One particularly useful review was given by Cano et al. \cite{Cano02}, which gives a good overview of the general structure of most audio fingerprinting algorithms. This gave me a good starting point for my system design.
 
-I also focussed on fully understanding the two algorithms which I had considered during my proposal \cite{Haitsma02} \cite{Wang03}. Both use many of the techniques I have learnt in Part II courses, particularly from Digital Signal Processing, which meant I was well placed to implement them well. However, they also have interesting differences in their approaches, and so they were chosen as the two algorithms to be implemented for this project.
+
+\section{Algorithm selection}
+\label{section:algoselection}
+
+In selecting the algorithms to compare, I wanted two algorithms which were:
+
+\begin{itemize}
+  \item Reasonably similar in their aims, so that they could be compared fairly
+  \item Reasonably different in their approach, so that there was still something to compare
+\end{itemize}
+
+There are many parameters affecting the design and performance of an audio fingerprinting system, which are described in more detail in section \ref{section:systemparams}. One of the most important, and most studied, is how robust the system is to degradation of input audio through various distortions. 
+
+The specific distortions that an algorithm needs to be robust towards are somewhat dependent on the intended use cases. For example, a system intented for radio broadcast monitoring might need to be robust against radio noise or compression, but wouldn't need to worry about reverb or matching using very short clips. However, a system intended to match songs from a smartphone app would require robustness to background noise (such as ambient crowd noise) and reverb, and would benefit from being able to work using clips which were as short as possible.
+
+The latter use case imposes more constraints on the problem in terms of severity of distortion, especially given the commodity hardware involved. As such, it is generally more interesting from a signal processing perspective, and both algorithms selected for this project try to tackle this use case.
+
+The first algorithm I selected was an algorithm developed by Avery Wang and deployed in the smartphone app Shazam \cite{Wang03}. I chose this as a good algorithm to implement first, since it is 
+
+% TODO
+
+% I also focussed on fully understanding the two algorithms which I had considered during my proposal \cite{Haitsma02} \cite{Wang03}. Both use many of the techniques I have learnt in Part II courses, particularly from Digital Signal Processing, which meant I was well placed to implement them well. However, they also have interesting differences in their approaches, and so they were chosen as the two algorithms to be implemented for this project.
 
 
 \section{Evaluation}
@@ -270,10 +285,7 @@ Ease of evaluation was also important. Although there wouldn't be much differenc
 
 I was already somewhat familiar with MATLAB, having written a little for the Part 1A NST Mathematics course, and for various exercises in Part 1B. I was also familiar with C++ through the Part 1B course. However, I would not have described myself as experienced with either language.
 
-On balance, I decided that MATLAB was the better choice, mainly on the merit of its strong inbuilt library support for both graph output and common signal processing operations. The toolkits for the two language appeared to be roughly comparable for my needs.
-
-
-
+The toolkits for both languages appeared to be roughly comparable for my needs. On balance, I decided that MATLAB was the better choice, mainly on the merit of its strong inbuilt library support for both graph output and common signal processing operations.
 
 
 \subsection{Version control}
@@ -287,6 +299,8 @@ Development was carried out on my laptop. Regular full disk backups of the machi
 
 
 \subsection{Development strategy}
+
+%TODO
 
 
 \section{Technology familiarisation}
@@ -317,9 +331,11 @@ I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked wel
 
 \chapter{Implementation}
 
-<intro>
+In this section I will outline all of the steps I took to successfully implement the two selected audio fingerprinting algorithms. This starts with the design of the system (section \ref{section:systemdesign}), and then moves on to implementation of each of the Shazam and Philips algorithms (sections \ref{section:shazam} and \ref{section:philips} respectively).
+
 
 \section{System design}
+\label{section:systemdesign}
 
 The first step of implementation was thorough planning in order to ensure a smooth development process. 
 
@@ -353,6 +369,7 @@ The code for actual registration, matching and fingerprinting is specific to eac
 
 
 \section{Implementation of Shazam algorithm}
+\label{section:shazam}
 
 \subsection{Fingerprint function}
 \subsection{Database}
@@ -360,6 +377,7 @@ The code for actual registration, matching and fingerprinting is specific to eac
 \subsection{Matching}
 
 \section{Implementation of Philips algorithm}
+\label{section:philips}
 
 \subsection{Fingerprint function}
 \subsection{Database}
