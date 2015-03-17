@@ -154,14 +154,16 @@ Each algorithm consists of three main parts:
   \item A matcher, which matches a fingerprint against the precomputed database
 \end{itemize}
 
-Given that the matcher needs to search the database for close matches, some notion of distance is needed to decide how similar two fingerprints are. Since a library can grow to many thousands of songs in size, and distance comparisons can be computationally expensive, methods of speeding up the database search are often employed. This often involves using a cheaper distance measure first to discard unlikely candidates, before using a more accurate measure to hone in on matches.
-
+This structure is shown in more detail in figure \ref{fig:generalframework}. 
 
 \begin{figure}[h]
   \centering
   \input{figs/general_framework}
   \caption{General structure of an audio fingerprinting algorithm}
+  \label{fig:generalframework}
 \end{figure}
+
+Given that the matcher needs to search the database for close matches, some notion of distance is needed to decide how similar two fingerprints are. A library can grow to many thousands of songs in size, and distance comparisons can be computationally expensive, so methods of speeding up the database search are often employed. This often involves using a cheaper distance measure first to discard unlikely candidates, before using a more accurate measure to hone in on matches.
 
 
 \subsection{System parameters}
