@@ -237,7 +237,9 @@ The specific distortions that an algorithm needs to be robust towards are somewh
 
 The latter use case imposes more constraints on the problem in terms of severity of distortion, especially given the commodity hardware involved. As such, it is generally more interesting from a signal processing perspective, and both algorithms selected for this project try to tackle this use case.
 
-The first algorithm I selected was an algorithm developed by Avery Wang and deployed in the smartphone app Shazam \cite{Wang03}. I chose this as a good algorithm to implement first, since it is 
+The first algorithm I selected was an algorithm developed by Avery Wang and deployed in the smartphone app Shazam \cite{Wang03}. I chose this as a good algorithm to implement first, since it is well documented both in the literature and on several blogs and forums. I will refer to this as the \textit{Shazam algorithm}.
+
+The second algorithm selected was an algorithm proposed by Philips researchers Haitsma et al. in 2002 \cite{Haitsma02}. I will refer to this as the \textit{Philips algorithm}. Although both algorithms begin with a similar step of taking the Fourier transform of the audio, the Shazam algorithm extracts local frequency-time domain maxima as its features, whilst the Philips algorithm computes a calculation based on the energy in different frequency bands. I decided that this pair represented a reasonable choice regarding the two aims stated above.
 
 % TODO
 
