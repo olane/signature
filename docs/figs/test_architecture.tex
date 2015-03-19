@@ -21,7 +21,7 @@
     % We start by placing the blocks
 
     % Vertical column
-    \node [block, name=library] (library) {Library};
+    \node [block, name=library] (library) {Library subset};
     \node [block, name=test_producer, below of=library] (test_producer) {Test producer};
     \node [block, name=tester, below of=test_producer] (tester) {Tester};
     \node [below of=tester, node distance=2cm] (output) {Test results};

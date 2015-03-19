@@ -154,7 +154,7 @@ Each algorithm consists of three main parts:
   \item A matcher, which matches a fingerprint against the precomputed database
 \end{itemize}
 
-This structure is shown in more detail in figure \ref{fig:generalframework}. 
+This structure is shown in more detail in Figure \ref{fig:generalframework}. 
 
 \begin{figure}[h]
   \centering
@@ -347,32 +347,69 @@ The first step of implementation was thorough planning in order to ensure a smoo
 
 Audio fingerprinting naturally divides into two processes: building a database of song fingerprints, and matching unlabelled audio against this database. I will refer to the former as `registration', and the latter as `matching'.
 
-Since matching also involves calculating a fingerprint, the fingerprinting algorithm can be extracted conveniently into its own module, which can be called by both the matching and registration processes.
+Since matching and registration both involve calculating a fingerprint, the fingerprinting algorithm is best extracted into its own module, which can be called by both processes.
 
 The code for actual registration, matching and fingerprinting is specific to each of the algorithms implemented, due to significant differences in their approaches to the problem. However, a significant amount of shared code was also required to feed data into the algorithms and collect results.
 
+The design outlined for these two processes in the next two sections is based around a framework of shared code which allows different algorithm implementations to be swapped in in the relevant locations. In the diagrams, shared components are represented using blue blocks, and algorithm-specific components are represented in grey. 
+
 
 \subsection{Registration}
+
+The design for the registration process is summarised in Figure \ref{figs:registration_design}. 
 
 \begin{figure}[h]
   \centering
   \input{figs/build_architecture}
   \caption{Block level design of the song registration system.}
+  \label{figs:registration_design}
   \medskip \small
-  The grey blocks within the matching section are algorithm-specific, while the blue blocks are shared code.
+  The grey blocks within the matching section are algorithm-specific, while the blue blocks represent shared components.
 \end{figure}
+
+The reader module takes individual song files from the library, and reads in the raw audio signal. At this point the audio is also converted from stereo to mono and resampled to a standard sample rate, which is dependent on the algorithm. This signal is passed into the algorithm's song registrar.
+
+The song registrar passes the signal to the fingerprinting module, which returns a fingerprint for the audio. The song registrar inserts the fingerprint into the algorithm's database, along with the song's metadata.
+
+All of the grey components within the Registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase.
+
 
 
 \subsection{Matching}
+
+
+The design for the matching process is summarised in Figure \ref{figs:matching_design}. 
 
 \begin{figure}[h]
   \centering
   \input{figs/test_architecture}
   \caption{Block level design of the testing system}
+  \label{figs:matching_design}
   \medskip \small
-  The grey blocks within the matching section are algorithm-specific, while the blue blocks are shared code. The test producer can be swapped out to run different test types.
+  The grey blocks within the matching section are algorithm-specific, while the blue blocks represent shared components. The test producer can be swapped out to run different tests.
 \end{figure}
 
+The test producer begins with a procedure similar to the reader module in the registration process above, reading in song files one by one. However, this time, the files are taken from a subset of the library, randomly chosen in advance. This subset is the random sample used in each test. In practice, there are three such subsets and each test is run once on each subset, with the results averaged. This process is described in detail in the evaluation section.
+
+After reading in each song to be tested, the test producer takes a clip of the song, and optionally applies some distortion to the clip. This distortion might range from adding background noise to playing the clip from speakers and re-recording it through a microphone.
+
+These different distortion options are determined by passing the handle of a distortion function to the test producer, which applies that function to the audio signal.
+
+The resulting test clip is passed by the tester to the algorithm's matching process, which creates a fingerprint from it and consults its database to try to find a match. The closest match is returned to the tester, and compared against the correct answer. Finally, the tester outputs the results of the tests.
+
+In the same way as described for the registration process in the previous section, the grey components can be swapped out by swapping out function handles passed in to the tester.
+
+
+\subsection{Component swapping}
+
+Many components of the design need to be able to be swapped in and out depending on the algorithm or test type. 
+
+In practice, this swapping-out is achieved by passing in function handles for swappable pieces of code. To use a different implementation, a different function handle can be passed.
+
+For example, in the case of registration, the function handle for the song registrar is passed to the reader function, which calls it with the appropriate song audio.
+
+
+\section{Implementation of shared code}
 
 \section{Implementation of Shazam algorithm}
 \label{section:shazam}
@@ -392,9 +429,6 @@ The code for actual registration, matching and fingerprinting is specific to eac
 
 
 
-
-
-- remember to include thoughts about testing at some point
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
