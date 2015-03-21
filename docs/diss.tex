@@ -289,12 +289,13 @@ The toolkits for both languages appeared to be roughly comparable for my needs. 
 
 
 \subsection{Development strategy}
+\label{section:devstrat}
 
 Both of the algorithms to be implemented were well specified, so I did not expect any major changes in their overall structure or features during development, as might be expected when developing a commercial product or working with a client. 
 
-As such, I deemed a waterfall model of development to be most appropriate, with the project having a clear linear path from requirements analysis to planning to implementation to evaluation. 
+As such, I deemed a waterfall model of development to be most appropriate, with the project having a clear linear path from requirements analysis to planning to implementation to evaluation. I decided to develop the two algorithms in series, with the Shazam algorithm coming first due to the fact I could find more sources of documentation for how it worked.
 
-There was one exception to this, which was in the shared parts of the codebase used as a framework to run and test the two implementations. I expected some requirements of this part of the system to become more clear during development. As such, I developed this part of the system in parallel with the first algorithm implementation, allowing the algorithm implementation to inform my implementation of the shared code.
+There was one exception to waterfall strategy, which was in the shared parts of the codebase used as a framework to run and test the two implementations. I expected some requirements of this part of the system to become more clear during development. As such, I developed the shared code in parallel with the first algorithm implementation, allowing the algorithm implementation to inform my implementation of the shared code. Some further refinements to the shared code were made during implementation of the second algorithm.
 
 
 \subsection{Version control}
@@ -313,7 +314,9 @@ Development was carried out on my laptop. Regular full disk backups of the machi
 
 \subsection{MATLAB}
 
-Since I had limited experience using MATLAB, particularly for larger programs, I began by re-familiarising myself with the language. I did this mainly by working through small textbook-style exercises -- for example, implementing bubble sort -- and reading documentation for areas of the language I hadn't previously been exposed to such as namespacing, first-class functions and anonymous functions.
+Since I had limited experience using MATLAB, particularly for larger programs, I had to re-familiarise myself with the language before beginning implementation. I did this mainly by working through small textbook-style exercises -- for example, implementing bubble sort -- and reading documentation for areas of the language I hadn't previously been exposed to such as namespacing, first-class functions and anonymous functions.
+
+I created small relevant segments of code for things like reading in audio files and creating spectrograms of a signal in order to make sure I would comfortable implementing the project.
 
 \subsection{MIRToolbox}
 
@@ -410,6 +413,36 @@ For example, in the case of registration, the function handle for the song regis
 
 
 \section{Implementation of shared code}
+
+This section details my implementation of the parts of the system shared by both algorithm implementations, which I will refer to as the `shared code'.
+
+As outlined in the development strategy section (\ref{section:devstrat}), I decided to implement the shared code in parallel with the algorithm implementations.
+
+Although my development strategy for the project as a whole used the waterfall model, my strategy for implementation of the shared code was closer to a spiral model, with iterated refinement of features and interface. Since the shared code needed to work with both algorithm implementations, its requirements were not totally clear from the start. 
+
+
+\subsection{First prototype}
+
+Without the shared code to feed in data, there is no way to test or run the algorithm implementations. In order to speed up my initial development and make sure I failed fast on any badly conceived paths, my first prototype of the shared code was simply the minimum needed to run the Shazam implementation. Getting this shared code working early was very useful in early debugging of the Shazam algorithm implementation.
+
+The shared code consists of two parts, one for registration and one for matching. 
+
+Since the registration half is relatively straightforward, the first prototype's implementation was actually almost complete. It consists simply of a function which reads in every song in a given folder (the library folder), and then passes each audio signal to a registration function which is part of the algorithm implementation. 
+
+It also resamples the audio to a fixed sample rate, converts the signal from stereo to mono, and passes in a name for the song as metadata. I wrote a separate function to perform the audio pre-processing steps, since they are required in a few parts of the shared code. The name of the song was simply set to be the name of the original audio file.
+
+The matching half is more complicated since it includes all of the testing functionality. The first prototype's version was severely limited -- it simply took audio files from a tests folder and ran them against the algorithm's matching function. The tests in this folder were clips from original songs, which I manually cropped from the original files using the free software Audacity. It then printed the returned match result to the MATLAB command line, which I could manually verify.
+
+This testing process was used for very early debugging of the Shazam algorithm implementation but quickly became too laborious for real evaluation.
+
+
+\subsection{Full implementation}
+
+
+
+
+\subsection{Final refinements}
+
 
 \section{Implementation of Shazam algorithm}
 \label{section:shazam}
