@@ -427,9 +427,13 @@ Without the shared code to feed in data, there is no way to test or run the algo
 
 The shared code consists of two parts, one for registration and one for matching. 
 
+\subsubsection{Registration}
+
 Since the registration half is relatively straightforward, the first prototype's implementation was actually almost complete. It consists simply of a function which reads in every song in a given folder (the library folder), and then passes each audio signal to a registration function which is part of the algorithm implementation. 
 
 It also resamples the audio to a fixed sample rate, converts the signal from stereo to mono, and passes in a name for the song as metadata. I wrote a separate function to perform the audio pre-processing steps, since they are required in a few parts of the shared code. The name of the song was simply set to be the name of the original audio file.
+
+\subsubsection{Matching}
 
 The matching half is more complicated since it includes all of the testing functionality. The first prototype's version was severely limited -- it simply took audio files from a tests folder and ran them against the algorithm's matching function. The tests in this folder were clips from original songs, which I manually cropped from the original files using the free software Audacity. It then printed the returned match result to the MATLAB command line, which I could manually verify.
 
@@ -438,11 +442,41 @@ This testing process was used for very early debugging of the Shazam algorithm i
 
 \subsection{Full implementation}
 
+Once an implementation of the Shazam algorithm was completed, and the prototype shared code was used as a first check that it was working, more features were needed from the shared code to carry out further evaluation that the implementation was working as intended.
 
+The prototype was expanded to include all of the features described in the system design section (\ref{section:systemdesign}). As well as this, I reviewed the code to make sure it was well structured, consistently styled and generic enough to allow use with the second algorithm. 
+
+Where I identified issues, I refactored the code. This refactoring step was important for maintainability of the code, since rapid development of the first prototype as well as my lack of experience with MATLAB at the start of the project had left behind badly structured and inconsistently styled code in a few areas.
+
+
+\subsubsection{Registration}
+
+Fully implementing the registration process was relatively fast, since most of the functionality was implemented in the prototype phase. However, some refactoring was still required.
+
+As a straightforward example, the first prototype did not actually support different registration functions -- it was hard coded to call the Shazam algorithm's registration function. Obviously, this would not be sufficient for the full project, and I refactored the code to take a function handle for the registration function to make it more generic.
+
+\subsubsection{Matching}
+
+The matching process was missing more features in the prototype than registration.
+
+First to be added was the test producer (shown in context in Figure \ref{figs:matching_design} on page \pageref{figs:matching_design}). Whilst the prototype required hand-made test clips, the test producer creates them automatically as required from the original library.
+
+To create test clips, the test producer first selects $n$ random songs from the library (where $n$ is specified as part of the test parameters). The test producer takes a clip from each of the songs, and saves the clip to a new folder of test clips. Before saving the clip back, it can optionally apply some distortion to the clip. These distortions, and their development, are discussed further in the evaluation section. % TODO reference
+
+The test producer finally passes a list of the test clips it has created to the next step, the tester, which passes each clip to the algorithm's matching function in the same way as described for the prototype.
+
+One important change made to the tester was to enable it to automatically classify matches as correct or incorrect, by tagging each clip coming out of the test producer with its corresponding correct answer. Test results could then be output directly by the tester as a proportion of correct matches.
 
 
 \subsection{Final refinements}
 
+The shared code detailed in the section above was good enough to verify that the Shazam algorithm was working well and could match undistorted clips with near 100\% accuracy.
+
+A few further improvements were made during my implementation of the Philips algorithm. The primary improvement was to allow the matching process to use test sets -- that is, instead of the test producer choosing $n$ random songs each time, random subsets of the library are defined in advance as test sets, and all songs in a test set are used to produce test clips.
+
+I wrote a new script, which produced multiple subsets of the library to draw tests from. It did this by copying songs to new test set folders, and only needed to be run once for each test set to be created. 
+
+The test producer was modified to produce test clips from all songs in a given test set folder. I also added the functionality to run batches of tests from multiple test sets. This testing functionality is further discussed in the evaluation section. %TODO reference
 
 \section{Implementation of Shazam algorithm}
 \label{section:shazam}
