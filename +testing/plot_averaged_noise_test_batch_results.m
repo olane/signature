@@ -1,5 +1,8 @@
 function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotname )
 
+    % Note: set isn't actually used at the moment. Averages are calculated
+    % for all results with the same length and same snr.
+    
     % Calculate the averages
     
     param_matrix = horzcat(snr', len');
