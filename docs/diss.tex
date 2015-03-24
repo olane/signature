@@ -483,21 +483,64 @@ I wrote a new script, which produced multiple subsets of the library to draw tes
 
 The test producer was modified to produce test clips from all songs in a given test set folder. I also added the functionality to run batches of tests from multiple test sets. This testing functionality is further discussed in the evaluation section. %TODO reference
 
-\section{Implementation of Shazam algorithm}
+
+
+\section{Implementation of the Shazam algorithm}
 \label{section:shazam}
 
-\subsection{Fingerprint function}
-\subsection{Database}
-\subsection{Registration}
-\subsection{Matching}
+This section is a summary of my work in implementing the first of the two fingerprinting algorithms, which was proposed by Avery Wang in 2003 \cite{Wang03}, and which I will refer to as the `Shazam algorithm'. Section \ref{section:algoselection} contains more discussion on the rationale used to select the algorithms.
 
-\section{Implementation of Philips algorithm}
+The original paper describes the algorithm as `capable of quickly identifying a short segment of music captured through a cellphone microphone in the presence of foreground voices and other dominant noise.' %TODO quote needed here?
+
+I will describe development over the next four subsections in terms of the four main components of the algorithm. These correspond to the components discussed in section \ref{section:systemdesign}, namely: 
+
+\begin{itemize}
+  \item A \textbf{fingerprinting function} to calculate reproducible hash tokens from audio
+  \item A \textbf{database} to store fingerprints for known songs
+  \item A \textbf{registrar} to add fingerprints to the database
+  \item A \textbf{matcher} to match unlabelled audio to labelled fingerprints in the database
+\end{itemize}
+
+\subsection{Fingerprinting function}
+
+In order to identify signals in a robust manner, features of the audio which are relatively invariant in the face of noise and distortions must be used as a basis for fingerprinting.
+
+\subsubsection{Constellation maps}
+
+The fingerprinting function of the Shazam algorithm uses spectrogram peaks as its chosen features. A time-frequency point is chosen as a feature if it is a local energy maxima -- that is, it has more energy than any of its close neighbors.
+
+In this way, a complex spectrogram can be reduced to a sparse set of time-frequency coordinates, which are relatively robust to signal degradations. The paper terms this list of coordinates a `constellation map', since it can resemble a star field. 
+
+The pattern of dots in the constellation map for two matching pieces of audio should be the same: if you slide copies of each map over each other, there should be some time offset where all of the points overlap. In practice, not all of the points will match because distortions may have introduced or deleted points.
+
+So far, our fingerprinting algorithm consists of computing a spectrogram for the input audio, finding peaks in it, and then storing these peaks to be matched against later. Matching becomes a process of trying to find the patch of stars in our database of constellation maps which most closely matches the small patch of stars we have calculated for our input clip. This process is discussed more in section \ref{shazam:matcher} but involves, for each peak in our input audio's constellation map, finding all peaks at the same frequency in the database. I will call these possible matches `candidate matches'.
+
+\subsubsection{Combinatorial hashing}
+
+Unfortunately, finding matches in this way can be slow due to the low entropy of the constellation points. Using 1024 frequency bins results in a maximum of 10 bits of entropy which can be used to find candidate matches in the database. 
+
+In order to increase this entropy and thus decrease the false match rate for candidate matches, Wang uses a combinatorial hashing technique. Each peak is paired with a number of other points in a target zone. The frequencies of both peaks and the time offset between them is packed into a 32-bit unsigned integer, which is returned as a hash value. Each hash value is also associated with the time offset from the start of the audio signal, although this does not make up part of the hash itself.
+
+By again using 1024 possible frequency values, and another 10 bits for the time offset between the two peaks, we now gain 30 bits of information as opposed to our previous 10. The 20 additional bits give each hash around a million times more specificity, and a similar search speedup. However, there is also a combinatorial explosion of the number of hashes. In order to limit this, a maximum fan-out factor $F$ is defined, and only the first $F$ peaks in the target zone are paired to form hashes. For $F=10$, as is used in my implementation, the end result is a speedup factor in the region of $10^5$ over the na{\"i}ve strategy described above.
+
+\subsubsection{Implementation}
+
+
+\subsection{Database}
+\subsection{Registrar}
+\subsection{Matcher}
+\label{shazam:matcher}
+
+
+
+
+\section{Implementation of the Philips algorithm}
 \label{section:philips}
 
-\subsection{Fingerprint function}
+\subsection{Fingerprinting function}
 \subsection{Database}
-\subsection{Registration}
-\subsection{Matching}
+\subsection{Registrar}
+\subsection{Matcher}
 
 
 
