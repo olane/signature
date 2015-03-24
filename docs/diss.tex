@@ -113,6 +113,7 @@ I, Oliver Lane of Trinity Hall, being a candidate for Part II of the Computer Sc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Introduction}
+\label{introduction}
 
 This project concerns the problem of identifying songs from small fragments of audio. Algorithms used to tackle this problem are usually called audio fingerprinting algorithms. In this project, I successfully implement two such algorithms, and compare their relative strengths and weaknesses.
 
@@ -212,8 +213,11 @@ Two such algorithms were selected and implemented for the project.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Preparation}
+\label{preparation}
 
-This section will summarise the work that was done before implementation of any code began. Broadly, this encompasses research on the literature around the topic, learning of new skills to be used during implementation, and planning of the implementation and evaluation portions of the project.
+The next three sections will cover all of the work done for the project. This section will summarise the work that was done before implementation of any code began. Broadly, this encompasses research on the literature around the topic, learning of new skills to be used during implementation, and planning of the implementation and evaluation portions of the project. It also involved the selection of two algorithms to be implemented and compared.
+
+Sections \ref{implementation} and \ref{evaluation} will cover the actual implementation of the two algorithms selected, and the subsequent evaluation of those implementations against each other.
 
 
 \section{Review of audio fingerprinting techniques}
@@ -339,6 +343,7 @@ I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked wel
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Implementation}
+\label{implementation}
 
 In this section I will outline all of the steps I took to successfully implement the two selected audio fingerprinting algorithms. This starts with the design of the system (section \ref{section:systemdesign}), and then moves on to implementation of each of the Shazam and Philips algorithms (sections \ref{section:shazam} and \ref{section:philips} respectively).
 
@@ -500,11 +505,13 @@ The test producer was modified to produce test clips from all songs in a given t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Evaluation}
+\label{evaluation}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Conclusion}
+\label{conclusion}
 
 In this project I successfully implemented two algorithms for audio fingerprinting and demonstrated their use for song recognition. I gathered a library of songs to test against, and used it to evaluate and compare both algorithms against a variety of criteria.
 
