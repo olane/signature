@@ -525,6 +525,15 @@ By again using 1024 possible frequency values, and another 10 bits for the time 
 
 \subsubsection{Implementation}
 
+Computing the spectrogram of the audio was achieved using a standard function in the MATLAB Signal Processing Toolbox. 
+
+The second phase, finding the local maxima, is done in three passes. The first pass is a simple 3 by 3 median filter, which reduces salt and pepper noise. This ensures peaks with very small amplitudes, which are much more distortion sensitive, are eliminated. 
+
+The second pass is a gaussian filter which smooths the spectrogram, removing high frequency components of the time-frequency signal. Again, this removes some high frequency noise and also makes sure that our peaks have a reasonable spacing -- peaks too close together are merged. The size of this gaussian filter determines the feature size of the peaks we detect. 
+
+The final step of peak finding is to compare each point with its neighbours. If it is the largest of all its 8 neighbours, it is classified as a peak.
+
+As described above, the peaks in the constellation map are then paired and each pair is packed into a 32 bit integer hash. The list of hashes is then returned, along with their associated time offsets.
 
 \subsection{Database}
 \subsection{Registrar}
