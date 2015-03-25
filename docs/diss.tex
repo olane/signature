@@ -5,6 +5,7 @@
 \usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
 \usepackage{verbatim}
 \usepackage{docmute}   % only needed to allow inclusion of proposal.tex
+\usepackage[T1]{fontenc}
 
 % Set distance between figures and text
 \setlength\floatsep{2\baselineskip}
@@ -14,6 +15,15 @@
 % TikZ is used for diagrams
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,fit}
+
+% Matlab-prettifier is used for matlab code formatting
+\usepackage[numbered,framed]{matlab-prettifier}
+\lstset{
+  style              = Matlab-editor,
+  basicstyle         = \mlttfamily,
+  mlshowsectionrules = true,
+}
+
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -525,7 +535,7 @@ By again using 1024 possible frequency values, and another 10 bits for the time 
 
 \subsubsection{Implementation}
 
-Computing the spectrogram of the audio was achieved using a standard function in the MATLAB Signal Processing Toolbox. 
+Computing the spectrogram of the audio was achieved using the \lstinline{spectrogram} function in the MATLAB Signal Processing Toolbox.
 
 The second phase, finding the local maxima, is done in three passes. The first pass is a simple 3 by 3 median filter, which reduces salt and pepper noise. This ensures peaks with very small amplitudes, which are much more distortion sensitive, are eliminated. 
 
