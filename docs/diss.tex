@@ -386,11 +386,11 @@ The design for the registration process is summarised in Figure \ref{figs:regist
   The grey blocks within the matching section are algorithm-specific, while the blue blocks represent shared components.
 \end{figure}
 
-The reader module takes individual song files from the library, and reads in the raw audio signal. At this point the audio is also converted from stereo to mono and resampled to a standard sample rate, which is dependent on the algorithm. This signal is passed into the algorithm's song registrar.
+The reader module finds all the individual song files in the library folder, and passes them to the algorithm's song registrar.
 
-The song registrar passes the signal to the fingerprinting module, which returns a fingerprint for the audio. The song registrar inserts the fingerprint into the algorithm's database, along with the song's metadata.
+The song registrar reads in the raw audio from the audio files, resamples to a standard sample rate and converts to mono. It then passes the signal to the fingerprinting module, which returns a fingerprint for the audio. The song registrar inserts the fingerprint into the algorithm's database, along with the song's metadata.
 
-All of the grey components within the Registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase.
+All of the grey components within the Registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase. %TODO capital R?
 
 
 
@@ -425,7 +425,7 @@ Many components of the design need to be able to be swapped in and out depending
 
 In practice, this swapping-out is achieved by passing in function handles for swappable pieces of code. To use a different implementation, a different function handle can be passed.
 
-For example, in the case of registration, the function handle for the song registrar is passed to the reader function, which calls it with the appropriate song audio.
+For example, in the case of registration, the function handle for the song registrar is passed to the reader function, which calls it with the appropriate song files.
 
 
 \section{Implementation of shared code}
@@ -445,9 +445,11 @@ The shared code consists of two parts, one for registration and one for matching
 
 \subsubsection{Registration}
 
-Since the registration half is relatively straightforward, the first prototype's implementation was actually almost complete. It consists simply of a function which reads in every song in a given folder (the library folder), and then passes each audio signal to a registration function which is part of the algorithm implementation. 
+Since the registration half is relatively straightforward, the first prototype's implementation was actually almost complete. It consisted simply of a function which retrieved an array of every audio file in a given folder, and passed each filename to a registration function which is part of the algorithm implementation. It also outputs some progress information to the standard output so that when running the script I can monitor progress.
 
-It also resamples the audio to a fixed sample rate, converts the signal from stereo to mono, and passes in a name for the song as metadata. I wrote a separate function to perform the audio pre-processing steps, since they are required in a few parts of the shared code. The name of the song was simply set to be the name of the original audio file.
+At the start of registering each song, each fingerprinting algorithm also needs to resample the audio to a fixed sample rate, and convert the signal from stereo to mono. However, each algorithm may require a different sample rate at this stage, and might require extra processing of some sort. As a result, I didn't include this preprocessing step in the shared code, instead I simply pass the audio file's location and let the algorithm's own registration function handle reading and resampling the audio.
+
+In order to avoid duplication of code, I wrote a utility function to resample audio to a mono signal at a given sample rate, which was straightforward with the Signal Processing Toolbox.
 
 \subsubsection{Matching}
 
@@ -467,9 +469,11 @@ Where I identified issues, I refactored the code. This refactoring step was impo
 
 \subsubsection{Registration}
 
-Fully implementing the registration process was relatively fast, since most of the functionality was implemented in the prototype phase. However, some refactoring was still required.
+Upgrading the registration process for the full implementation was relatively fast, since most of the functionality was already finished in the prototype phase. However, some refactoring and modification was still required.
 
-As a straightforward example, the first prototype did not actually support different registration functions -- it was hard coded to call the Shazam algorithm's registration function. Obviously, this would not be sufficient for the full project, and I refactored the code to take a function handle for the registration function to make it more generic.
+For example, the first prototype did not actually support different registration functions -- it was hard coded to call the Shazam algorithm's registration function. Obviously, this would not be sufficient for the full project, and I refactored the code to take a function handle for the registration function to make it more generic.
+
+In addition, I enabled the registration process to call two more functions, one at the start of the process and another at the end. The purpose of these was to allow algorithms to run arbitrary code at the start and end of the process, to allow them to do things like initialise the database and clean it up at the end. This was most mostly needed for an optimisation involving the database indexes, which is discussed in section \ref{section:shazamoptimisations}.
 
 \subsubsection{Matching}
 
@@ -546,6 +550,7 @@ The final step of peak finding is to compare each point with its neighbours. If 
 
 As described above, the peaks in the constellation map are then paired and each pair is packed into a 32 bit integer hash. The list of hashes is then returned, along with their associated time offsets.
 
+
 \subsection{Database}
 
 As I mention in section \ref{section:dbaccess}, the fingerprint databases use SQLite3. The database structure is straightforward, with a \lstinline{songs} table to store song metadata and a \lstinline{hashes} table to store fingerprint data.
@@ -555,12 +560,13 @@ The \lstinline{songs} table has two columns, \lstinline{song_id} and \lstinline{
 The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{hash}, and \lstinline{time}. The \lstinline{hash} column in each row stores frequency and time difference information for one pair of peaks, encoded as a 32-bit unsigned integer. The \lstinline{song_id} and \lstinline{time} columns store the identifier of the song the peaks are from, and time offset (in samples) from the beginning of the song.
 
 
-
-
 \subsection{Registrar}
+
 \subsection{Matcher}
-\subsection{Optimisations}
 \label{shazam:matcher}
+
+\subsection{Optimisations}
+\label{section:shazamoptimisations}
 
 
 

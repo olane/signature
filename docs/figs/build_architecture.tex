@@ -32,9 +32,9 @@
 
 
     % Now we connect the lines
-    \draw [->] (library) -- node {Song audio} (reader);
+    \draw [->] (library) -- node {Song files} (reader);
 
-    \draw [->] (reader) -- node {Song audio} (songadder);
+    \draw [->] (reader) -- node {Song files} (songadder);
  	\draw [->] (songadder) -- node (f) {Fingerprints} (db);
 
     \draw [->] (songadder.100) -- node {Audio} (fingerprinter.260);
