@@ -550,15 +550,16 @@ As described above, the peaks in the constellation map are then paired and each 
 
 As I mention in section \ref{section:dbaccess}, the fingerprint databases use SQLite3. The database structure is straightforward, with a \lstinline{songs} table to store song metadata and a \lstinline{hashes} table to store fingerprint data.
 
-The \lstinline{songs} table has two columns, one for the song's id number and another for the song name.
+The \lstinline{songs} table has two columns, \lstinline{song_id} and \lstinline{song_name}, and acts as a list of all songs in the database, along with an identifier for each one. In a real world implementation this table would almost certainly contain further metadata for each song, such as the artist, record label and album name. This extra information is not relevant to the algorithm itself and would have taken extra time to collect, so I omitted it.
 
-The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{hash}, and \lstinline{time}. The \lstinline{hash} column in each row stores one pair of peaks, encoded as a 32-bit unsigned integer. The \lstinline{song_id} and \lstinline{time} columns store which song the peak pair is from, and time offset (in samples) from the beginning of the song.
+The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{hash}, and \lstinline{time}. The \lstinline{hash} column in each row stores frequency and time difference information for one pair of peaks, encoded as a 32-bit unsigned integer. The \lstinline{song_id} and \lstinline{time} columns store the identifier of the song the peaks are from, and time offset (in samples) from the beginning of the song.
 
 
 
 
 \subsection{Registrar}
 \subsection{Matcher}
+\subsection{Optimisations}
 \label{shazam:matcher}
 
 
@@ -571,6 +572,7 @@ The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{
 \subsection{Database}
 \subsection{Registrar}
 \subsection{Matcher}
+\subsection{Optimisations}
 
 
 
