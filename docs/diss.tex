@@ -553,7 +553,7 @@ As described above, the peaks in the constellation map are then paired and each 
 
 \subsection{Database}
 
-As I mention in section \ref{section:dbaccess}, the fingerprint databases use SQLite3. The database structure is straightforward, with a \lstinline{songs} table to store song metadata and a \lstinline{hashes} table to store fingerprint data.
+As I discuss in section \ref{section:dbaccess}, the fingerprint databases use SQLite3. The database structure is straightforward, with a \lstinline{songs} table to store song metadata and a \lstinline{hashes} table to store fingerprint data.
 
 The \lstinline{songs} table has two columns, \lstinline{song_id} and \lstinline{song_name}, and acts as a list of all songs in the database, along with an identifier for each one. In a real world implementation this table would almost certainly contain further metadata for each song, such as the artist, record label and album name. This extra information is not relevant to the algorithm itself and would have taken extra time to collect, so I omitted it.
 
@@ -561,14 +561,38 @@ The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{
 
 
 \subsection{Registrar}
+\label{shazam:registrar}
+
+The registrar is responsible for registering a new song in the database. It consists of a single function, which receives an audio filename and a handle to the database. 
+
+It reads in the audio from the file, and resamples it to an 8kHz mono signal as a preprocessing step. It then calls the fingerprinter to obtain a fingerprint of the signal, and inserts the fingerprint hashes into the database, along with the song's name. Note that, for simplicity, the song's name is taken to be its filename.
+
 
 \subsection{Matcher}
 \label{shazam:matcher}
 
+The matching process is the final component of the system. It receives unlabelled audio and finds the closest matching song in the database. The implementation is described below in terms of the four main steps needed to match a clip of unlabelled audio.
+
+\subsubsection{Fingerprinting of unlabelled audio}
+
+The first step is to obtain the audio signal, and to calculate its fingerprint. In the case of my tests, the unlabelled audio signal is presented as a small audio file, but in a real system it might come directly from a microphone. The fingerprint is calculated by means of a call to the fingerprinting module.
+
+\subsubsection{Finding candidate songs}
+
+The next step is to find candidate songs in the database which might match our unlabelled audio. To do this, we simply take all of the hashes -- time-frequency peak pairs -- in the unlabelled audio's fingerprint, and search for identical hashes in the database. This search is made efficient by means of an index on the \lstinline{hash} column of the database.
+
+Each of these matches is binned according to the \lstinline{song_id}, which results in a list of candidate songs, each with a corresponding list of matching hashes. Each matching hash is associated with two time offsets: one  from the start of the song in the database, and one from the start of the unlabelled audio.
+
+\subsubsection{Scoring candidate songs}
+\subsubsection{Results}
+
+
 \subsection{Optimisations}
 \label{section:shazamoptimisations}
 
-
+\subsubsection{Database transactions}
+\subsubsection{Database indexes}
+\subsubsection{Memory allocation}
 
 
 \section{Implementation of the Philips algorithm}
@@ -577,6 +601,9 @@ The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{
 \subsection{Fingerprinting function}
 \subsection{Database}
 \subsection{Registrar}
+
+The Philips algorithm's registration process works identically to the Shazam algorithm's counterpart, which is described in section \ref{shazam:registrar}.
+
 \subsection{Matcher}
 \subsection{Optimisations}
 
