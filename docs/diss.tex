@@ -623,9 +623,52 @@ For the purposes of this project I decided that adding this feature for both imp
 \subsection{Optimisations}
 \label{section:shazamoptimisations}
 
-\subsubsection{Database transactions}
-\subsubsection{Database indexes}
+At this point a working version of the Shazam algorithm had been implemented. In preliminary tests with undistorted clips, it achieved a 100\% recognition rate, as would be hoped.
+
+However, the runtime of both processes -- registration and matching -- were much slower than I had hoped. %TODO numbers
+
+Although speed of matching is not a primary consideration in evaluation, it is still relevant. Slow runtimes might also have prevented me from running as many tests as I wanted to. 
+
+I knew that the algorithm could run very quickly, given that Wang reports search times of 5-500ms on a database of 20,000 tracks, implemented on a PC in 2003 \cite{Wang03}. These times are not directly comparable to mine given that 12 years have passed, and my implementation runs using MATLAB and SQLite on a laptop, whereas scalability was one of their main considerations so I would expect them to have used a more performance-oriented technology stack. However, INSERT NUMBER orders of magnitude difference still seemed high. %todo insert number
+
+I decided to investigate whether any straightforward optimisations could help the performance. The three which I implemented are outlined below. All optimisations were benchmarked before and after by matching 20 random undistorted test clips, to ensure that they actually resulted in a performance increase.
+
 \subsubsection{Memory allocation}
+
+During the fingerprinting process, a list of time-frequency peak pairs is created, which are then converted into hashes. These are stored in a two dimensional array, with each row of the array representing a peak pair. Each time a new peak pair is calculated, it is appended to this array.
+
+Unfortunately, unlike languages such as Java, MATLAB does not have a native growable list type, so this append action copies the entire array to a new array, one element larger, each time. However, it isn't possible to directly pre-allocate the array since it is impossible to tell in advance how many peak pairs there will be.
+
+Instead, I allocate an array with a certain starting size (set to $n_s/200$ in my implementation, where $n_s$ is the number of samples in the song to be fingerprinted). This starting size attempts to guess how large the array will need to be. Each time the array becomes full, I double the size of the array. At the end of the append phase, I remove the empty cells from the end of the array.
+
+This approach emulates the basic behaviour of Java's \lstinline{ArrayList} type.
+
+This simple change resulted in % todo insert numbers
+
+\subsubsection{Database queries}
+
+Another area I decided to investigate was my database access, since it appeared to be a bottleneck, particularly in the case of inserting hashes when registering a song, and retrieving hashes during matching.
+
+In the case of inserting hashes, \lstinline{INSERT} queries are executed in the body of a loop, with one query per hash. Since there may be many thousands of hashes per song, this results in a lot of queries.
+
+If no transaction is specified, an implicit transaction is wrapped around each query by the SQLite database. An overhead is associated with each transaction. In an attempt to reduce this overhead, I decided to try wrapping the loop (and thus, all of the insertion queries) in a single database transaction, replacing many thousands of transactions with just one. This sped up hash insertion by %todo insert numbers
+
+It was less clear how to proceed in speeding up the database search. I had already created an index on the hash column which was being searched, which is the conventional wisdom on speeding up search queries. I wasn't able to find any other solutions to speed up this process. I suspect that this operation is near the limit of SQLite's performance, and that to gain better speeds I would need to switch to a different database implementation.
+
+\subsubsection{Database index}
+
+Despite my optimisations using transactions, I still felt that hash insertion was slower than I would expect. I also noticed that insertion became much slower as the database increased in size. I suspected that this was due to the index on the hash column, inserted to speed up search during the matching process.
+
+I experimented with the index settings and verified that, without the index, insertion was approximately INSERT NUMBER times faster. %todo insert number
+
+Removing the index altogether was not an option given its importance in the speed of search queries. However, I found that by deleting the index before doing a batch insertion of hashes, and rebuilding the index at the end of the process, significant time savings could be made. Rebuilding the index takes approximately INSERT NUMBER, but this is smaller than the amount of time saved by deleting the index if more than 20 or so songs are being registered. %todo insert number
+
+One possible problem with this approach is that if the registration process is interrupted, the database might be left without the index built. To mitigate this situation, I added a check at the start of the matching process to make sure the index exists and rebuild it if necessary.
+
+\subsubsection{Conclusion}
+
+With this combination of optimisations, I increased performance significantly, to the point where I was happy to proceed to implementation of the second algorithm. Although further improvements could always be made, I decided that this was a good middle ground between not having an implementation too slow to test easily, and not spending all of my project time chasing small performance improvements.
+
 
 
 \section{Implementation of the Philips algorithm}
