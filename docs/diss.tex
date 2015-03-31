@@ -555,6 +555,7 @@ As described above, the peaks in the constellation map are then paired and each 
 
 
 \subsection{Database}
+\label{shazam:db}
 
 As I discuss in section \ref{section:dbaccess}, the fingerprint databases use SQLite3. The database structure is straightforward, with a \lstinline{songs} table to store song metadata and a \lstinline{hashes} table to store fingerprint data.
 
@@ -709,12 +710,29 @@ The energy in each frequency band is summed up over a frame to give 33 energy va
 
 Here $F(n,m)$ is the $m$th bit of the $n$th sub-fingerprint, and $E(n,m)$ is the energy of the $m$th frequency band of the $n$th frame. Note that although there are 33 frequency bands, only 32 bits can be calculated because each bit depends on two bands.
 
+
 \subsection{Database}
+
+The database for this algorithm is very similar to the one described in section \ref{shazam:db} for the Shazam algorithm.
+
+There are again two tables, a \lstinline{songs} table to store song metadata and a \lstinline{hashes} table to store fingerprint data.
+
+The \lstinline{songs} table has two columns, \lstinline{song_id} and \lstinline{song_name}, and acts as a list of all songs in the database, along with an identifier for each one.
+
+The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{hash}, and \lstinline{hash_number}. The \lstinline{hash} column stores sub-fingerprint values, packed as 32 bit unsigned integers. The \lstinline{song_id} and \lstinline{hash_number} columns store the identifier of the song, and number of the sub-fingerprint from the start of the song (i.e. the $n$ used in $F(n,m)$ above).
+
+There is an index on the \lstinline{hash} column for fast searching, as in the Shazam database. However, there is also a second index on the \lstinline{hash_number} column, because the search process for this algorithm also requires the ability to quickly recall sequences of hash values based on their hash numbers. The matching process is discussed in detail in section \ref{philips:matcher}.
+
+
 \subsection{Registrar}
 
 The Philips algorithm's registration process works identically to the Shazam algorithm's counterpart, which is described in section \ref{shazam:registrar}.
 
+
 \subsection{Matcher}
+\label{philips:matcher}
+
+
 \subsection{Optimisations}
 
 
