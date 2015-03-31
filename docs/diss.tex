@@ -517,6 +517,8 @@ I will describe development over the next four subsections in terms of the four 
   \item A \textbf{matcher} to match unlabelled audio to labelled fingerprints in the database
 \end{itemize}
 
+Finally, one further subsection will describe the optimisations I applied to my implementation in order to improve performance.
+
 \subsection{Fingerprinting function}
 
 In order to identify signals in a robust manner, features of the audio which are relatively invariant in the face of noise and distortions must be used as a basis for fingerprinting.
@@ -667,14 +669,46 @@ One possible problem with this approach is that if the registration process is i
 
 \subsubsection{Conclusion}
 
-With this combination of optimisations, I increased performance significantly, to the point where I was happy to proceed to implementation of the second algorithm. Although further improvements could always be made, I decided that this was a good middle ground between not having an implementation too slow to test easily, and not spending all of my project time chasing small performance improvements.
+With this combination of optimisations, I increased performance significantly, to the point where I was happy to proceed to implementation of the second algorithm. Although further improvements could probably be made, I decided that this was a good middle ground between not having an implementation too slow to test easily, and not spending all of my project time chasing small performance improvements.
 
 
 
 \section{Implementation of the Philips algorithm}
 \label{section:philips}
 
+Once implementation of the Shazam algorithm was complete, I moved my focus to the Philips algorithm, proposed in 2001 by Haitsma et al. \cite{Haitsma02}. 
+
+This section is a summary of the work completed during its implementation. It will follow a similar structure to my description of the first algorithm's implementation, with one subsection for each module implemented, and a final one describing performance optimisations.
+
+
 \subsection{Fingerprinting function}
+
+\subsubsection{Framing}
+
+The Philips algorithm works using a \textit{fingerprint stream} approach, in which small sections of audio, referred to as a \textit{frame}, are each assigned a 32 bit \textit{sub-fingerprint}. This stream of sub-fingerprints makes up the fingerprint. Sub-fingerprints are too small to uniquely identify a frame, but a longer interval containing sufficiently many frames can be used to identify audio robustly.
+
+The frames of audio are overlapping, and are weighted using a Hanning window, with overlap factor 31/32. This large overlap factor ensures that even if a comparison clip's frames are misaligned by 50\% of the frame size, the frames will be similar enough to enable identfication. Due to the large overlap, subsequent sub-fingerprints are very similar and vary fairly slowly with time. 
+
+Note that although the Shazam algorithm appears to take a very different approach to this algorithm, the framing process is in fact very similar. The Shazam algorithm's framing process is implicit within its computation of a spectrogram as the first step. A Hanning window with a large overlap factor is also used in the Shazam algorithm, for the same reasons.
+
+\subsubsection{Sub-fingerprints}
+
+The next step of the Philips algorithm is to perform a Fourier transform on each frame, to transfer us into the frequency domain where the important perceptual features live.
+
+In order to compute the 32 bit sub-fingerprint for each frame, 33 non-overlapping frequency bands are selected. These lie in the 300Hz to 2000Hz range, which is the most relevant range for the human auditory system. The human auditory system is based approximately on logarithmically spaced bands -- that is, a sound one octave higher in pitch has double the frequency. As such, the bands are chosen to be logarithmically spaced.
+
+The energy in each frequency band is summed up over a frame to give 33 energy values. The energy of each band is compared with the energy of the band below, and the same two bands in the subsequent frame, to compute a single bit:
+
+\begin{align*}
+  F(n,m)=
+  \begin{cases}
+      1 & \text{if } E(n,m)-E(n,m+1) > E(n-1,m)-E(n-1,m+1)\\
+      0 & \text{otherwise}
+  \end{cases}
+\end{align*}
+
+Here $F(n,m)$ is the $m$th bit of the $n$th sub-fingerprint, and $E(n,m)$ is the energy of the $m$th frequency band of the $n$th frame. Note that although there are 33 frequency bands, only 32 bits can be calculated because each bit depends on two bands.
+
 \subsection{Database}
 \subsection{Registrar}
 
