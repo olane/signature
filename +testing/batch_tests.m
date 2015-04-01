@@ -155,7 +155,7 @@ match_file_function     = @algorithms.barcoder.match_file;
 get_song_name_function  = @algorithms.barcoder.get_song_name;
 database_filename       = 'barcoder.db';
 clip_lengths            = [5];
-test_clips_folder       = ['./test_clips/basic/' num2str(clip_length) 'sec/'];
+test_clips_folder       = './test_clips/basic/';
 input_folder_base       = './test_clips/sets/';
 scoring_mode            = 'min';
 
@@ -175,7 +175,7 @@ match_file_function     = @algorithms.constellation.match_file;
 get_song_name_function  = @algorithms.constellation.get_song_name;
 database_filename       = 'constellation.db';
 clip_lengths            = [5];
-test_clips_folder       = ['./test_clips/basic/' num2str(clip_length) 'sec/'];
+test_clips_folder       = './test_clips/basic/';
 input_folder_base       = './test_clips/sets/';
 scoring_mode            = 'max';
 
