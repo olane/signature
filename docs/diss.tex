@@ -683,6 +683,7 @@ This section is a summary of the work completed during its implementation. It wi
 
 
 \subsection{Fingerprinting function}
+\label{philips:fingerprinter}
 
 \subsubsection{Framing}
 
@@ -732,10 +733,79 @@ The Philips algorithm's registration process works identically to the Shazam alg
 \subsection{Matcher}
 \label{philips:matcher}
 
+As in the Shazam algorithm, the matcher recieves unlabelled audio, and attempts to find a close match in the database. The first step is to calculate the fingerprint of the unlabelled audio, which is achieved through a call to the fingerprinting module described in section \ref{philips:fingerprinter}.
+
+\subsubsection{Fingerprint similarity}
+
+In the Philips algorithm, fingerprints are represented by a stream of 32 bit sub-fingerprints, each of which is based on a few milliseconds of the song. On its own, a single sub-fingerprint has insufficient discriminating power to uniquely identify that section of audio, so robust identification must be based on a sequence of sub-fingerprints.
+
+Two sequences of sub-fingerprints are said to be similar if corresponding bits in the sequences are similar. More formally, we define the distance between the two sequences to be the Hamming distance between their respective bit sequences. The smaller the distance, the more similar the sequences (and therefore the audio clips) are.
+
+
+\subsubsection{Searching for a match}
+
+When an unlabelled clip is input, and its fingerprint calculated, the next step is to locate the closest match for the given fingerprint in the database. The input clip will be a subset of the song, usually just a few seconds.
+
+The database contains a stream of sub-fingerprints for each song in the library. To find a match we must find a subset of one of these streams such that the distance between it and the unlabelled clip's fingerprint is minimised. This can be visualised as sliding the unlabelled clip's fingerprint over the database, finding the location where it aligns most closely.
+
+The na\"ive implementation would be a linear search, and would be very slow for large databases. To speed up the search, an assumption is made about the characteristics of the sub-fingerprints under distortion. 
+
+The assumption made is that at least one of the sub-fingerprints from the unlabelled audio will exactly match its counterpart in the database. In other words, at least one of the sub-fingerprints will be unchanged under whatever distortions are applied.
+
+This assumption significantly increases the speed of search, since only locations with a perfectly matching sub-fingerprint must be considered. This comes at the risk of falsely rejecting positions in the database which might have been the closest match, which will reduce the accuracy of the system under distortion.
+
+The full matching process proceeds as follows:
+
+\begin{enumerate}
+
+  \item \textbf{Calculation of unlabelled audio's fingerprint.} This is done by the fingerprinting module.
+
+  \item \textbf{Finding candidate starting positions.} Each sub-fingerprint from the unlabelled audio's fingerprint is searched for in the database. Anywhere there is a matching sub-fingerprint, we collect the song identifier and hash number. We subtract the sub-fingerprint's position in the unlabelled audio from the hash number to find a possible starting point for the unlabelled clip in the database. Note that duplicates must be removed from this list in case two or more sub-fingerprints were perfectly preserved.
+
+  \item \textbf{Retrieving candidate sequences.} Once candidate starting positions have been found, a subset of the fingerprint stream, starting from each of those positions, is retrieved. The length of this subset is the same as the length of the unlabelled audio's fingerprint stream.
+
+  \item \textbf{Scoring candidates.} Each candidate sequence is compared to the unlabelled audio's fingerprint, using the Hamming distance measure described above.
+
+  \item \textbf{Returning the best candidate.} Finally, the position of the candidate sequence with the smallest distance is returned as the best match.
+
+\end{enumerate}
 
 \subsection{Optimisations}
 
+Just as with my implementation of the Shazam algorithm, my first working implementation was slower than I would have liked. All of the same optimisations identified for that algorithm could be applied. I will briefly summarise the optimisations as applied to this algorithm, but I will not repeat the discussion in section \ref{section:shazamoptimisations}, which describes their specifics in more detail.
 
+
+\subsubsection{Memory allocation}
+
+During the matching process, a list of candidate positions is created. However, there is no way of knowing how many candidates there will be in advance, so the list cannot be pre-allocated, resulting in unecessary copying of the list. The same technique used in the Shazam algorithm of doubling the list's size when it gets full is applied to improve the performance of append operations.
+
+This change resulted in % todo insert numbers
+
+\subsubsection{Database queries}
+
+As in the Shazam algorithm, database access is the biggest bottleneck, particularly during matching.
+
+When inserting a song's fingerprint, all of the insertion queries for each sub-fingerprint are batched into a single transaction to decrease the transaction overheads.
+
+This sped up hash insertion by %todo insert numbers
+
+To speed up database search, an index is created on the \lstinline{hash} column, as with the Shazam algorithm. This speeds up finding candidate positions, but not the retrieval of fingerprint subsequences for scoring of candidate positions. In order to improve performance of the latter, I also added an index on the \lstinline{hash_number} column.
+
+This sped up finding candidate positions by NUMBER and retrieval of fingerprint subsequences by 1500-2000x. %todo insert number
+
+
+\subsubsection{Database index}
+
+As with the Shazam algorithm, the indexes added for query optimisation degraded the performance of insertion operations. However, since registration of songs (which is the only process which inserts into the database) happens in batches, the indexes can be dropped before a batch insertion and rebuilt afterwards.
+
+This speeds up the insertion by around NUMBER, although rebuilding the index afterwards adds around NUMBER.
+
+As before, checks were added to make sure the indexes are always rebuilt before they are required, even if the registration process is stopped in the middle of a batch.
+
+
+\subsubsection{Conclusion}
+
+A significant performance gain was again achieved for the second algorithm using these optimisations. I decided, again, that the performance was both sufficient and as good as could reasonably be expected given the time constraints and technology choices. I decided at this point to proceed to the evaluation phase.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -749,7 +819,7 @@ The Philips algorithm's registration process works identically to the Shazam alg
 \chapter{Conclusion}
 \label{conclusion}
 
-In this project I successfully implemented two algorithms for audio fingerprinting and demonstrated their use for song recognition. I gathered a library of songs to test against, and used it to evaluate and compare both algorithms against a variety of criteria.
+%In this project I successfully implemented two algorithms for audio fingerprinting and demonstrated their use for song recognition. I gathered a library of songs to test against, and used it to evaluate and compare both algorithms against a variety of criteria.
 
 
 
