@@ -30,5 +30,8 @@ function initialise_db( db_handle )
      sqlite3.execute(db_handle, ...
                      'DROP INDEX IF EXISTS hash_number_index');
                  
+     sqlite3.execute(db_handle, ...
+                     'DROP INDEX IF EXISTS song_id_index');
+                 
 end
 
