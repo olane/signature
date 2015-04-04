@@ -628,13 +628,13 @@ For the purposes of this project I decided that adding this feature for both imp
 
 At this point a working version of the Shazam algorithm had been implemented. In preliminary tests with undistorted clips, it achieved a 100\% recognition rate, as would be hoped.
 
-However, the runtime of both processes -- registration and matching -- were much slower than I had hoped. %TODO numbers
+However, the runtime of both processes -- registration and matching -- were much slower than I had hoped. Registering songs took around 70 seconds per song on average, and matching a 5 second clip took 30-60 seconds, depending on the number of candidates found in the database, which is quite variable.
 
 Although speed of matching is not a primary consideration in evaluation, it is still relevant. Slow runtimes might also have prevented me from running as many tests as I wanted to. 
 
-I knew that the algorithm could run very quickly, given that Wang reports search times of 5-500ms on a database of 20,000 tracks, implemented on a PC in 2003 \cite{Wang03}. These times are not directly comparable to mine given that 12 years have passed, and my implementation runs using MATLAB and SQLite on a laptop, whereas scalability was one of their main considerations so I would expect them to have used a more performance-oriented technology stack. However, INSERT NUMBER orders of magnitude difference still seemed high. %todo insert number
+I knew that the algorithm could run very quickly, given that Wang reports search times of 5-500ms on a database of 20,000 tracks, implemented on a PC in 2003 \cite{Wang03}. These times are not directly comparable to mine given that 12 years have passed, and my implementation runs using MATLAB and SQLite on a laptop, whereas scalability was one of their main considerations so I would expect them to have used a more performance-oriented technology stack. However, five orders of magnitude still seemed like a large difference. 
 
-I decided to investigate whether any straightforward optimisations could help the performance. The three which I implemented are outlined below. All optimisations were benchmarked before and after by matching 20 random undistorted test clips, to ensure that they actually resulted in a performance increase.
+I decided to investigate whether any straightforward optimisations could help the performance. The three which I implemented are outlined below. All optimisations were benchmarked before and after by matching 20 random undistorted 5 second test clips, to ensure that they actually resulted in a performance increase.
 
 \subsubsection{Memory allocation}
 
@@ -646,15 +646,15 @@ Instead, I allocate an array with a certain starting size (set to $n_s/200$ in m
 
 This approach emulates the basic behaviour of Java's \lstinline{ArrayList} type.
 
-This simple change resulted in % todo insert numbers
+This simple change resulted in the fingerprinting process taking around half the time.
 
 \subsubsection{Database queries}
 
 Another area I decided to investigate was my database access, since it appeared to be a bottleneck, particularly in the case of inserting hashes when registering a song, and retrieving hashes during matching.
 
-In the case of inserting hashes, \lstinline{INSERT} queries are executed in the body of a loop, with one query per hash. Since there may be many thousands of hashes per song, this results in a lot of queries.
+In the case of inserting hashes, many \lstinline{INSERT} queries are executed in the body of a loop: one per hash. Since there may be many thousands of hashes per song, this results in a lot of queries.
 
-If no transaction is specified, an implicit transaction is wrapped around each query by the SQLite database. An overhead is associated with each transaction. In an attempt to reduce this overhead, I decided to try wrapping the loop (and thus, all of the insertion queries) in a single database transaction, replacing many thousands of transactions with just one. This sped up hash insertion by %todo insert numbers
+If no transaction is specified, an implicit transaction is wrapped around each query by the SQLite database. An overhead is associated with each transaction. In an attempt to reduce this overhead, I decided to try wrapping the loop (and thus, all of the insertion queries) in a single database transaction, replacing many thousands of transactions with just one. This sped up hash insertion by a factor of 15.
 
 It was less clear how to proceed in speeding up the database search. I had already created an index on the hash column which was being searched, which is the conventional wisdom on speeding up search queries. I wasn't able to find any other solutions to speed up this process. I suspect that this operation is near the limit of SQLite's performance, and that to gain better speeds I would need to switch to a different database implementation.
 
@@ -662,15 +662,17 @@ It was less clear how to proceed in speeding up the database search. I had alrea
 
 Despite my optimisations using transactions, I still felt that hash insertion was slower than I would expect. I also noticed that insertion became much slower as the database increased in size. I suspected that this was due to the index on the hash column, inserted to speed up search during the matching process.
 
-I experimented with the index settings and verified that, without the index, insertion was approximately INSERT NUMBER times faster. %todo insert number
+I experimented with the index settings and verified that, without the index, insertion was approximately 20 times faster.
 
-Removing the index altogether was not an option given its importance in the speed of search queries. However, I found that by deleting the index before doing a batch insertion of hashes, and rebuilding the index at the end of the process, significant time savings could be made. Rebuilding the index takes approximately INSERT NUMBER, but this is smaller than the amount of time saved by deleting the index if more than 20 or so songs are being registered. %todo insert number
+Removing the index altogether was not an option given its importance in the speed of search queries. However, I found that by deleting the index before doing a batch insertion of hashes, and rebuilding the index at the end of the process, significant time savings could be made. Rebuilding the index takes approximately 90 seconds, but this becomes a worthwhile trade if more than around 15 songs are being registered (assuming the songs are about 4 minutes in length).
 
 One possible problem with this approach is that if the registration process is interrupted, the database might be left without the index built. To mitigate this situation, I added a check at the start of the matching process to make sure the index exists and rebuild it if necessary.
 
 \subsubsection{Conclusion}
 
-With this combination of optimisations, I increased performance significantly, to the point where I was happy to proceed to implementation of the second algorithm. Although further improvements could probably be made, I decided that this was a good middle ground between not having an implementation too slow to test easily, and not spending all of my project time chasing small performance improvements.
+With this combination of optimisations, I increased performance significantly, to the point where I was happy to proceed to implementation of the second algorithm. The final implementation takes, on average, NUMBER to register a song and NUMBER to match a 5 second clip. %todo insert numbers
+
+Although further improvements could probably be made, I decided that this was a good middle ground between not having an implementation too slow to test easily, and not spending all of my project time chasing small performance improvements.
 
 
 
@@ -772,14 +774,16 @@ The full matching process proceeds as follows:
 
 \subsection{Optimisations}
 
-Just as with my implementation of the Shazam algorithm, my first working implementation was slower than I would have liked. All of the same optimisations identified for that algorithm could be applied. I will briefly summarise the optimisations as applied to this algorithm, but I will not repeat the discussion in section \ref{section:shazamoptimisations}, which describes their specifics in more detail.
+Just as with my implementation of the Shazam algorithm, my first working implementation was slower than I would have liked. Matching a 5 second clip took 30-60 seconds, and registration took around 10 seconds. 
+
+All of the same optimisations identified for the Shazam algorithm could be applied again. I will briefly summarise the optimisations as applied to this algorithm, but I will not repeat the discussion in section \ref{section:shazamoptimisations}, which describes their specifics in more detail.
 
 
 \subsubsection{Memory allocation}
 
 During the matching process, a list of candidate positions is created. However, there is no way of knowing how many candidates there will be in advance, so the list cannot be pre-allocated, resulting in unecessary copying of the list. The same technique used in the Shazam algorithm of doubling the list's size when it gets full is applied to improve the performance of append operations.
 
-This change resulted in % todo insert numbers
+This change sped up fingerprinting by about 1.5x.
 
 \subsubsection{Database queries}
 
@@ -787,11 +791,11 @@ As in the Shazam algorithm, database access is the biggest bottleneck, particula
 
 When inserting a song's fingerprint, all of the insertion queries for each sub-fingerprint are batched into a single transaction to decrease the transaction overheads.
 
-This sped up hash insertion by %todo insert numbers
+This sped up hash insertion by approximately 20x.
 
 To speed up database search, an index is created on the \lstinline{hash} column, as with the Shazam algorithm. This speeds up finding candidate positions, but not the retrieval of fingerprint subsequences for scoring of candidate positions. In order to improve performance of the latter, I also added an index on the \lstinline{hash_number} column.
 
-This sped up finding candidate positions by NUMBER and retrieval of fingerprint subsequences by 1500-2000x. %todo insert number
+This sped up finding candidate positions and retrieval of fingerprint subsequences by 15-20x.
 
 
 \subsubsection{Database index}
@@ -805,7 +809,9 @@ As before, checks were added to make sure the indexes are always rebuilt before 
 
 \subsubsection{Conclusion}
 
-A significant performance gain was again achieved for the second algorithm using these optimisations. I decided, again, that the performance was both sufficient and as good as could reasonably be expected given the time constraints and technology choices. I decided at this point to proceed to the evaluation phase.
+A significant performance gain was again achieved for the second algorithm using these optimisations. The final implementation takes, on average, NUMBER to register a song and NUMBER to match a 5 second clip. %todo insert numbers
+
+I decided, again, that the performance was both sufficient and as good as could reasonably be expected given the time constraints and technology choices. I decided at this point to proceed to the evaluation phase.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
