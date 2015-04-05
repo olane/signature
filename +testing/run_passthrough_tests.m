@@ -1,4 +1,4 @@
-function result = run_passthrough_tests(match_file_function, get_song_name_function, database_filename, test_clips_folder, input_folder, scoring_mode, clip_length, m)
+function [matched, total] = run_passthrough_tests(match_file_function, get_song_name_function, database_filename, test_clips_folder, input_folder, scoring_mode, clip_length, m)
 
     addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
@@ -8,14 +8,15 @@ function result = run_passthrough_tests(match_file_function, get_song_name_funct
 
     db_handle = sqlite3.open(database_filename);
 
-    result = testing.test_clips(clips, ...
-                                match_file_function, ...
-                                get_song_name_function, ...
-                                scoring_mode, ...
-                                db_handle);
+    matched = testing.test_clips(clips, ...
+                                 match_file_function, ...
+                                 get_song_name_function, ...
+                                 scoring_mode, ...
+                                 db_handle);
 
+    total = length(clips);
 
-    disp(['Matched ' num2str(result) '/' num2str(length(clips)) ' correctly.']);
+    disp(['Matched ' num2str(matched) '/' num2str(total) ' correctly.']);
 
     sqlite3.close(db_handle);
     
