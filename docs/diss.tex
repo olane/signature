@@ -7,6 +7,7 @@
 \usepackage{docmute}   % only needed to allow inclusion of proposal.tex
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
+\usepackage{subcaption}
 
 % Set distance between figures and text
 \setlength\floatsep{2\baselineskip}
@@ -842,12 +843,52 @@ One simplistic form of noise is Gaussian white noise. This is created by samplin
 
 This type of noise is not very realistic for the use case of using a mobile phone to record a song clip, but white noise is a component of the noise often introduced in radio broadcasts. A user wishing to monitor songs on the radio might want to use an algorithm robust to white noise.
 
+\begin{figure}[p]
+    \centering
+
+    \begin{subfigure}{\textwidth}
+      \includegraphics[width=\textwidth]{./figs/gaussian_philips_results.eps}
+    \end{subfigure}
+
+    \vspace{10mm}
+
+    \begin{subfigure}{\textwidth}
+      \includegraphics[width=\textwidth]{./figs/gaussian_shazam_results.eps} 
+    \end{subfigure}
+
+    \vspace{15mm}
+
+    \caption{Results for additive noise tests on both algorithms, using gaussian white noise. Each line represents a different clip length.}
+    \label{fig:gaussian_philips}
+\end{figure}
+
+
+
 
 \subsubsection{Real world noise}
 
 To address the use case of a user identifying music using their mobile phone, I also ran tests using real world noise. I obtained a public domain clip of some ambient noise recorded inside a shopping centre from the website Sound Bible \cite{ShoppingAmbience}.
 
 This noise was added to plain clips at different signal to noise ratios to simulate the effect of trying to identify a song over the noise of a crowd.
+
+\begin{figure}[p]
+    \centering
+
+    \begin{subfigure}{\textwidth}
+      \includegraphics[width=\textwidth]{./figs/natural_philips_results.eps}
+    \end{subfigure}
+
+    \vspace{10mm}
+
+    \begin{subfigure}{\textwidth}
+      \includegraphics[width=\textwidth]{./figs/natural_shazam_results.eps} 
+    \end{subfigure}
+
+    \vspace{15mm}
+
+    \caption{Results for additive noise tests on both algorithms, using real world noise. Each line represents a different clip length.}
+    \label{fig:gaussian_philips}
+\end{figure}
 
 
 \subsection{Re-recorded clips}
