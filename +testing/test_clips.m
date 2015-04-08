@@ -11,6 +11,8 @@ function num_matched = test_clips(clip_filenames, match_function, id_to_songname
 %   scoring_dir should be 'min' or 'max' corresponding to which is the best
 %   score 
 
+    start = tic;
+    
     i = 0;
     s = 0;
     n = length(clip_filenames);
@@ -64,6 +66,9 @@ function num_matched = test_clips(clip_filenames, match_function, id_to_songname
     end
     
     num_matched = s;
+    
+    disp(['TOTAL TIME TO ANALYSE ' num2str(n) ' TRACKS:']);
+    toc(start)
     
 end
 
