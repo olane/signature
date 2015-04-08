@@ -1,7 +1,10 @@
-function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotname )
+function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotname, filename, errorbars )
 
     % Note: set isn't actually used at the moment. Averages are calculated
     % for all results with the same length and same snr.
+    
+    % Saves as an eps file in the docs/figs folder, filename should end in
+    % '.eps' 
     
     % Calculate the averages
     
@@ -13,6 +16,7 @@ function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotn
     new_len = zeros(length(param_vals(:,1)), 1);
     new_succ = zeros(length(param_vals(:,1)), 1);
     new_tot = zeros(length(param_vals(:,1)), 1);
+    std_dev = zeros(length(param_vals(:,1)), 1);
     
     for i = 1:length(param_vals(:, 1));
         
@@ -27,6 +31,8 @@ function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotn
         new_tot(i) = mean(tot(indices));
         new_succ(i) = mean(succ(indices));
         
+        std_dev(i) = std(succ(indices));
+        
     end
 
     
@@ -34,7 +40,7 @@ function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotn
     len = new_len';
     succ = new_succ';
     tot = new_tot';
-
+    std_dev = std_dev';
     
     % Plot the results
 
@@ -66,10 +72,16 @@ function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotn
         % Grab the relevant values
         these_snrs = snr(indices);
         these_percentages = percentages(indices);
+        these_std_devs = std_dev(indices);
         
         % Plot them (with a unique marker each time)
-        plot(these_snrs, these_percentages, ...
-             markers{mod(i,numel(markers))}, 'MarkerSize', 8);
+        if(errorbars)
+            errorbar(these_snrs, these_percentages, these_std_devs, ...
+                 markers{mod(i,numel(markers))}, 'MarkerSize', 8);
+        else
+            plot(these_snrs, these_percentages, ...
+                 markers{mod(i,numel(markers))}, 'MarkerSize', 8);
+        end
         
         % Add line to legend
         legend_entries(i) = {sprintf('%i seconds', len_val)} ;
@@ -92,7 +104,12 @@ function plot_averaged_noise_test_batch_results( set, snr, len, succ, tot, plotn
     legend('String', legend_entries, ...
            'Location', 'southeast', ...
            'FontSize', 20);
+       
+    title(plotname);
     
     hold off;
+    
+    saveas(gca, ['./docs/figs/' filename], 'epsc');
+
 end
 
