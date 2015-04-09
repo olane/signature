@@ -8,6 +8,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{subcaption}
+\usepackage{tabularx}
 
 % Set distance between figures and text
 \setlength\floatsep{2\baselineskip}
@@ -871,7 +872,6 @@ For the Shazam algorithm, longer clip lengths reliably translate to higher recog
 The differences in the results for different clip lengths for the Philips are all within 2 standard deviations, so perhaps not too much should be read into the trend. However, the clear correlation seen in the case of the Shazam algorithm is not present.
 
 
-
 \subsubsection{Real world noise}
 
 To address the use case of a user identifying music using their mobile phone, I also ran tests using real world noise. I obtained a public domain clip of some ambient noise recorded inside a shopping centre from the website Sound Bible \cite{ShoppingAmbience}.
@@ -932,6 +932,44 @@ I used a pair of reasonably high quality hi-fi speakers, and the microphone buil
 % the appendices
 \appendix
 
+
+\chapter{Full test results}
+
+
+\section{Basic clips}
+
+\subsubsection{Shazam}
+
+\begin{table}[h]
+  \begin{tabularx}{\textwidth}{|X|X|X|X|X|X|}
+    \hline
+    Clip length & Set A & Set B & Set C & Mean & SD \\ 
+    \hline
+    5 & 72 & 72 & 72 & 72 & 0\\ 
+    \hline
+  \end{tabularx}
+  \label{table:shazam_basic}
+\end{table}
+
+\subsubsection{Philips}
+
+\begin{table}[h]
+  \begin{tabularx}{\textwidth}{|X|X|X|X|X|X|}
+    \hline
+    Clip length & Set A & Set B & Set C & Mean & SD\\ 
+    \hline
+    5 & 72 & 72 & 72 & 72 & 0\\ 
+    \hline
+  \end{tabularx}
+  \label{table:table}
+  \end{table}
+\section{Gaussian white noise}
+
+\section{Real world noise}
+
+\section{Re-recorded clips}
+
+\section{Performance}
 
 \chapter{Project Proposal}
 
