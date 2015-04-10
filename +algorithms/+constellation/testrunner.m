@@ -28,15 +28,19 @@ h = algorithms.constellation.fingerprinter.get_fingerprint(D);
     
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
-database_filename = 'constellation-nnnn.db';
+database_filename = 'constellation-new.db';
 
 folder = './library/';
+
+timer = tic;
 
 utils.register_all_songs(database_filename, folder, ...
                          @algorithms.constellation.initialise_db, ...
                          @algorithms.constellation.register_song, ...
-                         @algorithms.constellation.cleanup_db)
-
+                         @algorithms.constellation.cleanup_db);
+                     
+disp('TOTAL TIME ELAPSED:');
+toc(timer);
 
 
 %% Match clip

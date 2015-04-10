@@ -21,17 +21,21 @@ algorithms.barcoder.cleanup_db(db_handle);
 %% register_all_songs
 
 
-
 addpath('/Users/olane/Documents/MATLAB/matlab-sqlite3-driver/');
 
 database_filename = 'barcoder-new.db';
 
 folder = './library/';
 
+timer = tic;
+
 utils.register_all_songs(database_filename, folder, ...
                          @algorithms.barcoder.initialise_db, ...
                          @algorithms.barcoder.register_song, ...
-                         @algorithms.barcoder.cleanup_db)
+                         @algorithms.barcoder.cleanup_db);
+
+disp('TIME ELAPSED:');
+toc(timer);
 
                      
 %% match clip
