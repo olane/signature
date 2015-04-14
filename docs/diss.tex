@@ -108,9 +108,14 @@ None.
 I, Oliver Lane of Trinity Hall, being a candidate for Part II of the Computer Science Tripos, hereby declare that this dissertation and the work described in  it are my own work, unaided except as may be specified below, and that the  dissertation does not contain material that has already been used to any  substantial extent for a comparable purpose.
 
 \bigskip
+\bigskip
+\bigskip
+
 \leftline{Signed}
 
-\medskip
+\bigskip
+\bigskip
+
 \leftline{Date}
 
 \tableofcontents
@@ -457,7 +462,7 @@ Once an implementation of the Shazam algorithm was completed, and the prototype 
 
 The prototype was expanded to include all of the features described in the system design section (\ref{section:systemdesign}). As well as this, I reviewed the code to make sure it was well structured, consistently styled and generic enough to allow use with the second algorithm. 
 
-Where I identified issues, I refactored the code. This refactoring step was important for maintainability of the code, since rapid development of the first prototype as well as my lack of experience with MATLAB at the start of the project had left behind badly structured and inconsistently styled code in a few areas.
+Where I identified issues, I refactored the code. This refactoring step was important for maintainability of the code, since rapid development of the first prototype as well as my lack of experience with MATLAB at the start of the project had left behind badly structured and inconsistently styled code in a few areas. These problem areas were restructured and fixed, leaving a much more manageable codebase.
 
 
 \subsubsection{Registration}
@@ -662,7 +667,7 @@ One possible problem with this approach is that if the registration process is i
 
 \subsubsection{Conclusion}
 
-With this combination of optimisations, I increased performance significantly, to the point where I was happy to proceed to implementation of the second algorithm. The final implementation takes, on average, NUMBER to register a song and NUMBER to match a 5 second clip. %todo insert numbers
+With this combination of optimisations, I increased performance significantly, to the point where I was happy to proceed to implementation of the second algorithm. The final implementation takes, on average, 6.3 seconds to register a song and 4.4 seconds to match a 5 second clip.
 
 Although further improvements could probably be made, I decided that this was a good middle ground between not having an implementation too slow to test easily, and not spending all of my project time chasing small performance improvements.
 
@@ -794,14 +799,14 @@ This sped up finding candidate positions and retrieval of fingerprint subsequenc
 
 As with the Shazam algorithm, the indexes added for query optimisation degraded the performance of insertion operations. However, since registration of songs (which is the only process which inserts into the database) happens in batches, the indexes can be dropped before a batch insertion and rebuilt afterwards.
 
-This speeds up the insertion by around NUMBER, although rebuilding the index afterwards adds around NUMBER.
+This speeds up the database insertion by a factor of almost 20, although rebuilding the index afterwards adds around 100 seconds.
 
 As before, checks were added to make sure the indexes are always rebuilt before they are required, even if the registration process is stopped in the middle of a batch.
 
 
 \subsubsection{Conclusion}
 
-A significant performance gain was again achieved for the second algorithm using these optimisations. The final implementation takes, on average, NUMBER to register a song and NUMBER to match a 5 second clip. %todo insert numbers
+A significant performance gain was again achieved for the second algorithm using these optimisations. The final implementation takes, on average, 12.9 seconds to register a song and 2.5 seconds to match a 5 second clip.
 
 I decided, again, that the performance was both sufficient and as good as could reasonably be expected given the time constraints and technology choices. I decided at this point to proceed to the evaluation phase.
 
