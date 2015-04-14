@@ -921,14 +921,12 @@ For registration, fingerprinting is the longest process for both algorithms, sin
 
 The audio processing is approximately the same for each algorithm, and so just adds an extra constant cost to each song processed. Database insertion is roughly proportional to the size of the fingerprints produced, since both algorithms use the same database architecture and have similar schemas. As such, the timing differences for registration are mostly a result of differences in fingerprinting speed and size.
 
-The matching process performance is dominated by the database search process, since it involves many distance calculations between fingerprints, and a lot of database access. Fingerprinting speed is a factor, but not a major one since input clips are much shorter than full songs.
-
-%todo methodology
+To measure the performance of the registration processes, I added the full library of songs to an empty database, and timed the process. As can be seen in Table \ref{table:registration_speed}, registration takes around double the time per song for the Philips algorithm. There is no significant difference in the time taken to rebuild the indexes after a batch insertion.
 
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \begin{table}[h]
-	\begin{tabularx}{\textwidth}{L{3cm}L{4cm}L{4cm}L{4cm}}
-		\textbf{Algorithm} & \textbf{Registration time per song (s)} & \textbf{Time to re-build indexes (s)} & \textbf{Total time for 720 songs (s)}\\ 
+	\begin{tabularx}{\textwidth}{L{2.7cm}L{4cm}L{4cm}L{4cm}}
+		\textbf{Algorithm} & \textbf{Registration time per song (s)} & \textbf{Time to re-build indexes (s)} & \textbf{Registration time for 720 songs (s)}\\ 
 		\hline 
 		Shazam & 6.3 & 97 & 4634\\ 
 		Philips & 12.9 & 99 & 9399\\ 
@@ -938,20 +936,32 @@ The matching process performance is dominated by the database search process, si
 \end{table}
 
 
+The performance of the matching process is dominated by the database search, since it involves many distance calculations between fingerprints, and a lot of database access. Fingerprinting speed is a less important factor, since input clips are much shorter than full songs.
+
+To measure the speed of matching, I ran the matching test for 5 second clean clips, and timed the process. This test includes 216 clips in total. The mean time taken per song can be seen in Table \ref{table:registration_speed}.
+
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \begin{table}[h]
 	\centering
 	\begin{tabularx}{0.75\textwidth}{L{4cm}L{5.5cm}}
 		\textbf{Algorithm} & \textbf{Mean matching time for 5 second clean clip (s)} \\ 
 		\hline 
-		Shazam & 2.47\\ 
-		Philips & 4.45\\ 
+		Shazam & 4.45\\ 
+		Philips & 2.47\\ 
 	\end{tabularx}
 	\caption{Matching speeds for both algorithms.}
 	\label{table:registration_speed}
 \end{table}
 
+Here the Philips algorithm outperforms the Shazam algorithm by a factor of 1.8, taking less than 2.5 second to match each clip on average.
+
 \section{Database size}
+
+The sizes of both fingerprint databases are shown in Table \ref{table:db_size}.
+
+Although the two algorithms have very different fingerprinting techniques, they have the same schema for their fingerprint tables, since the hash values are packed into 32 bit integers in both cases. The Shazam algorithm has around 50\% more rows in its databases, indicating that the fingerprints it produces are significantly larger. 
+
+However, when we look at the actual size of the database on disc, the Philips database is around 14\% larger. This can be accounted for by the fact it has an extra index on the fingerprints table to improve its database search speed.
 
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \begin{table}[h]
@@ -964,12 +974,6 @@ The matching process performance is dominated by the database search process, si
 	\caption{Database sizes for both algorithms}
 	\label{table:db_size}
 \end{table}
-
-The sizes of both fingerprint databases are shown in Table \ref{table:db_size}.
-
-Although the two algorithms have very different fingerprinting techniques, they have the same schema for their fingerprint tables, since the hash values are packed into 32 bit integers in both cases. The Shazam algorithm has around 50\% more rows in its databases, indicating that the fingerprints it produces are significantly larger. 
-
-However, when we look at the actual size of the database on disc, the Philips database is around 14\% larger. This can be accounted for by the fact it has an extra index on the fingerprints table to improve its database search speed.
 
 
 \section{Overall comparison}
