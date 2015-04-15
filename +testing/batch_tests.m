@@ -2,7 +2,7 @@
 
 % Pause before start to make sure tester doesn't disturb the first few
 % clips. Length in seconds.
-pause(15);
+pause(1);
 
 % Make sure volume is at appropriate level before running this
 
@@ -32,7 +32,7 @@ save('passthrough_barcoder_results.mat', 'set', 'len', 'succ', 'tot');
 match_file_function     = @algorithms.constellation.match_file;
 get_song_name_function  = @algorithms.constellation.get_song_name;
 database_filename       = 'constellation.db';
-clip_length             = [5, 10, 15];
+clip_lengths            = [5, 10, 15];
 test_clips_base_folder  = './test_clips/passthrough/';
 input_folder_base       = './test_clips/sets/';
 scoring_mode            = 'max';
