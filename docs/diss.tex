@@ -951,7 +951,7 @@ The audio processing is approximately the same for each algorithm, and so just a
 To measure the performance of the registration processes, I added the full library of songs to an empty database, and timed the process. As can be seen in Table \ref{table:registration_speed}, registration takes around double the time per song for the Philips algorithm. There is no significant difference in the time taken to rebuild the indexes after a batch insertion.
 
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\begin{table}[h]
+\begin{table}[t]
 	\begin{tabularx}{\textwidth}{L{2.7cm}L{4cm}L{4cm}L{4cm}}
 		\textbf{Algorithm} & \textbf{Registration time per song (s)} & \textbf{Time to re-build indexes (s)} & \textbf{Registration time for 720 songs (s)}\\ 
 		\hline 
@@ -967,6 +967,8 @@ The performance of the matching process is dominated by the database search, sin
 
 To measure the speed of matching, I ran the matching test for 5 second clean clips, and timed the process. This test includes 216 clips in total. The mean time taken per song can be seen in Table \ref{table:registration_speed}.
 
+Here the Philips algorithm outperforms the Shazam algorithm by a factor of 1.8, taking less than 2.5 second to match each clip on average.
+
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \begin{table}[h]
 	\centering
@@ -980,7 +982,6 @@ To measure the speed of matching, I ran the matching test for 5 second clean cli
 	\label{table:registration_speed}
 \end{table}
 
-Here the Philips algorithm outperforms the Shazam algorithm by a factor of 1.8, taking less than 2.5 second to match each clip on average.
 
 \section{Database size}
 
@@ -991,7 +992,7 @@ Although the two algorithms have very different fingerprinting techniques, they 
 However, when we look at the actual size of the database on disc, the Philips database is around 14\% larger. This can be accounted for by the fact it has an extra index on the fingerprints table to improve its database search speed.
 
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\begin{table}[h]
+\begin{table}[t]
 	\begin{tabularx}{\textwidth}{L{3cm}L{4cm}L{4cm}L{4cm}}
 		\textbf{Algorithm} & \textbf{Total database size (MB)} & \textbf{Database size per song (MB)} & \textbf{Rows in fingerprint table}\\ 
 		\hline
@@ -1005,6 +1006,13 @@ However, when we look at the actual size of the database on disc, the Philips da
 
 \section{Overall comparison}
 
+I will conclude the evaluation section with a brief summary of the two algorithms' comparative strengths and weaknesses.
+
+The Shazam algorithm outperforms the Philips algorithm on pure accuracy fairly consistently, with the exception of the shorter clips on the re-recorded clips test. It also has a slightly smaller fingerprint database. In applications where distortions are likely and accuracy is important, or storage space is very limited, the Shazam algorithm is probably a better choice.
+
+However, the Philips algorithm wins on matching speed by a significant margin, and still has comparable accuracy on shorter clips in some tests. In applications where matching speed is important, clips are limited to 5 seconds or less, or distortions are unlikely, the Philips algorithm may be superior. 
+
+The Shazam algorithm is, in my opinion, a better general purpose recognition algorithm for most use cases. However, the Philips algorithm may be better in some less common cases such as content watermarking, due to its speed.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1012,9 +1020,13 @@ However, when we look at the actual size of the database on disc, the Philips da
 \chapter{Conclusion}
 \label{conclusion}
 
-%In this project I successfully implemented two algorithms for audio fingerprinting and demonstrated their use for song recognition. I gathered a library of songs to test against, and used it to evaluate and compare both algorithms against a variety of criteria.
+In this project I successfully implemented two algorithms for audio fingerprinting and demonstrated their use for song recognition. I gathered a library of songs to test against, and used it to evaluate and compare both algorithms against a variety of criteria. The implementations performed well given the constraints of the technologies used, and my evaluation successfully found strengths and weaknesses in both.
 
+Had there been more time available, I would have liked to attempt implementation of a third algorithm which strayed more from the standard structure of an audio fingerprinting algorithm, since the two algorithms examined had many similarities, mainly as a result of the similarity of their aims. For example, an algorithm that attempts to recognise covers of songs as well as exact recordings would be interesting to study.
 
+If I were to do the project again, I might have chosen a language other than MATLAB for my implementation. In hindsight, the convenience of inbuilt graph plotting and signal processing functionality may have been outweighed by my unfamiliarity with the language. Choosing another language would have also given me the opportunity to experiment with other database implementations to try to improve performance. However, I am broadly happy with the technology choices I made.
+
+%todo more
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
