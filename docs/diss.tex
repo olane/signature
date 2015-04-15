@@ -389,7 +389,7 @@ The reader module finds all the individual song files in the library folder, and
 
 The song registrar reads in the raw audio from the audio files, resamples to a standard sample rate and converts to mono. It then passes the signal to the fingerprinting module, which returns a fingerprint for the audio. The song registrar inserts the fingerprint into the algorithm's database, along with the song's metadata.
 
-All of the grey components within the Registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase. %TODO capital R?
+All of the grey components within the registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase. 
 
 
 
@@ -481,7 +481,7 @@ The matching process was missing more features in the prototype than registratio
 
 First to be added was the test producer (shown in context in Figure \ref{figs:matching_design} on page \pageref{figs:matching_design}). Whilst the prototype required hand-made test clips, the test producer creates them automatically as required from the original library.
 
-To create test clips, the test producer first selects $n$ random songs from the library (where $n$ is specified as part of the test parameters). The test producer takes a clip from each of the songs, and saves the clip to a new folder of test clips. Before saving the clip back, it can optionally apply some distortion to the clip. These distortions, and their development, are discussed further in the evaluation section. % TODO reference
+To create test clips, the test producer first selects $n$ random songs from the library (where $n$ is specified as part of the test parameters). The test producer takes a clip from each of the songs, and saves the clip to a new folder of test clips. Before saving the clip back, it can optionally apply some distortion to the clip. These distortions, and their development, are discussed further in the evaluation (section \ref{evaluation}).
 
 The test producer finally passes a list of the test clips it has created to the next step, the tester, which passes each clip to the algorithm's matching function in the same way as described for the prototype.
 
@@ -496,8 +496,7 @@ A few further improvements were made during my implementation of the Philips alg
 
 I wrote a new script, which produced multiple subsets of the library to draw tests from. It did this by copying songs to new test set folders, and only needed to be run once for each test set to be created. 
 
-The test producer was modified to produce test clips from all songs in a given test set folder. I also added the functionality to run batches of tests from multiple test sets. This testing functionality is further discussed in the evaluation section. %TODO reference
-
+The test producer was modified to produce test clips from all songs in a given test set folder. I also added the functionality to run batches of tests from multiple test sets. This testing functionality is further discussed in the evaluation (section \ref{evaluation}). 
 
 
 \section{Implementation of the Shazam algorithm}
@@ -992,7 +991,7 @@ Although the two algorithms have very different fingerprinting techniques, they 
 However, when we look at the actual size of the database on disc, the Philips database is around 14\% larger. This can be accounted for by the fact it has an extra index on the fingerprints table to improve its database search speed.
 
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\begin{table}[t]
+\begin{table}[ht]
 	\begin{tabularx}{\textwidth}{L{3cm}L{4cm}L{4cm}L{4cm}}
 		\textbf{Algorithm} & \textbf{Total database size (MB)} & \textbf{Database size per song (MB)} & \textbf{Rows in fingerprint table}\\ 
 		\hline
