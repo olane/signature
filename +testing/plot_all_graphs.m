@@ -56,3 +56,15 @@ testing.plot_averaged_noise_test_batch_results...
      'Recognition rate for additive real world noise: Shazam algorithm', ...
      'natural_shazam_results.eps', ...
      false);
+ 
+ 
+ %% Passthrough Philips
+ 
+load('passthrough_barcoder_results.mat')
+testing.plot_passthrough_test_batch(set, len, succ, tot, {'Recognition rate for re-recorded clips:'; 'Philips algorithm'}, 'barcoder_passthrough.eps', true)
+
+
+ %% Passthrough Shazam
+ 
+load('passthrough_constellation_results.mat')
+testing.plot_passthrough_test_batch(set, len, succ, tot, {'Recognition rate for re-recorded clips:'; 'Shazam algorithm'}, 'constellation_passthrough.eps', true)
