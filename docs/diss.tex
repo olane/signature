@@ -28,6 +28,8 @@
   mlshowsectionrules = true,
 }
 
+\captionsetup{labelfont=bf} % Make figure labels bold
+
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -843,15 +845,6 @@ As well as the length of the test clip, these tests also allow me to test at dif
 
 In order to achieve the correct signal to noise ratio (SNR), the noise is first generated at an arbitrary level. The total power is computed for both the noise and the original clip, and the amplitude of the noise clip is multiplied so as to give the correct ratio between the two signal powers. The two signals are then added, and normalised to lie between -1 and 1 to avoid clipping artefacts.
 
-
-\subsubsection{Gaussian white noise}
-
-One simplistic form of noise is Gaussian white noise. This is created by sampling noise from a Gaussian distribution, provided by MATLAB's \lstinline{randn} function. Each sample of noise is independent of all the other samples, which is the requirement for white noise.
-
-This type of noise is not very realistic for the use case of using a mobile phone to record a song clip, but white noise is a component of the noise often introduced in radio broadcasts. A user wishing to monitor songs on the radio might want to use an algorithm robust to white noise.
-
-Results for the gaussian white noise test can be seen in the two graphs in Figure \ref{fig:gaussian_results}. 
-
 \begin{figure}[p]
     \centering
 
@@ -871,18 +864,20 @@ Results for the gaussian white noise test can be seen in the two graphs in Figur
     \label{fig:gaussian_results}
 \end{figure}
 
+
+\subsubsection{Gaussian white noise}
+
+One simplistic form of noise is Gaussian white noise. This is created by sampling noise from a Gaussian distribution, provided by MATLAB's \lstinline{randn} function. Each sample of noise is independent of all the other samples, which is the requirement for white noise.
+
+This type of noise is not very realistic for the use case of using a mobile phone to record a song clip, but white noise is a component of the noise often introduced in radio broadcasts. A user wishing to monitor songs on the radio might want to use an algorithm robust to white noise.
+
+Results for the gaussian white noise test can be seen in the two graphs in Figure \ref{fig:gaussian_results}. 
+
 The Shazam algorithm clearly outperforms the Shazam algorithm in this test -- the average recognition rate over the three test sets is higher in every case than for the Philips algorithm, although it should be noted that the difference between the two algorithms is within a standard deviation for the SNRs over 6db.
 
 For the Shazam algorithm, longer clip lengths reliably translate to higher recognition rates, although the effect diminishes for higher SNR values. Interestingly, this effect is much less clear in the results for the Philips algorithm. There is a small correlation between clip length and recognition rate for SNR values of 0db and below, but the effect appears to actually be reversed for higher SNR values: longer clips result in a slightly lower recognition rate. This is possibly a result of the Hamming distance metric used: whilst the Shazam algorithm simply rewards similarities in the fingerprints, the Philips algorithm penalizes differences in the fingerprints. A longer clip may allow for a higher chance of encountering a patch of noise which significantly penalises an otherwise closely matching clip.
 
 The differences for different clip lengths are all within 2 standard deviations for the Philips algorithm, so further testing would probably be needed to confirm the trend. However, the clear correlation seen in the case of the Shazam algorithm is not present.
-
-
-\subsubsection{Real world noise}
-
-To address the use case of a user identifying music using their mobile phone, I also ran tests using real world noise. I obtained a public domain clip of some ambient noise recorded inside a shopping centre from the website Sound Bible \cite{ShoppingAmbience}.
-
-This noise was added to plain clips at different signal to noise ratios to simulate the effect of trying to identify a song over the noise of a busy environment. Results for the tests can be seen in the two graphs in Figure \ref{fig:natural_results}.
 
 \begin{figure}[p]
     \centering
@@ -903,6 +898,12 @@ This noise was added to plain clips at different signal to noise ratios to simul
     \label{fig:natural_results}
 \end{figure}
 
+\subsubsection{Real world noise}
+
+To address the use case of a user identifying music using their mobile phone, I also ran tests using real world noise. I obtained a public domain clip of some ambient noise recorded inside a shopping centre from the website Sound Bible \cite{ShoppingAmbience}.
+
+This noise was added to plain clips at different signal to noise ratios to simulate the effect of trying to identify a song over the noise of a busy environment. Results for the tests can be seen in the two graphs in Figure \ref{fig:natural_results}.
+
 Again, the Shazam algorithm outperforms the Philips algorithm. Recognition rates are lower, in both cases, than for the additive Gaussian noise test, indicating that both algorithms deal with white noise more easily than the shopping centre noise. This is probably a result of the fact that white noise has a roughly flat frequency spectrum, and so is likely to have less effect on the features that both algorithms try to detect, which live in the frequency domain. Conversely, the ambient noise has many peaks and troughs in its spectrogram, which could be confused for features of the music clips.
 
 Once again, the Shazam algorithm performs consistently better when longer clip lengths are used, whilst the Philips algorithm only shows this effect for lower SNR values.
@@ -916,7 +917,28 @@ Re-recorded clips were generated by playing a plain clip out of some speakers an
 
 I used a pair of reasonably high quality hi-fi speakers, and the microphone built into my laptop (a Macbook Pro 2014). The microphone is fairly low quality and is quite similar to a standard smartphone microphone. Tests were carried out in my room, during the Easter vacation to minimise noise from neighbours. Minimal background noise was present in the final test clips -- the majority of signal degradation was due to the acoustic characteristics of the speakers, microphone and room.
 
+The results can be seen in Figure \ref{fig:re-recorded_results}. 
 
+Once again, the Shazam algorithm exhibits a strong correlation between longer clip lengths and higher accuracy, whilst the Philips algorithm does not. The Philips algorithm's accuracy increases in variability as the clip length increases. This perhaps supports my hypothesis that longer clips increase the chance of a patch of high distortion which is over-penalised by the Philips algorithm.
+
+The Shazam algorithm does not outperform the Philips algorithm by as much of a margin here as in previous tests, and actually performs slightly worse for 5 second clips. 
+
+\begin{figure}[htbp!]
+    \centering
+
+    \begin{subfigure}{0.5\textwidth}
+    	\centering
+     	\includegraphics[width=0.95\linewidth]{./figs/barcoder_passthrough.eps}
+    \end{subfigure}%
+    ~
+    \begin{subfigure}{0.5\textwidth}
+    	\centering
+     	\includegraphics[width=0.95\linewidth]{./figs/constellation_passthrough.eps} 
+    \end{subfigure}
+
+    \caption{Results for re-recorded tests on both algorithms. Each point is the averaged result over three tests.}
+    \label{fig:re-recorded_results}
+\end{figure}
 
 \section{Performance}
 
