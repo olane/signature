@@ -59,7 +59,7 @@
 \vspace*{60mm}
 \begin{center}
 \Huge
-\textbf{Audio Fingerprinting for Music Recongition} \\[5mm]
+\textbf{Audio Fingerprinting for Music Recognition} \\[5mm]
 Computer Science Tripos -- Part II \\[5mm]
 Trinity Hall \\[5mm]
 \today  % today's date
@@ -89,13 +89,13 @@ Supervisor:         & Vaiva Imbrasait\'{e}                    \\
 
 In this project I aimed firstly to implement at least two audio fingerprinting algorithms, each with a corresponding matching algorithm, for the purpose of recognising clips of songs from a library in a way that is robust to noise and distortions.
 
-Secondly, I aimed to assemble a library of songs and corresponsing test clips against which to test these algorithms.
+Secondly, I aimed to assemble a library of songs and corresponding test clips against which to test these algorithms.
 
 Finally, I aimed to compare these implementations against several criteria, including size of fingerprints generated and percentage of test clips matched correctly from the assembled library, at various clip lengths and levels of noise.
 
 \section*{Work Completed}
 
-Two algorithms for audio fingerprinting were successfully implemented, with corresponsing matching algorithms. These algorithms were proposed by Avery Wang in 2003 \cite{Wang03} and Haitsma et al. in 2002 \cite{Haitsma02}. A library of songs was assembled, and corresponding test cases made by taking different length clips from the library and adding distortions.
+Two algorithms for audio fingerprinting were successfully implemented, with corresponding matching algorithms. These algorithms were proposed by Avery Wang in 2003 \cite{Wang03} and Haitsma et al. in 2002 \cite{Haitsma02}. A library of songs was assembled, and corresponding test cases made by taking different length clips from the library and adding distortions.
 
 The two implementations were tested and evaluated against several criteria using the set of test clips, and compared against each other.
 
@@ -195,7 +195,7 @@ Audio fingerprinting systems can be evaluated over a variety of parameters, whic
 
 \subsubsection{Robustness}
 
-Robustness to signal degradations is one of the most important parameters. Ideally, even severly degraded audio should give a very similar fingerprint. All algorithms require some robustness to resampling and mild compression, since there is no guarantee that the input audio will be in the same format and coded at the same compression rate as the original copy in the library.
+Robustness to signal degradations is one of the most important parameters. Ideally, even severely degraded audio should give a very similar fingerprint. All algorithms require some robustness to resampling and mild compression, since there is no guarantee that the input audio will be in the same format and coded at the same compression rate as the original copy in the library.
 
 Most algorithms will also try to be as robust as possible to other distortions such as echo, reverb, severe compression, background noise and equalisation.
 
@@ -215,7 +215,7 @@ The size of the fingerprint calculated is important, because to identify metadat
 
 The property of granularity determines how many seconds of audio are required to identify a match in the database. In some applications the whole song can be used for identification, in others shorter clips are preferred. 
 
-The granularity will often depend on the types of degradation applied to the audio; many algorithms can compensate for more severly degraded audio by matching on longer clips.
+The granularity will often depend on the types of degradation applied to the audio; many algorithms can compensate for more severely degraded audio by matching on longer clips.
 
 \subsubsection{Scalability}
 
@@ -264,7 +264,7 @@ In selecting which algorithms to compare, I wanted two algorithms which were:
 
 There are many parameters affecting the design and performance of an audio fingerprinting system, which are described in more detail in section \ref{section:systemparams}. One of the most important, and most studied, is how robust the system is to degradation of input audio through various distortions. 
 
-The specific distortions that an algorithm needs to be robust towards are somewhat dependent on the intended use cases. For example, a system intented for radio broadcast monitoring might need to be robust against radio noise or compression, but wouldn't need to worry about reverb or matching using very short clips. However, a system intended to match songs from a smartphone app would require robustness to background noise (such as ambient crowd noise) and reverb, and would benefit from being able to work using clips which were as short as possible.
+The specific distortions that an algorithm needs to be robust towards are somewhat dependent on the intended use cases. For example, a system intended for radio broadcast monitoring might need to be robust against radio noise or compression, but wouldn't need to worry about reverb or matching using very short clips. However, a system intended to match songs from a smartphone app would require robustness to background noise (such as ambient crowd noise) and reverb, and would benefit from being able to work using clips which were as short as possible.
 
 The latter use case imposes more constraints on the problem in terms of severity of distortion, especially given the commodity hardware involved. As such, it is generally more interesting from a signal processing perspective, and both algorithms selected for this project try to tackle this use case.
 
@@ -277,7 +277,7 @@ The second algorithm selected was an algorithm proposed by Philips researchers H
 
 \subsection{Library}
 
-To test the audio fingerprinting algorithms, a reasonably large library of songs was required to match against. Both of the papers I was focussing on tested their algorithms on databases of 10,000 songs, but a library this size would be difficult for me to obtain for this project. A library size of at least 500 songs was decided, as a compromise between time constraints and the quality of the testing.
+To test the audio fingerprinting algorithms, a reasonably large library of songs was required to match against. Both of the papers I was focusing on tested their algorithms on databases of 10,000 songs, but a library this size would be difficult for me to obtain for this project. A library size of at least 500 songs was decided, as a compromise between time constraints and the quality of the testing.
 
 Genre and style diversity in the song library was also an important consideration, in order to reduce biases in the testing process.
 
@@ -294,7 +294,7 @@ I also created a set of plain clips, generated by simply cropping original song 
 
 \subsection{Language choice}
 
-One of my early focusses was deciding on the language to be used for the project, along with finding any libraries that would be helpful. My main considerations when making these decisions were ease of development, ease of evaluation, and my own familiarity.
+One of my early focuses was deciding on the language to be used for the project, along with finding any libraries that would be helpful. My main considerations when making these decisions were ease of development, ease of evaluation, and my own familiarity.
 
 To make development as easy as possible, I decided to make sure there was strong library support for operations which would be useful but could take a disproportionate amount of time to implement well myself, such as audio file manipulation. For example, a fast and accurate Discrete Fourier Transform implementation was essential.
 
@@ -339,7 +339,7 @@ I created small relevant segments of code for things like reading in audio files
 
 \subsection{MIRToolbox}
 
-I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an mp3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the perfromance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
+I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an mp3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the performance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
 
 After consulting the operations available in the MATLAB standard library, I decided it would probably be possible to implement the algorithms just as easily without the use of MIRToolbox. Since, based on my preliminary tests, the MIRToolbox code might also be slower, I decided not to use MIRToolbox for my implementations.
 
@@ -527,7 +527,7 @@ In order to identify signals in a robust manner, features of the audio which are
 
 \subsubsection{Constellation maps}
 
-The fingerprinting function of the Shazam algorithm uses spectrogram peaks as its chosen features. A time-frequency point is chosen as a feature if it is a local energy maxima -- that is, it has more energy than any of its close neighbors.
+The fingerprinting function of the Shazam algorithm uses spectrogram peaks as its chosen features. A time-frequency point is chosen as a feature if it is a local energy maxima -- that is, it has more energy than any of its close neighbours.
 
 In this way, a complex spectrogram can be reduced to a sparse set of time-frequency coordinates, which are relatively robust to signal degradations. The paper terms this list of coordinates a `constellation map', since it can resemble a star field. 
 
@@ -551,7 +551,7 @@ The second phase, finding the local maxima, is not well described in the origina
 
 The first pass is a simple 3 by 3 median filter, which reduces salt and pepper noise. This ensures peaks with very small amplitudes, which are much more distortion sensitive, are eliminated. 
 
-The second pass is a gaussian filter which smooths the spectrogram, removing high frequency components of the time-frequency signal. Again, this removes some high frequency noise and also makes sure that the peaks have a reasonable spacing; peaks too close together are merged. The size of this gaussian filter determines the feature size of the peaks detected. 
+The second pass is a Gaussian filter which smooths the spectrogram, removing high frequency components of the time-frequency signal. Again, this removes some high frequency noise and also makes sure that the peaks have a reasonable spacing; peaks too close together are merged. The size of this Gaussian filter determines the feature size of the peaks detected. 
 
 The final step of peak finding is to compare each point with its neighbours. If it is the largest of all its 8 neighbours, it is classified as a peak.
 
@@ -632,9 +632,9 @@ For the purposes of this project I decided that adding this feature for both imp
 
 At this point a working version of the Shazam algorithm had been implemented. In preliminary tests with undistorted clips, it achieved a 100\% recognition rate, as would be hoped.
 
-However, the runtime of both processes -- registration and matching -- were much slower than I had hoped. Registering songs took around 70 seconds per song on average, and matching a 5 second clip took 30-60 seconds, depending on the number of candidates found in the database, which is quite variable.
+However, the run time of both processes -- registration and matching -- were much slower than I had hoped. Registering songs took around 70 seconds per song on average, and matching a 5 second clip took 30-60 seconds, depending on the number of candidates found in the database, which is quite variable.
 
-Although speed of matching is not a primary consideration in evaluation, it is still relevant. Slow runtimes might also have prevented me from running as many tests as I wanted to. 
+Although speed of matching is not a primary consideration in evaluation, it is still relevant. Slow run times might also have prevented me from running as many tests as I wanted to. 
 
 I knew that the algorithm could run very quickly, given that Wang reports search times of 5-500ms on a database of 20,000 tracks, implemented on a PC in 2003 \cite{Wang03}. These times are not directly comparable to mine given that 12 years have passed, and my implementation runs using MATLAB and SQLite on a laptop, whereas scalability was one of their main considerations so I would expect them to have used a more performance-oriented technology stack. However, five orders of magnitude still seemed like a large difference. 
 
@@ -695,7 +695,7 @@ This section is a summary of the work completed during its implementation. It wi
 
 The Philips algorithm works using a \textit{fingerprint stream} approach, in which small sections of audio, referred to as a \textit{frame}, are each assigned a 32 bit \textit{sub-fingerprint}. This stream of sub-fingerprints makes up the fingerprint. Sub-fingerprints are too small to uniquely identify a frame, but a longer interval containing sufficiently many frames can be used to identify audio robustly.
 
-The frames of audio are overlapping, and are weighted using a Hanning window, with overlap factor 31/32. This large overlap factor ensures that even if a comparison clip's frames are misaligned by 50\% of the frame size, the frames will be similar enough to enable identfication. Due to the large overlap, subsequent sub-fingerprints are very similar and vary fairly slowly with time. 
+The frames of audio are overlapping, and are weighted using a Hanning window, with overlap factor 31/32. This large overlap factor ensures that even if a comparison clip's frames are misaligned by 50\% of the frame size, the frames will be similar enough to enable identification. Due to the large overlap, subsequent sub-fingerprints are very similar and vary fairly slowly with time. 
 
 Note that although the Shazam algorithm appears to take a very different approach to this algorithm, the framing process is in fact very similar. The Shazam algorithm's framing process is implicit within its computation of a spectrogram as the first step. A Hanning window with a large overlap factor is also used in the Shazam algorithm, for the same reasons.
 
@@ -739,7 +739,7 @@ The Philips algorithm's registration process works identically to the Shazam alg
 \subsection{Matcher}
 \label{philips:matcher}
 
-As in the Shazam algorithm, the matcher recieves unlabelled audio, and attempts to find a close match in the database. The first step is to calculate the fingerprint of the unlabelled audio, which is achieved through a call to the fingerprinting module described in section \ref{philips:fingerprinter}.
+As in the Shazam algorithm, the matcher receives unlabelled audio, and attempts to find a close match in the database. The first step is to calculate the fingerprint of the unlabelled audio, which is achieved through a call to the fingerprinting module described in section \ref{philips:fingerprinter}.
 
 \subsubsection{Fingerprint similarity}
 
@@ -785,7 +785,7 @@ All of the same optimisations identified for the Shazam algorithm could be appli
 
 \subsubsection{Memory allocation}
 
-During the matching process, a list of candidate positions is created. However, there is no way of knowing how many candidates there will be in advance, so the list cannot be pre-allocated, resulting in unecessary copying of the list. The same technique used in the Shazam algorithm of doubling the list's size when it gets full is applied to improve the performance of append operations.
+During the matching process, a list of candidate positions is created. However, there is no way of knowing how many candidates there will be in advance, so the list cannot be pre-allocated, resulting in unnecessary copying of the list. The same technique used in the Shazam algorithm of doubling the list's size when it gets full is applied to improve the performance of append operations.
 
 This change sped up fingerprinting by about 1.5x.
 
@@ -845,7 +845,7 @@ All of my plain test clips are 5 seconds in length. As would be expected, both t
 
 \subsection{Clips with added noise}
 
-Clips with added noise are generated by taking plain clips and overlaying noise at different signal to noise ratios. The noise added might be generated, such as gaussian noise, or taken from a pre-recorded noise file. An example of pre-recorded noise might be a clip of ambient noise in a busy restaurant.
+Clips with added noise are generated by taking plain clips and overlaying noise at different signal to noise ratios. The noise added might be generated, such as Gaussian noise, or taken from a pre-recorded noise file. An example of pre-recorded noise might be a clip of ambient noise in a busy restaurant.
 
 As well as the length of the test clip, these tests also allow me to test at different signal to noise ratios. I decided on clip lengths of 5, 10 and 15 seconds, and signal to noise ratios ranging from -9dB to +9dB, at intervals of 3dB. All tests were run for all possible pairs of these parameters, giving 21 different test setups in total for each noise type. 
 
@@ -866,7 +866,7 @@ In order to achieve the correct signal to noise ratio (SNR), the noise is first 
 
     \vspace{15mm}
 
-    \caption{Results for additive noise tests on both algorithms, using gaussian white noise. Each line represents a different clip length, and each point is the averaged result over three tests.}
+    \caption{Results for additive noise tests on both algorithms, using Gaussian white noise. Each line represents a different clip length, and each point is the averaged result over three tests.}
     \label{fig:gaussian_results}
 \end{figure}
 
@@ -877,11 +877,11 @@ One simplistic form of noise is Gaussian white noise. This is created by samplin
 
 This type of noise is not very realistic for the use case of using a mobile phone to record a song clip, but white noise is a component of the noise often introduced in radio broadcasts. A user wishing to monitor songs on the radio might want to use an algorithm robust to white noise.
 
-Results for the gaussian white noise test can be seen in the two graphs in Figure \ref{fig:gaussian_results}. 
+Results for the Gaussian white noise test can be seen in the two graphs in Figure \ref{fig:gaussian_results}. 
 
 The Shazam algorithm clearly outperforms the Shazam algorithm in this test -- the average recognition rate over the three test sets is higher in every case than for the Philips algorithm, although it should be noted that the difference between the two algorithms is within a standard deviation for the SNRs over 6db.
 
-For the Shazam algorithm, longer clip lengths reliably translate to higher recognition rates, although the effect diminishes for higher SNR values. Interestingly, this effect is much less clear in the results for the Philips algorithm. There is a small correlation between clip length and recognition rate for SNR values of 0db and below, but the effect appears to actually be reversed for higher SNR values: longer clips result in a slightly lower recognition rate. This is possibly a result of the Hamming distance metric used: whilst the Shazam algorithm simply rewards similarities in the fingerprints, the Philips algorithm penalizes differences in the fingerprints. A longer clip may allow for a higher chance of encountering a patch of noise which significantly penalises an otherwise closely matching clip.
+For the Shazam algorithm, longer clip lengths reliably translate to higher recognition rates, although the effect diminishes for higher SNR values. Interestingly, this effect is much less clear in the results for the Philips algorithm. There is a small correlation between clip length and recognition rate for SNR values of 0db and below, but the effect appears to actually be reversed for higher SNR values: longer clips result in a slightly lower recognition rate. This is possibly a result of the Hamming distance metric used: whilst the Shazam algorithm simply rewards similarities in the fingerprints, the Philips algorithm penalises differences in the fingerprints. A longer clip may allow for a higher chance of encountering a patch of noise which significantly penalises an otherwise closely matching clip.
 
 The differences for different clip lengths are all within 2 standard deviations for the Philips algorithm, so further testing would probably be needed to confirm the trend. However, the clear correlation seen in the case of the Shazam algorithm is not present.
 
