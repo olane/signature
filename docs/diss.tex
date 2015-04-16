@@ -1046,4 +1046,291 @@ If I were to do the project again, I might have chosen a language other than MAT
 
 
 
+\chapter{Full matching test results}
+
+In all tables, clip length is abbreviated as CL and standard deviation as SD.
+
+% Centering for X columns
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\section{Basic clips}
+
+For both the Shazam and Philips algorithms, plain clips of length 5 seconds were tested. For all 3 test sets, both algorithms matched all 72 clips correctly.
+
+\section{Gaussian white noise}
+
+\subsubsection{Philips}
+
+\begin{tabularx}{\textwidth}{YYYYYYY}
+\hline
+&  & \multicolumn{5}{c}{Correctly matched (out of 72)} \\ 
+\cline{3-7}
+CL (s) & SNR (dB) & Set A & Set B & Set C & Mean & SD\\ 
+\hline
+\hline
+5 & -9 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+5 & -6 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+5 & -3 & 6 & 10 & 8 & 8.0 & 2.0\\ 
+\hline
+5 & 0 & 45 & 44 & 43 & 44.0 & 1.0\\ 
+\hline
+5 & 3 & 70 & 67 & 69 & 68.7 & 1.5\\ 
+\hline
+5 & 6 & 70 & 71 & 72 & 71.0 & 1.0\\ 
+\hline
+5 & 9 & 72 & 71 & 72 & 71.7 & 0.6\\ 
+\hline
+\hline
+10 & -9 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+10 & -6 & 0 & 1 & 1 & 0.7 & 0.6\\ 
+\hline
+10 & -3 & 10 & 14 & 9 & 11.0 & 2.6\\ 
+\hline
+10 & 0 & 52 & 44 & 48 & 48.0 & 4.0\\ 
+\hline
+10 & 3 & 67 & 66 & 65 & 66.0 & 1.0\\ 
+\hline
+10 & 6 & 69 & 69 & 71 & 69.7 & 1.2\\ 
+\hline
+10 & 9 & 69 & 71 & 72 & 70.7 & 1.5\\ 
+\hline
+\hline
+15 & -9 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+15 & -6 & 1 & 1 & 1 & 1.0 & 0.0\\ 
+\hline
+15 & -3 & 9 & 8 & 8 & 8.3 & 0.6\\ 
+\hline
+15 & 0 & 47 & 48 & 45 & 46.7 & 1.5\\ 
+\hline
+15 & 3 & 67 & 58 & 67 & 64.0 & 5.2\\ 
+\hline
+15 & 6 & 71 & 69 & 68 & 69.3 & 1.5\\ 
+\hline
+15 & 9 & 70 & 68 & 72 & 70.0 & 2.0\\ 
+\hline
+\end{tabularx}
+
+\subsubsection{Shazam}
+
+\begin{tabularx}{\textwidth}{YYYYYYY}
+\hline
+&  & \multicolumn{5}{c}{Correctly matched (out of 72)} \\ 
+\cline{3-7}
+CL (s) & SNR (dB) & Set A & Set B & Set C & Mean & SD\\ 
+
+\hline
+\hline
+5 & -9 & 5 & 6 & 7 & 6.0 & 1.0\\ 
+\hline
+5 & -6 & 24 & 25 & 29 & 26.0 & 2.6\\ 
+\hline
+5 & -3 & 60 & 54 & 60 & 58.0 & 3.5\\ 
+\hline
+5 & 0 & 70 & 68 & 70 & 69.3 & 1.2\\ 
+\hline
+5 & 3 & 70 & 71 & 71 & 70.6 & 0.6\\ 
+\hline
+5 & 6 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+5 & 9 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+\hline
+10 & -9 & 13 & 7 & 17 & 12.3 & 5.0\\ 
+\hline
+10 & -6 & 49 & 45 & 47 & 47.0 & 2.0\\ 
+\hline
+10 & -3 & 70 & 69 & 71 & 70.0 & 1.0\\ 
+\hline
+10 & 0 & 72 & 72 & 71 & 71.7 & 0.6\\ 
+\hline
+10 & 3 & 71 & 72 & 71 & 71.3 & 0.6\\ 
+\hline
+10 & 6 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+10 & 9 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+\hline
+15 & -9 & 20 & 12 & 18 & 16.7 & 4.2\\ 
+\hline
+15 & -6 & 55 & 59 & 58 & 57.3 & 2.1\\ 
+\hline
+15 & -3 & 70 & 71 & 71 & 70.7 & 0.6\\ 
+\hline
+15 & 0 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+15 & 3 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+15 & 6 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+15 & 9 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+
+\end{tabularx}
+
+\section{Real world noise}
+
+\subsubsection{Philips}
+\begin{tabularx}{\textwidth}{YYYYYYY}
+\hline
+&  & \multicolumn{5}{c}{Correctly matched (out of 72)} \\ 
+\cline{3-7}
+CL (s) & SNR (dB) & Set A & Set B & Set C & Mean & SD\\ 
+\hline
+\hline
+
+5 & -9 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+5 & -6 & 0 & 1 & 0 & 0.3 & 0.6\\ 
+\hline
+5 & -3 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+5 & 0 & 3 & 1 & 1 & 1.7 & 1.2\\ 
+\hline
+5 & 3 & 23 & 22 & 23 & 22.7 & 0.6\\ 
+\hline
+5 & 6 & 60 & 59 & 59 & 59.3 & 0.6\\ 
+\hline
+5 & 9 & 71 & 70 & 70 & 70.3 & 0.6\\ 
+\hline
+\hline
+10 & -9 & 1 & 0 & 0 & 0.3 & 0.6\\ 
+\hline
+10 & -6 & 1 & 0 & 1 & 0.7 & 0.6\\ 
+\hline
+10 & -3 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+10 & 0 & 7 & 1 & 4 & 4.0 & 3.0\\ 
+\hline
+10 & 3 & 32 & 26 & 25 & 27.7 & 3.8\\ 
+\hline
+10 & 6 & 57 & 58 & 58 & 57.7 & 0.6\\ 
+\hline
+10 & 9 & 63 & 64 & 67 & 64.7 & 2.1\\ 
+\hline
+15 & -9 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+15 & -6 & 0 & 1 & 0 & 0.3 & 0.6\\ 
+\hline
+15 & -3 & 0 & 1 & 0 & 0.3 & 0.6\\ 
+\hline
+15 & 0 & 8 & 1 & 5 & 4.7 & 3.5\\ 
+\hline
+15 & 3 & 33 & 29 & 28 & 30.0 & 2.6\\ 
+\hline
+15 & 6 & 47 & 52 & 53 & 50.7 & 3.2\\ 
+\hline
+15 & 9 & 61 & 60 & 66 & 62.3 & 3.2\\ 
+\hline
+
+
+\end{tabularx}
+
+\subsubsection{Shazam}
+\begin{tabularx}{\textwidth}{YYYYYYY}
+\hline
+&  & \multicolumn{5}{c}{Correctly matched (out of 72)} \\ 
+\cline{3-7}
+CL (s) & SNR (dB) & Set A & Set B & Set C & Mean & SD\\ 
+
+\hline
+\hline
+5 & -9 & 1 & 0 & 0 & 0.3 & 0.6\\ 
+\hline
+5 & -6 & 2 & 2 & 0 & 1.3 & 1.2\\ 
+\hline
+5 & -3 & 13 & 14 & 13 & 13.3 & 0.6\\ 
+\hline
+5 & 0 & 48 & 52 & 53 & 51.0 & 2.6\\ 
+\hline
+5 & 3 & 71 & 68 & 68 & 69.0 & 1.7\\ 
+\hline
+5 & 6 & 71 & 72 & 72 & 71.7 & 0.6\\ 
+\hline
+5 & 9 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+\hline
+10 & -9 & 0 & 0 & 0 & 0.0 & 0.0\\ 
+\hline
+10 & -6 & 5 & 4 & 0 & 3.0 & 2.6\\ 
+\hline
+10 & -3 & 23 & 34 & 25 & 27.3 & 5.9\\ 
+\hline
+10 & 0 & 67 & 66 & 63 & 65.3 & 2.1\\ 
+\hline
+10 & 3 & 72 & 72 & 71 & 71.7 & 0.6\\ 
+\hline
+10 & 6 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+10 & 9 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+\hline
+15 & -9 & 1 & 1 & 0 & 0.7 & 0.6\\ 
+\hline
+15 & -6 & 7 & 10 & 2 & 6.3 & 4.0\\ 
+\hline
+15 & -3 & 42 & 41 & 40 & 41.0 & 1.0\\ 
+\hline
+15 & 0 & 70 & 69 & 69 & 69.3 & 0.6\\ 
+\hline
+15 & 3 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+15 & 6 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+15 & 9 & 72 & 72 & 72 & 72.0 & 0.0\\ 
+\hline
+
+\end{tabularx}
+
+\newpage
+\section{Re-recorded clips}
+
+\subsubsection{Philips}
+\begin{tabularx}{\textwidth}{YYYYYYY}
+\hline
+&  \multicolumn{5}{c}{Correctly matched (out of 72)} \\ 
+\cline{2-6}
+CL (s) & Set A & Set B & Set C & Mean & SD\\ 
+
+\hline
+\hline
+5 & 33 & 34 & 33 & 33.3 & 0.6\\ 
+\hline
+10 & 54 & 40 & 45 & 46.3 & 7.1\\ 
+\hline
+15 & 44 & 36 & 32 & 37.3 & 6.1\\ 
+\hline
+
+\end{tabularx}
+
+\bigskip
+
+\subsubsection{Shazam}
+\begin{tabularx}{\textwidth}{YYYYYYY}
+\hline
+&  \multicolumn{5}{c}{Correctly matched (out of 72)} \\ 
+\cline{2-6}
+CL (s) & Set A & Set B & Set C & Mean & SD\\ 
+
+\hline
+\hline
+5 & 34 & 31 & 33 & 32.6 & 1.5\\ 
+\hline
+10 & 54 & 52 & 58 & 54.7 & 3.1\\ 
+\hline
+15 & 60 & 60 & 60 & 60 & 0\\ 
+\hline
+
+\end{tabularx}
+
+
+
+\chapter{Project Proposal}
+
+
+\input{proposal}
+
 \end{document}
