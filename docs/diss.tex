@@ -78,7 +78,7 @@ Name:               & \bf Oliver Lane                       \\
 College:            & \bf Trinity Hall                     \\
 Project Title:      & \bf Audio Fingerprinting for Music Recognition \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2015  \\
-Word count:         & \bf   \\
+Word count:         & \bf 11,454  \\
 Project Originator: & Oliver Lane                    \\
 Supervisor:         & Vaiva Imbrasait\'{e}                    \\ 
 \end{tabular}
@@ -155,13 +155,13 @@ An audio fingerprinting algorithm needs to work independently to the representat
 
 As a result, a robust audio fingerprinting algorithm needs to take into account the perceptual characteristics of the audio, and be as unaffected as possible in the face of likely distortions. Despite this, it must retain enough discriminatory power to distinguish between similar songs.
 
-Once an audio fingerprint has been computed for a fragment of audio, a precomputed database of song fingerprints can be searched for a close match. Here, a close match is defined by some distance metric which defines how similar two fingerprints are determined to be. If a close match is found, we conclude that our fragment of audio is from the song found in the database.
+Once an audio fingerprint has been computed for a fragment of audio, a precomputed database of song fingerprints can be searched for a close match. Here, a close match is defined by some distance metric which defines how similar two fingerprints are determined to be. If a close match is found, the algorithm concludes that the fragment of audio matches the song found in the database.
 
 Note that it is not possible to create a fingerprint function which always results in identical fingerprints for perceptually similar audio, because perceptual similarity is known not to be transitive. That is, if an audio clip A is perceptually similar to two other clips, B and C, then B and C are not necessarily perceptually similar. A fingerprinting scheme which relied on absolute equality would enforce such a property, and would therefore be unsuitable for modelling perceptual similarity.
 
-In conclusion, when designing a fingerprinting function, we require that two perceptually similar audio objects result in similar fingerprints. In addition, we require that the probability that two dissimilar audio objects are very unlikely to produce similar fingerprints. 
+In conclusion, when designing a fingerprinting function, it is required that two perceptually similar audio objects result in similar fingerprints. In addition, two dissimilar audio objects should be very unlikely to produce similar fingerprints. 
 
-More formally, we require that a well designed fingerprint function $F$ and corresponding distance function $D$ will have some threshold $t$ such that with very high probability $D(F(A),F(B)) <= t$ if objects A and B are perceptually similar, and $D(F(A),F(B)) > t$ if they are not.
+More formally, a well designed fingerprint function $F$ and corresponding distance function $D$ will have some threshold $t$ such that with very high probability $D(F(A),F(B)) <= t$ if objects A and B are perceptually similar, and $D(F(A),F(B)) > t$ if they are not.
 
 
 \subsection{General framework}
@@ -195,7 +195,7 @@ Audio fingerprinting systems can be evaluated over a variety of parameters, whic
 
 \subsubsection{Robustness}
 
-Robustness to signal degradations is one of the most important parameters. Ideally, we would prefer that even severly degraded audio gives a very similar fingerprint. All algorithms require some robustness to resampling and mild compression, since there is no guarantee that the input audio will be in the same format and coded at the same compression rate as the original copy in the library.
+Robustness to signal degradations is one of the most important parameters. Ideally, even severly degraded audio should give a very similar fingerprint. All algorithms require some robustness to resampling and mild compression, since there is no guarantee that the input audio will be in the same format and coded at the same compression rate as the original copy in the library.
 
 Most algorithms will also try to be as robust as possible to other distortions such as echo, reverb, severe compression, background noise and equalisation.
 
@@ -209,9 +209,7 @@ This would be slightly more important, for example, to a music label tracking ro
 
 \subsubsection{Fingerprint size}
 
-The size of the fingerprint calculated is important, because to identify metadata we need to create a database of song fingerprints. The larger each fingerprint is in size, the faster this database will grow.
-
-Fingerprint size is usually expressed in bits per second of audio.
+The size of the fingerprint calculated is important, because to identify metadata a database of song fingerprints must be created. The larger each fingerprint is in size, the faster this database will grow.
 
 \subsubsection{Granularity}
 
@@ -236,20 +234,28 @@ Two such algorithms were selected and implemented for the project.
 \chapter{Preparation}
 \label{preparation}
 
-The next three sections will cover all of the work done for the project. This section will summarise the work that was done before implementation of any code began. Broadly, this encompasses research on the literature around the topic, learning of new skills to be used during implementation, and planning of the implementation and evaluation portions of the project. It also involved the selection of two algorithms to be implemented and compared.
+The next three sections will cover all of the work done for the project. This section will summarise the work that was done before implementation of any code began. 
+
+Broadly, this encompasses research on the literature around the topic, learning of new skills to be used during implementation, and planning of the implementation and evaluation portions of the project. It also involved the selection of two algorithms to be implemented and compared.
 
 Sections \ref{implementation} and \ref{evaluation} will cover the actual implementation of the two algorithms selected, and the subsequent evaluation of those implementations against each other.
 
 
 \section{Review of audio fingerprinting techniques}
 
-The first step undertaken was to review the current literature around the area. One particularly useful review was given by Cano et al. \cite{Cano02}, which gives a good overview of the general structure of most audio fingerprinting algorithms. This gave me a good starting point for my system design.
+The first step undertaken was to review the current literature around the area.
+
+A focus of mine during this review was to understand what my system design might look like, given that the design had to be generic enough to allow the implementation of at least two algorithms with different approaches. 
+
+Reading individual papers for proposed algorithms was useful in this regard, but it was often difficult to separate algorithm-specific features from general features of audio fingerprinting systems. One particularly useful paper in developing this understanding is due to Cano et al. \cite{Cano02}, which reviews many audio fingerprinting algorithms and provides a good overview of the general structure of most audio fingerprinting algorithms. 
+
+This general overview combined with basic understanding of a few specific algorithms gave me a good starting point for my system design.
 
 
 \section{Algorithm selection}
 \label{section:algoselection}
 
-In selecting the algorithms to compare, I wanted two algorithms which were:
+In selecting which algorithms to compare, I wanted two algorithms which were:
 
 \begin{itemize}
   \item Reasonably similar in their aims, so that they could be compared fairly
@@ -367,16 +373,14 @@ Audio fingerprinting naturally divides into two processes: building a database o
 
 Since matching and registration both involve calculating a fingerprint, the fingerprinting algorithm is best extracted into its own module, which can be called by both processes.
 
-The code for actual registration, matching and fingerprinting is specific to each of the algorithms implemented, due to significant differences in their approaches to the problem. However, a significant amount of shared code was also required to feed data into the algorithms and collect results.
+The code for actual registration, matching and fingerprinting is specific to each of the algorithms implemented, due to large differences in their approaches to the problem. However, a significant amount of shared code was also required to feed data into the algorithms and collect results.
 
 The design outlined for these two processes in the next two sections is based around a framework of shared code which allows different algorithm implementations to be swapped in in the relevant locations. In the diagrams, shared components are represented using blue blocks, and algorithm-specific components are represented in grey. 
 
 
 \subsection{Registration}
 
-The design for the registration process is summarised in Figure \ref{figs:registration_design}. 
-
-\begin{figure}[h]
+\begin{figure}[htb]
   \centering
   \input{figs/build_architecture}
   \caption{Block level design of the song registration system.}
@@ -385,20 +389,18 @@ The design for the registration process is summarised in Figure \ref{figs:regist
   The grey blocks within the matching section are algorithm-specific, while the blue blocks represent shared components.
 \end{figure}
 
+The design for the registration process is summarised in Figure \ref{figs:registration_design}. 
+
 The reader module finds all the individual song files in the library folder, and passes them to the algorithm's song registrar.
 
 The song registrar reads in the raw audio from the audio files, resamples to a standard sample rate and converts to mono. It then passes the signal to the fingerprinting module, which returns a fingerprint for the audio. The song registrar inserts the fingerprint into the algorithm's database, along with the song's metadata.
 
-All of the grey components within the registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase. 
-
+All of the grey components within the registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase.
 
 
 \subsection{Matching}
 
-
-The design for the matching process is summarised in Figure \ref{figs:matching_design}. 
-
-\begin{figure}[h]
+\begin{figure}[htb]
   \centering
   \input{figs/test_architecture}
   \caption{Block level design of the testing system}
@@ -407,7 +409,9 @@ The design for the matching process is summarised in Figure \ref{figs:matching_d
   The grey blocks within the matching section are algorithm-specific, while the blue blocks represent shared components. The test producer can be swapped out to run different tests.
 \end{figure}
 
-The test producer begins with a procedure similar to the reader module in the registration process above, reading in song files one by one. However, this time, the files are taken from a subset of the library, randomly chosen in advance. This subset is the random sample used in each test. In practice, there are three such subsets and each test is run once on each subset, with the results averaged. This process is described in detail in the evaluation section.
+The design for the matching process is summarised in Figure \ref{figs:matching_design}.
+
+The test producer begins with a procedure similar to the reader module in the registration process above, reading in song files one by one. However, this time, the files are taken from a subset of the library, randomly chosen in advance. This subset is the random sample used in each test. In practice, there are three such subsets and each test is run once on each subset, with the results averaged. This process is described in detail in the evaluation (section \ref{evaluation:matching_with_distortion}).
 
 After reading in each song to be tested, the test producer takes a clip of the song, and optionally applies some distortion to the clip. This distortion might range from adding background noise to playing the clip from speakers and re-recording it through a microphone.
 
@@ -415,14 +419,14 @@ These different distortion options are determined by passing the handle of a dis
 
 The resulting test clip is passed by the tester to the algorithm's matching process, which creates a fingerprint from it and consults its database to try to find a match. The closest match is returned to the tester, and compared against the correct answer. Finally, the tester outputs the results of the tests.
 
-In the same way as described for the registration process in the previous section, the grey components can be swapped out by swapping out function handles passed in to the tester.
+In the same way as described for the registration process in the previous section, the grey components can be swapped out depending on the algorithm.
 
 
 \subsection{Component swapping}
 
 Many components of the design need to be able to be swapped in and out depending on the algorithm or test type. 
 
-In practice, this swapping-out is achieved by passing in function handles for swappable pieces of code. To use a different implementation, a different function handle can be passed.
+In practice, this swapping-out is achieved by creating function handles (MATLAB terminology for first-class functions) for swappable pieces of code. To use a different implementation, a different function handle can be passed to the code that calls that function.
 
 For example, in the case of registration, the function handle for the song registrar is passed to the reader function, which calls it with the appropriate song files.
 
@@ -434,7 +438,7 @@ This section details my implementation of the parts of the system shared by both
 
 As outlined in the development strategy section (\ref{section:devstrat}), I decided to implement the shared code in parallel with the algorithm implementations.
 
-Although my development strategy for the project as a whole used the waterfall model, my strategy for implementation of the shared code was closer to a spiral model, with iterated refinement of features and interface. Since the shared code needed to work with both algorithm implementations, its requirements were not totally clear from the start. 
+Although my development strategy for the project as a whole used a waterfall model, my strategy for implementation of the shared code was closer to a spiral model, with iterated refinement of features and interface. This was useful since the shared code needed to work with both algorithm implementations, and so its requirements were not totally clear from the start. 
 
 
 \subsection{First prototype}
@@ -481,7 +485,7 @@ The matching process was missing more features in the prototype than registratio
 
 First to be added was the test producer (shown in context in Figure \ref{figs:matching_design} on page \pageref{figs:matching_design}). Whilst the prototype required hand-made test clips, the test producer creates them automatically as required from the original library.
 
-To create test clips, the test producer first selects $n$ random songs from the library (where $n$ is specified as part of the test parameters). The test producer takes a clip from each of the songs, and saves the clip to a new folder of test clips. Before saving the clip back, it can optionally apply some distortion to the clip. These distortions, and their development, are discussed further in the evaluation (section \ref{evaluation}).
+To create test clips, the test producer first selects $n$ random songs from the library (where $n$ is specified as part of the test parameters). The test producer takes a clip from each of the songs, and saves the clip to a new folder of test clips. Before saving the clip back, it can optionally apply some distortion to the clip. These distortions, and their development, are discussed further in the evaluation (section \ref{evaluation:matching_with_distortion}).
 
 The test producer finally passes a list of the test clips it has created to the next step, the tester, which passes each clip to the algorithm's matching function in the same way as described for the prototype.
 
@@ -496,7 +500,7 @@ A few further improvements were made during my implementation of the Philips alg
 
 I wrote a new script, which produced multiple subsets of the library to draw tests from. It did this by copying songs to new test set folders, and only needed to be run once for each test set to be created. 
 
-The test producer was modified to produce test clips from all songs in a given test set folder. I also added the functionality to run batches of tests from multiple test sets. This testing functionality is further discussed in the evaluation (section \ref{evaluation}). 
+The test producer was modified to produce test clips from all songs in a given test set folder. I also added the functionality to run batches of tests from multiple test sets. This testing functionality is further discussed in the evaluation (section \ref{evaluation:matching_with_distortion}). 
 
 
 \section{Implementation of the Shazam algorithm}
@@ -529,7 +533,7 @@ In this way, a complex spectrogram can be reduced to a sparse set of time-freque
 
 The pattern of dots in the constellation map for two matching pieces of audio should be the same: if you slide copies of each map over each other, there should be some time offset where all of the points overlap. In practice, not all of the points will match because distortions may have introduced or deleted points.
 
-So far, our fingerprinting algorithm consists of computing a spectrogram for the input audio, finding peaks in it, and then storing these peaks to be matched against later. Matching becomes a process of trying to find the patch of stars in our database of constellation maps which most closely matches the small patch of stars we have calculated for our input clip. This process is discussed more in section \ref{shazam:matcher} but involves, for each peak in our input audio's constellation map, finding all peaks at the same frequency in the database. I will call these possible matches `candidate matches'.
+So far, the fingerprinting algorithm consists of computing a spectrogram for the input audio, finding peaks in it, and then storing these peaks to be matched against later. Matching becomes a process of trying to find the patch of stars in the database of constellation maps which most closely matches the small patch of stars calculated for the input clip. This process is discussed more in section \ref{shazam:matcher} but involves, for each peak in the input audio's constellation map, finding all peaks at the same frequency in the database. I will call these possible matches `candidate matches'.
 
 \subsubsection{Combinatorial hashing}
 
@@ -537,15 +541,17 @@ Unfortunately, finding matches in this way can be slow due to the low entropy of
 
 In order to increase this entropy and thus decrease the false match rate for candidate matches, Wang uses a combinatorial hashing technique. Each peak is paired with a number of other points in a target zone. The frequencies of both peaks and the time offset between them is packed into a 32-bit unsigned integer, which is returned as a hash value. Each hash value is also associated with the time offset from the start of the audio signal, although this does not make up part of the hash itself.
 
-By again using 1024 possible frequency values, and another 10 bits for the time offset between the two peaks, we now gain 30 bits of information as opposed to our previous 10. The 20 additional bits give each hash around a million times more specificity, and a similar search speedup. However, there is also a combinatorial explosion of the number of hashes. In order to limit this, a maximum fan-out factor $F$ is defined, and only the first $F$ peaks in the target zone are paired to form hashes. For $F=10$, as is used in my implementation, the end result is a speedup factor in the region of $10^5$ over the na{\"i}ve strategy described above.
+By again using 1024 possible frequency values, and another 10 bits for the time offset between the two peaks, each hash contains 30 bits of information as opposed to the previous 10. These 20 additional bits give each hash around a million times more specificity, and a similar search speedup. However, there is also a combinatorial explosion of the number of hashes. In order to limit this, a maximum fan-out factor $F$ is defined, and only the first $F$ peaks in the target zone are paired to form hashes. For $F=10$, as is used in my implementation, the end result is a speedup factor in the region of $10^5$ over the na{\"i}ve strategy described above.
 
 \subsubsection{Implementation}
 
 Computing the spectrogram of the audio was achieved using the \lstinline{spectrogram} function in the MATLAB Signal Processing Toolbox.
 
-The second phase, finding the local maxima, is done in three passes. The first pass is a simple 3 by 3 median filter, which reduces salt and pepper noise. This ensures peaks with very small amplitudes, which are much more distortion sensitive, are eliminated. 
+The second phase, finding the local maxima, is not well described in the original paper. My original After some research on methods for finding local maxima in 2D signals, I settled on a three pass method. 
 
-The second pass is a gaussian filter which smooths the spectrogram, removing high frequency components of the time-frequency signal. Again, this removes some high frequency noise and also makes sure that our peaks have a reasonable spacing; peaks too close together are merged. The size of this gaussian filter determines the feature size of the peaks we detect. 
+The first pass is a simple 3 by 3 median filter, which reduces salt and pepper noise. This ensures peaks with very small amplitudes, which are much more distortion sensitive, are eliminated. 
+
+The second pass is a gaussian filter which smooths the spectrogram, removing high frequency components of the time-frequency signal. Again, this removes some high frequency noise and also makes sure that the peaks have a reasonable spacing; peaks too close together are merged. The size of this gaussian filter determines the feature size of the peaks detected. 
 
 The final step of peak finding is to compare each point with its neighbours. If it is the largest of all its 8 neighbours, it is classified as a peak.
 
@@ -581,17 +587,17 @@ The first step is to obtain the audio signal, and to calculate its fingerprint. 
 
 \subsubsection{Finding candidate songs}
 
-The next step is to find candidate songs in the database which might match our unlabelled audio. To do this, we simply take all of the hashes -- time-frequency peak pairs -- in the unlabelled audio's fingerprint, and search for identical hashes in the database. This search is made efficient by means of an index on the \lstinline{hash} column of the database.
+The next step is to find candidate songs in the database which might match the unlabelled audio. To do this, the matcher simply takes all of the hashes -- time-frequency peak pairs -- in the unlabelled audio's fingerprint, and searches for identical hashes in the database. This search is made efficient by means of an index on the \lstinline{hash} column of the database.
 
 Each of these matches is binned according to the \lstinline{song_id}. This results in a list of candidate songs, each with a corresponding list of matching hashes. Each matching hash is associated with two time offsets: one  from the start of the song in the database, and one from the start of the unlabelled audio.
 
 \subsubsection{Scoring candidate songs}
 
-Having found a list of candidate songs, we now need to score each in order to find out which one is the closest match.
+Having found a list of candidate songs, a distance score is needed for each one in order to find out which one is the closest match.
 
-The list of hash matches corresponding to a candidate song represents a scatterplot, with time in the candidate song along one axis and time in the unlabelled audio along the other. If two files matched, we would expect a sequence of features in one file to also occur in the same relative time sequence (minus some offset) in the other file. That is, we should expect a diagonal line in the scatterplot of matching hashes.
+The list of hash matches corresponding to a candidate song represents a scatterplot, with time in the candidate song along one axis and time in the unlabelled audio along the other. If two files matched, you would expect a sequence of features in one file to also occur in the same relative time sequence (minus some offset) in the other file. That is, you should see a diagonal line in the scatterplot of matching hashes.
 
-A robust regression technique could be used to detect this line, but would be computationally expensive. To constrain the problem, we assume that the gradient of the line is 1. This means we lose the ability to detect clips played back faster or slower than the original song, but in practice this is a rare distortion.
+A robust regression technique could be used to detect this line, but would be computationally expensive. To constrain the problem, the algorithm assumes that the gradient of the line is 1. This means the ability to detect clips played back faster or slower than the original song is lost, but in practice this is a rare distortion for most use cases.
 
 Using this assumption, the corresponding times of matching features between matching signals have the relationship
 
@@ -601,13 +607,13 @@ Using this assumption, the corresponding times of matching features between matc
 
 where $t_f$ is the time of a feature $f$ in the unlabelled audio clip, and $t_f'$ is the time of the same feature in the candidate song. $k$ is the time offset between the sequences (the start time of the clip in the original song).
 
-For each $(t_f',t_f)$ pair in the scatterplot, we calculate
+For each $(t_f',t_f)$ pair in the scatterplot, $\delta t_f$ is defined as
 
 \begin{align*}
   \delta t_f = t_f' - t_f
 \end{align*}
 
-Then, we calculate a histogram of these $\delta t_f$ values. If a diagonal line exists in the scatterplot, we will get a sharp peak in the histogram at the associated offset (where $\delta t_f = k$).
+A histogram of these $\delta t_f$ values is plotted. If a diagonal line exists in the scatterplot, a sharp peak will be produced in the histogram at the associated offset (where $\delta t_f = k$).
 
 The score assigned to each candidate song is simply the height of the highest peak in this histogram.
 
@@ -616,7 +622,7 @@ The score assigned to each candidate song is simply the height of the highest pe
 
 The final task is to sort the candidate songs in descending order of score and return the top match. 
 
-My implementation simply returns the candidate with the highest score. A more sophisticated implementation might attempt to assess the probability of a false match given the score of the top candidate, and return no match if the significance of the score is too low. However, this requires statistical analysis of the song library in question to determine false positive rates for different scores.
+My implementation simply returns the candidate with the highest score. A more sophisticated implementation might attempt to assess the probability of a false match given the score of the top candidate, and return no match if the significance of the score is too low. However, this would require statistical analysis of the song library in question to determine false positive rates for different scores.
 
 For the purposes of this project I decided that adding this feature for both implementations would require too much time, and would not contribute enough to the evaluation of the algorithms.
 
@@ -739,14 +745,14 @@ As in the Shazam algorithm, the matcher recieves unlabelled audio, and attempts 
 
 In the Philips algorithm, fingerprints are represented by a stream of 32 bit sub-fingerprints, each of which is based on a few milliseconds of the song. On its own, a single sub-fingerprint has insufficient discriminating power to uniquely identify that section of audio, so robust identification must be based on a sequence of sub-fingerprints.
 
-Two sequences of sub-fingerprints are said to be similar if corresponding bits in the sequences are similar. More formally, we define the distance between the two sequences to be the Hamming distance between their respective bit sequences. The smaller the distance, the more similar the sequences (and therefore the audio clips) are.
+Two sequences of sub-fingerprints are said to be similar if corresponding bits in the sequences are similar. More formally, the distance between the two sequences is defined to be the Hamming distance between their respective bit sequences. The smaller the distance, the more similar the sequences (and therefore the audio clips) are.
 
 
 \subsubsection{Searching for a match}
 
 When an unlabelled clip is input, and its fingerprint calculated, the next step is to locate the closest match for the given fingerprint in the database. The input clip will be a subset of the song, usually just a few seconds.
 
-The database contains a stream of sub-fingerprints for each song in the library. To find a match we must find a subset of one of these streams such that the distance between it and the unlabelled clip's fingerprint is minimised. This can be visualised as sliding the unlabelled clip's fingerprint over the database, finding the location where it aligns most closely.
+The database contains a stream of sub-fingerprints for each song in the library. To find a match, the algorithm must find a subset of one of these streams such that the distance between it and the unlabelled clip's fingerprint is minimised. This can be visualised as sliding the unlabelled clip's fingerprint over the database, finding the location where it aligns most closely.
 
 The na\"ive implementation would be a linear search, and would be very slow for large databases. To speed up the search, an assumption is made about the characteristics of the sub-fingerprints under distortion. 
 
@@ -760,7 +766,7 @@ The full matching process proceeds as follows:
 
   \item \textbf{Calculation of unlabelled audio's fingerprint.} This is done by the fingerprinting module.
 
-  \item \textbf{Finding candidate starting positions.} Each sub-fingerprint from the unlabelled audio's fingerprint is searched for in the database. Anywhere there is a matching sub-fingerprint, we collect the song identifier and hash number. We subtract the sub-fingerprint's position in the unlabelled audio from the hash number to find a possible starting point for the unlabelled clip in the database. Note that duplicates must be removed from this list in case two or more sub-fingerprints were perfectly preserved.
+  \item \textbf{Finding candidate starting positions.} Each sub-fingerprint from the unlabelled audio's fingerprint is searched for in the database. Anywhere there is a matching sub-fingerprint, the song identifier and hash number are collected. The sub-fingerprint's position in the unlabelled audio is subtracted from the hash number to find a possible starting point for the unlabelled clip in the database. Note that duplicates must be removed from this list in case two or more sub-fingerprints were perfectly preserved.
 
   \item \textbf{Retrieving candidate sequences.} Once candidate starting positions have been found, a subset of the fingerprint stream, starting from each of those positions, is retrieved. The length of this subset is the same as the length of the unlabelled audio's fingerprint stream.
 
@@ -821,6 +827,7 @@ With both implementations complete, I moved on to the evaluation phase. This sec
 
 
 \section{Matching in the presence of distortions}
+\label{evaluation:matching_with_distortion}
 
 The process for testing robustness of matching is discussed in my implementation of the shared matching code in section \ref{section:sharedimpl}. It consists of inputting clips of songs from the library, and checking whether each clip is matched to the correct song. These clips may have different distortions applied to them to test robustness.
 
@@ -988,7 +995,7 @@ The sizes of both fingerprint databases are shown in Table \ref{table:db_size}.
 
 Although the two algorithms have very different fingerprinting techniques, they have the same schema for their fingerprint tables, since the hash values are packed into 32 bit integers in both cases. The Shazam algorithm has around 50\% more rows in its databases, indicating that the fingerprints it produces are significantly larger. 
 
-However, when we look at the actual size of the database on disc, the Philips database is around 14\% larger. This can be accounted for by the fact it has an extra index on the fingerprints table to improve its database search speed.
+However, when you look at the actual size of the database on disc, the Philips database is around 14\% larger. This can be accounted for by the fact it has an extra index on the fingerprints table to improve its database search speed.
 
 \newcolumntype{L}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \begin{table}[ht]
