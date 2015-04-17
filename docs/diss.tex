@@ -149,11 +149,11 @@ This technology has found a variety of uses in both industry and consumer produc
 
 \subsection{Fingerprinting functions}
 
-An audio fingerprint is a compact digital representation of some audio, which summarises its content. It is generated deterministically from the audio signal, and can be thought of as a kind of hash, where the aim is that perceptually similar pieces of audio -- that is, audio which sounds the same or very similar to the human ear -- have similar hash values.
+An audio fingerprint is a compact digital representation of some audio, which summarises its content. It is generated deterministically from the audio signal, and can be thought of as a kind of hash, where the aim is that perceptually similar pieces of audio have similar hash values. Perceptual similarity is used here to mean that two clips sound similar to the human ear, although this is somewhat difficult to quantify.
 
 An audio fingerprinting algorithm needs to work independently to the representation of the audio signal. If two audio signals sound the same to the human ear then their fingerprints should be a close match, regardless of how similar the binary representation of the audio was. For instance, two copies of the same song encoded at different rates of compression will have quite different representations but are very perceptually similar, and so should have very similar fingerprints.
 
-As a result, a robust audio fingerprinting algorithm needs to take into account the perceptual characteristics of the audio, and be as unaffected as possible in the face of likely distortions. Despite this, it must retain enough discriminatory power to distinguish between similar songs.
+As a result, a robust audio fingerprinting algorithm needs to take into account the perceptual characteristics of the audio, and be as immune as possible to likely distortions. Despite this, it must retain enough discriminatory power to distinguish between similar songs.
 
 Once an audio fingerprint has been computed for a fragment of audio, a precomputed database of song fingerprints can be searched for a close match. Here, a close match is defined by some distance metric which defines how similar two fingerprints are determined to be. If a close match is found, the algorithm concludes that the fragment of audio matches the song found in the database.
 
@@ -339,7 +339,7 @@ I created small relevant segments of code for things like reading in audio files
 
 \subsection{MIRToolbox}
 
-I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an mp3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the performance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
+I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an MP3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the performance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
 
 After consulting the operations available in the MATLAB standard library, I decided it would probably be possible to implement the algorithms just as easily without the use of MIRToolbox. Since, based on my preliminary tests, the MIRToolbox code might also be slower, I decided not to use MIRToolbox for my implementations.
 
@@ -361,7 +361,7 @@ I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked wel
 \chapter{Implementation}
 \label{implementation}
 
-In this section I will outline all of the steps I took to successfully implement the two selected audio fingerprinting algorithms. This starts with the design of the system (section \ref{section:systemdesign}), and then moves on to implementation of each of the Shazam and Philips algorithms (sections \ref{section:shazam} and \ref{section:philips} respectively).
+In this section I outline all of the steps I took to successfully implement the two selected audio fingerprinting algorithms. This starts with the design of the system (section \ref{section:systemdesign}), and then moves on to implementation of each of the Shazam and Philips algorithms (sections \ref{section:shazam} and \ref{section:philips} respectively).
 
 
 \section{System design}
@@ -393,7 +393,7 @@ The design for the registration process is summarised in Figure \ref{figs:regist
 
 The reader module finds all the individual song files in the library folder, and passes them to the algorithm's song registrar.
 
-The song registrar reads in the raw audio from the audio files, resamples to a standard sample rate and converts to mono. It then passes the signal to the fingerprinting module, which returns a fingerprint for the audio. The song registrar inserts the fingerprint into the algorithm's database, along with the song's metadata.
+The song registrar reads in the raw audio from the audio files, resamples to a standard sample rate and converts to a monophonic signal. It then passes the signal to the fingerprinting module, which returns a fingerprint for the audio. The song registrar inserts the fingerprint into the algorithm's database, along with the song's metadata.
 
 All of the grey components within the registration process can be swapped out to allow for testing of both algorithms. This allows re-use of the reader code and makes for a cleaner codebase.
 
@@ -426,7 +426,7 @@ In the same way as described for the registration process in the previous sectio
 
 Many components of the design need to be able to be swapped in and out depending on the algorithm or test type. 
 
-In practice, this swapping-out is achieved by creating function handles (MATLAB terminology for first-class functions) for swappable pieces of code. To use a different implementation, a different function handle can be passed to the code that calls that function.
+In practice, this swapping-out is achieved by creating function handles\footnote{A \textit{function handle} is MATLAB terminology for a first-class function.} for swappable pieces of code. To use a different implementation, a different function handle can be passed to the code that calls that function.
 
 For example, in the case of registration, the function handle for the song registrar is passed to the reader function, which calls it with the appropriate song files.
 
@@ -451,13 +451,13 @@ The shared code consists of two parts, one for registration and one for matching
 
 Since the registration half is relatively straightforward, the first prototype's implementation was actually almost complete. It consisted simply of a function which retrieved an array of every audio file in a given folder, and passed each filename to a registration function which is part of the algorithm implementation. It also outputs some progress information to the standard output so that when running the script I can monitor progress.
 
-At the start of registering each song, each fingerprinting algorithm also needs to resample the audio to a fixed sample rate, and convert the signal from stereo to mono. However, each algorithm may require a different sample rate at this stage, and might require extra processing of some sort. As a result, I didn't include this preprocessing step in the shared code, instead I simply pass the audio file's location and let the algorithm's own registration function handle reading and resampling the audio.
+At the start of registering each song, each fingerprinting algorithm also needs to resample the audio to a fixed sample rate, and convert the signal from stereo to a single channel. However, each algorithm may require a different sample rate at this stage, and might require extra processing of some sort. As a result, I didn't include this preprocessing step in the shared code, instead I simply pass the audio file's location and let the algorithm's own registration function handle reading and resampling the audio.
 
-In order to avoid duplication of code, I wrote a utility function to resample audio to a mono signal at a given sample rate, which was straightforward with the Signal Processing Toolbox.
+In order to avoid duplication of code, I wrote a utility function to resample audio to a monophonic signal at a given sample rate, which was straightforward with the Signal Processing Toolbox.
 
 \subsubsection{Matching}
 
-The matching half is more complicated since it includes all of the testing functionality. The first prototype's version was severely limited -- it simply took audio files from a tests folder and ran them against the algorithm's matching function. The tests in this folder were clips from original songs, which I manually cropped from the original files using the free software Audacity. It then printed the returned match result to the MATLAB command line, which I could manually verify.
+The matching half is more complicated since it includes all of the testing functionality. The first prototype's version was severely limited -- it simply took audio files from a tests folder and ran them against the algorithm's matching function. The tests in this folder were clips from original songs, which I manually cropped from the original files using the free software Audacity \cite{Audacity}. It then printed the returned match result to the MATLAB command line, which I could manually verify.
 
 This testing process was used for very early debugging of the Shazam algorithm implementation but quickly became too laborious for real evaluation.
 
@@ -494,7 +494,7 @@ One important change made to the tester was to enable it to automatically classi
 
 \subsection{Final refinements}
 
-The shared code detailed in the section above was good enough to verify that the Shazam algorithm was working well and could match undistorted clips with near 100\% accuracy.
+The shared code detailed in the section above was good enough to verify that the Shazam algorithm was working well and could match the tested undistorted clips with 100\% accuracy.
 
 A few further improvements were made during my implementation of the Philips algorithm. The primary improvement was to allow the matching process to use test sets -- that is, instead of the test producer choosing $n$ random songs each time, random subsets of the library are defined in advance as test sets, and all songs in a test set are used to produce test clips.
 
@@ -506,7 +506,7 @@ The test producer was modified to produce test clips from all songs in a given t
 \section{Implementation of the Shazam algorithm}
 \label{section:shazam}
 
-This section is a summary of my work in implementing the first of the two fingerprinting algorithms, which was proposed by Avery Wang in 2003 \cite{Wang03}, and which I will refer to as the `Shazam algorithm'. Section \ref{section:algoselection} contains more discussion on the rationale used to select the algorithms.
+This section is a summary of my work in implementing the Shazam algorithm, which was proposed by Avery Wang in 2003 \cite{Wang03}. Section \ref{section:algoselection} contains more discussion on the rationale used to select the algorithms.
 
 The original paper describes the algorithm as `capable of quickly identifying a short segment of music captured through a cellphone microphone in the presence of foreground voices and other dominant noise.' %TODO quote needed here?
 
@@ -547,7 +547,7 @@ By again using 1024 possible frequency values, and another 10 bits for the time 
 
 Computing the spectrogram of the audio was achieved using the \lstinline{spectrogram} function in the MATLAB Signal Processing Toolbox.
 
-The second phase, finding the local maxima, is not well described in the original paper. My original After some research on methods for finding local maxima in 2D signals, I settled on a three pass method. 
+The second phase, finding the local maxima, is not well described in the original paper. After some research on methods for finding local maxima in 2D signals, I settled on a three pass method. 
 
 The first pass is a simple 3 by 3 median filter, which reduces salt and pepper noise. This ensures peaks with very small amplitudes, which are much more distortion sensitive, are eliminated. 
 
@@ -573,7 +573,7 @@ The \lstinline{hashes} table has three columns: \lstinline{song_id}, \lstinline{
 
 The registrar is responsible for registering a new song in the database. It consists of a single function, which receives an audio filename and a handle to the database. 
 
-It reads in the audio from the file, and resamples it to an 8kHz mono signal as a preprocessing step. It then calls the fingerprinter to obtain a fingerprint of the signal, and inserts the fingerprint hashes into the database, along with the song's name. Note that, for simplicity, the song's name is taken to be its filename.
+It reads in the audio from the file, and resamples it to an 8kHz monophonic signal as a preprocessing step. It then calls the fingerprinter to obtain a fingerprint of the signal, and inserts the fingerprint hashes into the database, along with the song's name. Note that, for simplicity, the song's name is taken to be its filename.
 
 
 \subsection{Matcher}
@@ -695,7 +695,7 @@ This section is a summary of the work completed during its implementation. It wi
 
 The Philips algorithm works using a \textit{fingerprint stream} approach, in which small sections of audio, referred to as a \textit{frame}, are each assigned a 32 bit \textit{sub-fingerprint}. This stream of sub-fingerprints makes up the fingerprint. Sub-fingerprints are too small to uniquely identify a frame, but a longer interval containing sufficiently many frames can be used to identify audio robustly.
 
-The frames of audio are overlapping, and are weighted using a Hanning window, with overlap factor 31/32. This large overlap factor ensures that even if a comparison clip's frames are misaligned by 50\% of the frame size, the frames will be similar enough to enable identification. Due to the large overlap, subsequent sub-fingerprints are very similar and vary fairly slowly with time. 
+The frames of audio are overlapping, and are weighted using a Hann window, with overlap factor 31/32. This large overlap factor ensures that even if a comparison clip's frames are misaligned by 50\% of the frame size, the frames will be similar enough to enable identification. Due to the large overlap, subsequent sub-fingerprints are very similar and vary fairly slowly with time. 
 
 Note that although the Shazam algorithm appears to take a very different approach to this algorithm, the framing process is in fact very similar. The Shazam algorithm's framing process is implicit within its computation of a spectrogram as the first step. A Hanning window with a large overlap factor is also used in the Shazam algorithm, for the same reasons.
 
@@ -950,7 +950,7 @@ The Shazam algorithm does not outperform the Philips algorithm by as much of a m
 
 There are two aspects to the performance of the algorithms: matching, and registration. Of the two, matching is more important since registration is a one-time cost for each song in the database, whilst matching occurs in every application of the algorithm. 
 
-For registration, fingerprinting is the longest process for both algorithms, since the whole song must be analysed. Other time consuming processes include reading in the song audio from disc and resampling it to a standard sample rate mono signal, and inserting the fingerprints into the database.
+For registration, fingerprinting is the longest process for both algorithms, since the whole song must be analysed. Other time consuming processes include reading in the song audio from disc and resampling it to a standard sample rate monophonic signal, and inserting the fingerprints into the database.
 
 The audio processing is approximately the same for each algorithm, and so just adds an extra constant cost to each song processed. Database insertion is roughly proportional to the size of the fingerprints produced, since both algorithms use the same database architecture and have similar schemas. As such, the timing differences for registration are mostly a result of differences in fingerprinting speed and size.
 
