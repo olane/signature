@@ -86,17 +86,21 @@ Supervisor:         & Vaiva Imbrasait\'{e}                    \\
 
 \section*{Original aims of the project}
 
-In this project I aimed firstly to implement at least two audio fingerprinting algorithms, each with a corresponding matching algorithm, for the purpose of recognising clips of songs from a library in a way that is robust to noise and distortions.
+Audio fingerprinting algorithms are a class of algorithms designed to identify short clips of audio from a library of known audio files, such as songs.
 
-Secondly, I aimed to assemble a library of songs and corresponding test clips against which to test these algorithms.
+In this project I planned firstly to implement at least two audio fingerprinting algorithms, each with a corresponding matching algorithm.
 
-Finally, I aimed to compare these implementations against several criteria, including size of fingerprints generated and percentage of test clips matched correctly from the assembled library, at various clip lengths and levels of noise.
+For testing purposes, I planned to assemble a library of songs and corresponding test clips against which to test these algorithms.
+
+Finally, I aimed to compare these implementations using several criteria, including size of fingerprints generated and identification accuracy, using various clip lengths and levels of noise.
 
 \section*{Work completed}
 
-Two algorithms for audio fingerprinting were successfully implemented, with corresponding matching algorithms. These algorithms were proposed by Avery Wang in 2003 \cite{Wang03} and Haitsma et al. in 2002 \cite{Haitsma02}. A library of songs was assembled, and corresponding test cases made by taking different length clips from the library and adding distortions.
+Two algorithms for audio fingerprinting were successfully implemented, with corresponding matching algorithms. These algorithms were proposed by Avery Wang in 2003 \cite{Wang03} and Haitsma et al. in 2002 \cite{Haitsma02}. 
 
-The two implementations were tested and evaluated against several criteria using the set of test clips, and compared against each other.
+I assembled a library of songs, and generated a set of test cases by taking clips of different lengths. I also enhanced the test set by applying different types of distortion to test how well the algorithms deal with different types of noise.
+
+The two implementations were tested and evaluated using several criteria using the set of test clips, and compared against each other.
 
 \section*{Special difficulties}
 
@@ -145,47 +149,43 @@ Finally, thanks to my parents for always encouraging me to do what I enjoy, and 
 \chapter{Introduction}
 \label{introduction}
 
-This project concerns the problem of identifying songs from small fragments of audio. Algorithms used to tackle this problem are usually referred to as \emph{audio fingerprinting} algorithms. In this project, I successfully implement two such algorithms, and compare their relative strengths and weaknesses.
+This project concerns the problem of identifying songs from small fragments of audio. Algorithms used to tackle this problem are usually referred to as \emph{audio fingerprinting} algorithms. Each algorithm has a fingerprinting component which creates a summary of the audio content, and a matching component which uses this summary to identify a close match in a database of known songs. In this project, I successfully implement two such algorithms, and compare their relative strengths and weaknesses.
 
 This section serves as an introduction to the subject area, and summarises the main content of the project.
 
 \section{Introduction to audio fingerprinting}
 
-Audio fingerprinting gives the ability to identify metadata for songs, videos and other media based on the content of the audio signal (or, often, a small section of that audio).
+Audio fingerprinting provides the ability to identify songs, videos and other media based on the content of the audio signal (or, often, a small section of that audio).
 
 This technology has found a variety of uses in both industry and consumer products. For example, a user might want to identify a song's name and artist by recording a clip of it using their mobile phone. Music labels might use the technology to automatically monitor radio stations to ensure the correct song royalties are being paid, or to use as part of a watermarking system to track copyright violations.
 
 
 \subsection{Fingerprinting functions}
 
-An audio fingerprint is a compact digital representation of some audio, which summarises its content. It is generated deterministically from the audio signal, and can be thought of as a kind of hash, where the aim is that perceptually similar pieces of audio have similar hash values. Perceptual similarity is used here to mean that two clips sound similar to the human ear, although this is somewhat difficult to quantify.
+An audio fingerprint is a compact digital representation of some audio, which summarises its content. It is generated deterministically from the audio signal, and can be thought of as a kind of hash, where perceptually similar pieces of audio have similar hash values. Perceptual similarity is used here to mean that two clips sound similar to the human ear, although this is somewhat difficult to quantify precisely.
 
-An audio fingerprinting algorithm needs to work independently to the representation of the audio signal. If two audio signals sound the same to the human ear then their fingerprints should be a close match, regardless of how similar the binary representation of the audio was. For instance, two copies of the same song encoded at different bitrates using a lossy compression scheme such as MP3  will have quite different representations but are very perceptually similar, and so should have very similar fingerprints.
+An audio fingerprinting algorithm needs to work independently of the representation of the audio signal. For instance, two copies of the same song encoded at different bitrates using a lossy compression scheme such as MP3  will have quite different binary representations but sound very similar to the human ear, and so should have very similar fingerprints.
 
-As a result, a robust audio fingerprinting algorithm needs to take into account the perceptual characteristics of the audio, and be as immune as possible to likely distortions. Despite this, it must retain enough discriminatory power to distinguish between similar songs.
+As a result, a robust audio fingerprinting algorithm needs to take into account characteristics of the audio which summarise the content of the signal, such as timing and frequency information. These characteristics should also be as immune as possible to likely distortions. Despite this, the fingerprint must retain enough discriminatory power to distinguish between similar songs.
 
-Once an audio fingerprint has been computed for a fragment of audio, a precomputed database of song fingerprints can be searched for a close match. Here, a close match is defined by some distance metric which determines the similarity between two fingerprints. If a close match is found, the algorithm concludes that the fragment of audio matches the song found in the database.
+Once an audio fingerprint has been computed for a fragment of audio, a precomputed database of song fingerprints can be searched for a close match. Here, a close match is defined by some distance metric which indicates how similar two fingerprints are. If a close match is found, the algorithm concludes that the fragment of audio matches the song found in the database.
 
-Note that it is not possible to create a fingerprint function which always results in identical fingerprints for perceptually similar audio, because perceptual similarity is known not to be transitive. That is, if an audio clip A is perceptually similar to two other clips, B and C, then B and C are not necessarily perceptually similar. A fingerprinting scheme which relied on absolute equality would enforce such a property, and would therefore be unsuitable for modelling perceptual similarity.
-
-In conclusion, when designing a fingerprinting function, it is required that two perceptually similar audio objects result in similar fingerprints. In addition, two dissimilar audio objects should be very unlikely to produce similar fingerprints. 
-
-More formally, a well designed fingerprint function $F$ and corresponding distance function $D$ will have some threshold $t$ such that with very high probability $D(F(A),F(B)) <= t$ if objects A and B are perceptually similar, and $D(F(A),F(B)) > t$ if they are not.
+A well designed fingerprint function $F$ and corresponding distance function $D$ will have some threshold $t$ such that with very high probability $D(F(A),F(B)) <= t$ if objects A and B are perceptually similar, and $D(F(A),F(B)) > t$ if they are not.
 
 
 \subsection{General framework}
 
-Despite their differences in approach, most audio fingerprinting algorithms share a common framework.
+Despite the many different approaches to the problem, most audio fingerprinting algorithms share a common framework.
 
 Each algorithm consists of three main parts: 
 
 \begin{itemize}
-  \item A fingerprinter, which generates an audio fingerprint from a given piece of audio.
+  \item A fingerprinter, which generates a fingerprint from a given piece of audio.
   \item A registrar, which builds a database of fingerprints from a library of song audio files and their metadata.
   \item A matcher, which matches a fingerprint against the precomputed database.
 \end{itemize}
 
-This structure is shown in more detail in Figure \ref{fig:generalframework}. 
+This structure is depicted in Figure \ref{fig:generalframework}. 
 
 \begin{figure}[h]
   \centering
@@ -200,65 +200,74 @@ Given that the matcher needs to search the database for close matches, some noti
 \subsection{System parameters}
 \label{section:systemparams}
 
-Audio fingerprinting systems can be evaluated over a variety of parameters, which vary in importance based on the application. The main parameters are summarised below.
+Audio fingerprinting systems can be evaluated using a variety of parameters, whose relative importance varies based on the application. 
+The main parameters are summarised below.
 
 \subsubsection{Robustness}
 
-Robustness to signal degradations is one of the most important parameters. Ideally, even severely degraded audio should give a very similar fingerprint. All algorithms require some robustness to resampling and mild compression, since there is no guarantee that the input audio will be in the same format and coded at the same compression rate as the original copy in the library.
+Robustness to signal degradations is one of the most important parameters. Ideally, even severely degraded audio should have a very similar fingerprint to the same audio without any degradation. All algorithms require some robustness to resampling and mild compression, since there is no guarantee that the input audio will be in the same format and coded at the same compression rate as the original copy in the library.
 
-Most algorithms will also try to be as robust as possible to other distortions such as echo, reverb, severe compression, background noise and equalisation.
+Other specific distortions that an algorithm needs to be robust towards are somewhat dependent on the intended use cases. For example, a system intended for radio broadcast monitoring might need to be robust against radio noise or compression, but wouldn't need to worry about reverb or matching using very short clips. However, a system intended to match songs from a smartphone app would require robustness to background noise (such as ambient crowd noise) and reverb, and would benefit from maintaining high accuracy even when only very short clips of the full track are available.
 
-In order to remain robust to distortions, algorithms must base their fingerprints on features of the audio which are reasonably invariant to the distortions in question. Usually these are perceptual features such as frequency peaks.
+In order to remain robust to distortions, algorithms must base their fingerprints on features of the audio which are reasonably invariant to the distortions in question.
+
+This parameter is particularly important for applications where the audio to be matched is collected using a microphone or some sort of wireless receiver. For applications where severe distortion is unlikely, such as tagging the metadata of unlabelled audio files, it is much less important.
 
 \subsubsection{Reliability}
 
 Reliability has to do with the proportion of songs which are incorrectly matched. The rate at which this occurs is usually referred to as the false positive rate or the false match rate.
 
-This would be slightly more important, for example, to a music label tracking royalties than to a user finding song titles using their smartphone. However, this metric is always fairly important.
+This would be more important, for example, to a music label tracking royalties than to a user finding song titles using their smartphone, because a false positive may cause them to charge royalties incorrectly. However, this metric is always fairly important.
 
 \subsubsection{Fingerprint size}
 
-The size of the fingerprint calculated is important, because to identify metadata a database of song fingerprints must be created. The larger each fingerprint is in size, the faster this database will grow.
+The size of the fingerprint calculated is important, because to identify metadata a database of song fingerprints must be created. Larger fingerprints will cause the database to grow faster as the song count grows.
+
+The more constrained memory is, and the more songs are to be matched against, the more important this is. A music label may only be interested in matching its own songs, in which case this metric is less important.
+
 
 \subsubsection{Granularity}
 
-The property of granularity determines how many seconds of audio are required to identify a match in the database. In some applications the whole song can be used for identification, in others shorter clips are preferred. 
+Granularity determines how many seconds of audio are required to identify a match in the database. In some applications, such as the radio monitoring case, it may be possible to use almost the entire song for identification, in others shorter clips are preferred.
 
 The granularity will often depend on the types of degradation applied to the audio; many algorithms can compensate for more severely degraded audio by matching on longer clips.
 
 \subsubsection{Scalability}
 
-Scalability refers to how easily the system can be extended for larger and larger library sizes. A larger library means a larger fingerprint database, and therefore longer search times. Efficient database search strategies are usually employed to keep search times as low as possible.
+Scalability refers to how easily the system can be extended to larger and larger library sizes. A larger library means a larger fingerprint database, and therefore longer search times. Efficient database search strategies are usually employed to keep search times as low as possible.
 
 
 \section{This project}
 
-There are a many algorithms for audio fingerprinting which have been proposed in the literature, some of which have been used extensively for commercial applications. 
+There are many algorithms for audio fingerprinting which have been proposed in the literature, some of which have been used extensively for commercial applications. Two such algorithms were selected and implemented for the project.
 
-Two such algorithms were selected and implemented for the project.
-
+I examine all of the above system parameters in my evaluation, with the exception of scalability, which was not possible to test without obtaining a larger library of songs.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Preparation}
 \label{preparation}
 
-The next three sections will cover all of the work done for the project. This section will summarise the work that was done before implementation of any code began. 
+The next three chapters will cover all of the work done for the project. This chapter will summarise the work that was done before implementation of any code began. 
 
-Broadly, this encompasses research on the literature around the topic, learning of new skills to be used during implementation, and planning of the implementation and evaluation portions of the project. It also involved the selection of two algorithms to be implemented and compared.
+Broadly, this encompasses researching the literature around the topic, learning new skills required for implementation, and planning the implementation and evaluation portions of the project. It also involves the selection of two algorithms to be implemented and compared.
 
-Sections \ref{implementation} and \ref{evaluation} will cover the actual implementation of the two algorithms selected, and the subsequent evaluation of those implementations against each other.
+Chapters \ref{implementation} and \ref{evaluation} will cover the actual implementation of the two algorithms selected, and the subsequent evaluation of those implementations against each other.
 
 
 \section{Review of audio fingerprinting techniques}
 
 The first step undertaken was to review the current literature around the area.
 
-A focus of mine during this review was to understand what my system design might look like, given that the design had to be generic enough to allow the implementation of at least two algorithms with different approaches. 
+The main differentiators between fingerprinting algorithms tend to be which audio characteristics they choose to extract in order to base their fingerprints on. In general, algorithms start with some preprocessing steps which typically involve some transformation of the audio into the time-frequency domain. This transformation is usually a Fast Fourier Transform, but others such as the Discrete Cosine Transform and Walsh-Hadamard Transform are sometimes used \cite{Cano02}.
 
-Reading individual papers for proposed algorithms was useful in this regard, but it was often difficult to separate algorithm-specific features from general features of audio fingerprinting systems. One particularly useful paper in developing this understanding is due to Cano et al. \cite{Cano02}, which reviews many audio fingerprinting algorithms and provides a good overview of the general structure of most audio fingerprinting algorithms. 
+Once the audio is in this domain, a feature extraction step takes place. This step is where the greatest diversity of techniques is found. For example, Kimura et al. analyse the power of different bands of the frequency spectrum \cite{Kimura01}, whilst Allamanche et al. use the Spectral Flatness Measure, which is an estimation of how noise-like or tone-like a signal is \cite{Allamanche01}.
 
-This general overview combined with basic understanding of a few specific algorithms gave me a good starting point for my system design.
+Most systems then further process these extracted features, for example by taking a derivative, comparing values between frequency bands, or applying a quantisation step. Finally, the features are reduced into some final representation, which serves as the fingerprint itself and can be stored in the database. The structure and form of this final representation may affect the database search strategy and distance measure used.
+
+A side goal of mine during this review was to understand what my system design should look like, given that the design had to be generic enough to allow the implementation of at least two algorithms with different approaches. 
+
+One particularly useful paper in developing this understanding is due to Cano et al. \cite{Cano02}, which reviews many audio fingerprinting algorithms and provides a good overview of the general structure of most audio fingerprinting algorithms. This general overview combined with basic understanding of a few specific algorithms gave me a good starting point for my system design.
 
 
 \section{Algorithm selection}
@@ -267,49 +276,52 @@ This general overview combined with basic understanding of a few specific algori
 In selecting which algorithms to compare, I wanted two algorithms which were:
 
 \begin{itemize}
-  \item Reasonably similar in their aims, so that they could be compared fairly
-  \item Reasonably different in their approach, so that there was still something to compare
+  \item Reasonably different in their approach, to showcase the trade-offs between different criteria.
+  \item Not so different in their indended use cases that they could not be compaired fairly. 
 \end{itemize}
 
 There are many parameters affecting the design and performance of an audio fingerprinting system, which are described in more detail in section \ref{section:systemparams}. One of the most important, and most studied, is how robust the system is to degradation of input audio through various distortions. 
 
-The specific distortions that an algorithm needs to be robust towards are somewhat dependent on the intended use cases. For example, a system intended for radio broadcast monitoring might need to be robust against radio noise or compression, but wouldn't need to worry about reverb or matching using very short clips. However, a system intended to match songs from a smartphone app would require robustness to background noise (such as ambient crowd noise) and reverb, and would benefit from maintaining high accuracy even when only very short clips of the full track are available.
+Different use cases impose different constraints on this parameter. A system intended to match songs from a smartphone app requires robustness to many types of degradation including background noise, echo and reverb, none of which would be very important for a system intended for radio broadcast monitoring. 
 
-The latter use case imposes more constraints on the problem in terms of severity of distortion, especially given the commodity hardware involved. As such, it is generally more interesting from a signal processing perspective, and both algorithms selected for this project try to tackle this use case.
+The former use case imposes more constraints on the problem in terms of the severity of distortions, especially given the commodity hardware involved. As such, it is generally more interesting from a signal processing perspective, and both algorithms selected for this project try to tackle this use case.
 
-The first algorithm I selected was an algorithm developed by Avery Wang in 2003 and deployed in the smartphone app Shazam \cite{Wang03}. I chose this as a good algorithm to implement first, since it is well documented both in the literature and on several blogs and forums. I will refer to this as the \textit{Shazam algorithm}.
+The first algorithm I selected was an algorithm developed by Avery Wang in 2003 \cite{Wang03}. I chose this as a good algorithm to implement first, since it is well documented both in the literature and on several blogs and forums. It has also been commercially deployed in the popular smartphone app Shazam and demonstrated to be scalable to hundreds of millions of users. I will refer to this as the \textit{Shazam algorithm}.
 
-The second algorithm selected was an algorithm proposed by Philips researchers Haitsma et al. in 2002 \cite{Haitsma02}. I will refer to this as the \textit{Philips algorithm}. Although both algorithms begin with a similar step of taking the Fourier transform of the audio, the Shazam algorithm extracts local frequency-time domain maxima as its features, whilst the Philips algorithm computes a calculation based on the energy in different frequency bands. I decided that this pair represented a reasonable choice with respect to the two aims stated above.
+The second algorithm selected was an algorithm proposed by Philips researchers Haitsma et al. in 2002 \cite{Haitsma02}. I will refer to this as the \textit{Philips algorithm}. Again, it attempts to tackle the smartphone use case, and is well documented. However, whilst the Shazam algorithm extracts local frequency-time domain maxima as its features, this algorithm computes a calculation based on the energy in different frequency bands of the audio. 
+
+I decided that this pair represented a reasonable choice with respect to the two aims stated above.
 
 
 \section{Evaluation}
 
 \subsection{Library}
 
-To test the audio fingerprinting algorithms, a reasonably large library of songs was needed to match clips against. Both of the papers I focused on tested their algorithms on databases of 10,000 songs, but a library this size would be difficult for me to gather myself. Since I could find no test sets available for this sort of evaluation, I decided to assemble my own library. A library size of at least 500 songs was decided, as a compromise between time constraints and the quality of the testing.
+To test the audio fingerprinting algorithms, a reasonably large library of songs was required. Both of the papers I focused on tested their algorithms on databases of 10,000 songs, but a library this size would be difficult for me to gather myself. Since I could find no test sets available for this sort of evaluation, I decided to assemble my own library. A library size of at least 500 songs was decided, as a compromise between time constraints and the quality of the testing.
 
-Genre and style diversity in the song library was also an important consideration, in order to reduce biases in the testing process. My own local music library was used as the basis for my test set (around 600 songs). Fortunately my library is fairly diverse, but I also supplemented the selection with more songs from the Free Music Archive to increase the representation of genres less common in my local collection. The full test library consists of 720 songs.
+Genre and style diversity in the song library was also an important consideration, in order to reduce biases in the testing process. My own local music library was used as the basis for the test set (around 600 songs). The initial set was fairly diverse, but I also supplemented it with more songs from the Free Music Archive to increase the representation of genres less common in my local collection. The full test library consists of 720 songs.
 
 \subsection{Test strategy}
 
-I decided on a testing strategy, which consists of inputting clips of known songs from the library into the algorithms, and recording whether each clip was matched to the correct song. Different distortions are applied to these clips so as to test the algorithms' resilience to different types of distortions in the input signal.
+I decided on a testing strategy, which consists of measuring the matching accuracy for different sets of audio clips. I created a set of plain clips, generated by simply cropping original song audio files to the required length. These are useful as a first check during development, to ensure the algorithm is functioning at a basic level. The match rate for these plain clips should be 100\%.
 
-I also created a set of plain clips, generated by simply cropping original song audio files to the required length. These are useful as a first check during development, to ensure the algorithm is functioning at a basic level. The match rate for these plain clips should be 100\%.
+Further sets of test clips are created by applying different distortions to these clips so as to test the algorithms' resilience to different types of distortions in the input signal.
+
 
 
 \section{Software engineering decisions}
 
 \subsection{Language choice}
 
-One of my early focuses was deciding on the language to be used for the project, along with finding any libraries that would be helpful. My main considerations when making these decisions were ease of development, ease of evaluation, and my own familiarity.
+One of the early decisions which I had to make was which language to use for the project, along with picking the libraries that would be helpful. My main considerations when making these decisions were ease of development, ease of evaluation, and my own familiarity.
 
-To make development as easy as possible, I decided to make sure there was strong library support for operations which would be useful but could take a disproportionate amount of time to implement well myself, such as audio file manipulation. For example, a fast and accurate Discrete Fourier Transform implementation was essential.
+To make development as easy as possible, I decided to make sure there was strong library support for operations which would be useful but could take a disproportionate amount of time to implement well myself. For example, a fast and accurate Discrete Fourier Transform implementation, and easy input and output of audio files was essential.
 
-I investigated several toolkits for music information retrieval, including in particular the C++ library OpenSMILE \cite{Eyben10} and the MATLAB library MIRToolbox \cite{Lartillot07}.
+I investigated several toolkits used for music information retrieval systems, including in particular the C++ library OpenSMILE \cite{Eyben10} and the MATLAB library MIRToolbox \cite{Lartillot07}.
 
-Ease of evaluation was also important. Although there wouldn't be much difference in writing test scripts in most programming languages, some languages, such as MATLAB, provide inbuilt support for plotting graphs, which could speed up my workflow significantly.
+Ease of evaluation was also important. Although most programming languages would be similarly convenient for writing test scripts, some languages, such as MATLAB, provide inbuilt support for plotting graphs, which could speed up my workflow significantly.
 
-I was already somewhat familiar with MATLAB, having written a little for the Part 1A NST Mathematics course, and for various exercises in Part 1B. I was also familiar with C++ through the Part 1B course. However, I would not have described myself as experienced with either language.
+I was already somewhat familiar with MATLAB, having used it for the Part IA NST Mathematics course, and for various exercises in Part IB. I was also familiar with C++ from the Part 1B course. However, I would not have described myself as experienced with either language.
 
 The toolkits for both languages appeared to be roughly comparable for my needs. On balance, I decided that MATLAB was the better choice, mainly on the merit of its strong inbuilt library support for both graph output and common signal processing operations.
 
@@ -317,21 +329,21 @@ The toolkits for both languages appeared to be roughly comparable for my needs. 
 \subsection{Development strategy}
 \label{section:devstrat}
 
-Both of the algorithms to be implemented were well specified, so I did not expect any major changes in their overall structure or features during development, as might be expected when developing a commercial product or working with a client. 
+Both of the algorithms to be implemented were well specified before the start of the implementation, so I did not expect any major changes in their overall structure or features during development, as might be expected when developing a commercial product or working with a client. 
 
-As such, I deemed a waterfall model of development to be most appropriate, with the project having a clear linear path from requirements analysis to planning to implementation to evaluation. I decided to develop the two algorithms in series, with the Shazam algorithm coming first due to the fact I could find more sources of documentation for how it worked.
+As such, I deemed a waterfall model of development to be most appropriate, with the project having a clear linear path from requirements analysis to planning to implementation to evaluation. I decided to develop the two algorithms in series, with the Shazam algorithm coming first due to the fact that I could find more sources of documentation for how it worked.
 
-There was one exception to waterfall strategy, which was in the shared parts of the codebase used as a framework to run and test the two implementations. I expected some requirements of this part of the system to become more clear during development. As such, I developed the shared code in parallel with the first algorithm implementation, allowing the algorithm implementation to inform my implementation of the shared code. Some further refinements to the shared code were made during implementation of the second algorithm.
+The shared parts of the codebase were developed in parallel with the Shazam algorithm, since I could not easily test one without the other.
 
 
 \subsection{Version control}
 
-Git was used as my version control system during development and writeup. This provided a backup of all code via GitHub, as well as the ability to roll back changes and develop new features on separate branches. The commit history was also very useful as a supplement to my written notes when writing up the project.
+Git was used as my version control system during development and writeup. This provided the ability to roll back changes and develop new features on separate branches. The commit history was also very useful as a supplement to my written notes when writing up the project.
 
 
 \subsection{Backup strategy}
 
-Development was carried out on my laptop. Regular full disk backups of the machine were taken using Time Machine onto an external drive, in case of corruption or malfunction. In addition, in case of theft or loss of both the laptop and hard drive, all data was backed up remotely. This was achieved using Google Drive for the music library, and a private GitHub repository for code and documentation.
+Development was carried out on my laptop. Regular full disk backups of the machine were taken using Time Machine onto an external drive. In addition, in case of theft or loss of both the laptop and hard drive, all data was backed up remotely. I used Google Drive for the music library, and a private GitHub repository for code and documentation.
 
 
 
@@ -344,20 +356,23 @@ Since I had limited experience using MATLAB, particularly for larger programs, I
 
 I created small relevant segments of code for things like reading in audio files and creating spectrograms of a signal in order to make sure I would comfortable implementing the project.
 
-\subsection{MIRToolbox}
+\subsection{Audio Processing}
 
-I also familiarised myself with MIRToolbox and its documentation. I started to investigate how useful it would be by importing some audio from an MP3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the performance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
+I initially planned to use MIRToolbox to help with audio processing.
+
+To investigate how useful it would be, I familiarised myself with it by importing some audio from an MP3 file and drawing a spectrogram of it. I implemented this task both with and without MIRToolbox, to compare the performance and ease of development. I found that the MIRToolbox version of the code was both slower and harder to develop, in that MIRToolbox tends to constrain you to a particular data flow to optimise certain operations, which makes it less flexible.
 
 After consulting the operations available in the MATLAB standard library, I decided it would probably be possible to implement the algorithms just as easily without the use of MIRToolbox. Since, based on my preliminary tests, the MIRToolbox code might also be slower, I decided not to use MIRToolbox for my implementations.
 
-\subsection{Database access}
+
+\subsection{Database integration}
 \label{section:dbaccess}
 
-Early on, I identified database access as a possible difficulty with my algorithm implementations. To ensure this would not be a problem, I decided to finish my familiarisation period by setting up a small database and making sure I could read and write to it.
+Early on, I identified database integration as a possible difficulty with my algorithm implementations, because the official MATLAB Database Toolbox is not included under the University's blanket license. To ensure this would not be a problem, I decided to finish my familiarisation period by setting up a small database and making sure I could read and write to it.
 
-Although MATLAB has an official Database Toolbox for database access, it is not included under the University's blanket license, so I investigated alternatives before attempting to obtain a license by other means.
+Before attempting to obtain a license to the Database Toolbox by other means, I investigated alternatives.
 
-I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked well, and supported the full SQLite feature set, including batching multiple operations into transactions. After reading and writing to a small test database, I decided to use this database system for both my algorithm implementations.
+I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked well, and supported the full SQLite feature set, including batching multiple operations into transactions. After trying it out, I decided to use this database system for both my algorithm implementations.
 
 %TODO? \section{Starting point}
 
@@ -368,7 +383,7 @@ I found an open source MATLAB SQLite3 driver \cite{Yamaguchi14} which worked wel
 \chapter{Implementation}
 \label{implementation}
 
-In this section I outline all of the steps I took to successfully implement the two selected audio fingerprinting algorithms. This starts with the design of the system (section \ref{section:systemdesign}), and then moves on to implementation of each of the Shazam and Philips algorithms (sections \ref{section:shazam} and \ref{section:philips} respectively).
+In this chapter I outline the implementation of the two selected audio fingerprinting algorithms. It starts with the design of the system (section \ref{section:systemdesign}), and then moves on to implementation of the Shazam and the Philips algorithms (sections \ref{section:shazam} and \ref{section:philips} respectively).
 
 
 \section{System design}
@@ -382,7 +397,7 @@ Since matching and registration both involve calculating a fingerprint, the fing
 
 The code for registration, matching and fingerprinting is specific to each of the algorithms implemented, due to large differences in their approaches to the problem. However, a significant amount of shared code was also required to feed data into the algorithms and collect results.
 
-The design outlined for these processes in the next two sections is based around a framework of shared code which allows, in the relevant locations, different algorithm implementations to be swapped in. In the diagrams, shared components are represented using blue blocks, and algorithm-specific components are represented in grey. 
+The design outlined for the matching and registration processes in the next two sections uses a library of shared code which allows, in the relevant locations, different algorithm implementations to be swapped in. In the diagrams, shared components are represented using blue blocks, and algorithm-specific components are represented in grey. 
 
 
 \subsection{Registration}
@@ -416,24 +431,24 @@ All of the grey components within the registration process can be swapped out to
   The grey blocks within the matching section are algorithm-specific, while the blue blocks represent shared components. The test producer can be swapped out to run different tests.
 \end{figure}
 
-The design for the matching process is summarised in Figure \ref{figs:matching_design}.
+The design for the matching process is depicted in Figure \ref{figs:matching_design}.
 
-The test producer begins with a procedure similar to the reader module in the registration process above, reading in song files one by one. However, this time, the files are taken from a subset of the library, randomly chosen in advance. This subset is the random sample used in each test. In practice, there are three such subsets and each test is run once on each subset, with the results averaged. This process is described in detail in the evaluation (section \ref{evaluation:matching_with_distortion}).
+The test producer begins with a procedure similar to the reader module in the registration process above, reading in song files one by one. However, this time, the files are taken from a subset of the library, randomly chosen in advance. This process of testing is described in detail in the evaluation (section \ref{evaluation:matching_with_distortion}).
 
 After reading in each song to be tested, the test producer takes a clip of the song, and optionally applies some distortion to the clip. This distortion might range from adding background noise to playing the clip from speakers and re-recording it through a microphone.
 
-These different distortion options are determined by passing the handle of a distortion function to the test producer, which applies that function to the audio signal.
+These different distortion options are determined by passing the handle\footnote{A \textit{function handle} is MATLAB terminology for a first-class function.} of a distortion function to the test producer, which applies that function to the audio signal. This is represented by the \textit{distorter} component in Figure \ref{figs:matching_design}.
 
-The resulting test clip is passed by the tester to the algorithm's matching process, which creates a fingerprint from it and consults its database to try to find a match. The closest match is returned to the tester, and compared against the correct answer. Finally, the tester outputs the results of the tests.
+The resulting test clip is passed by the tester to the algorithm's matching process, which calculates its fingerprint and consults the database to try to find a match. The closest match is returned to the tester, and compared against the correct answer. Finally, the tester outputs the results of the tests.
 
 In the same way as described for the registration process in the previous section, the grey components can be swapped out depending on the algorithm.
 
 
 \subsection{Component swapping}
 
-Many components of the design need to be able to be swapped in and out depending on the algorithm or test type. 
+Many components of the design need to be able to be swapped in and out depending on the algorithm or test type. These components are coloured grey in the diagrams.
 
-In practice, this swapping-out is achieved by creating function handles\footnote{A \textit{function handle} is MATLAB terminology for a first-class function.} for swappable pieces of code. To use a different implementation, a different function handle can be passed to the code that calls that function.
+In practice, this swapping-out is achieved by creating function handles for swappable pieces of code. To use a different implementation, a different function handle can be passed to the code that calls that function.
 
 For example, in the case of registration, the function handle for the song registrar is passed to the reader function, which calls it with the appropriate song files.
 
@@ -443,71 +458,42 @@ For example, in the case of registration, the function handle for the song regis
 
 This section details my implementation of the parts of the system shared by both algorithm implementations, which I will refer to as the `shared code'.
 
-As outlined in the development strategy section (\ref{section:devstrat}), I decided to implement the shared code in parallel with the algorithm implementations.
+As outlined in the development strategy section (\ref{section:devstrat}), I decided to implement the shared code in parallel with the first algorithm implementation. Although a waterfall development model was used, the first version was fairly quickly implemented in order to obtain faster confirmation that my algorithm implementation was functioning correctly.
 
-Although my development strategy for the project as a whole used a waterfall model, my strategy for implementation of the shared code was closer to a spiral model, with iterated refinement of features and interface. This was useful since the shared code needed to work with both algorithm implementations, and so its requirements were not totally clear from the start. 
+Once the first algorithm implementation was complete, I reviewed the code and refactored some sections which were badly structured. I also added some final, more advanced features to enable full evaluation.
 
+%todo prototyping stuff needed here?
 
-\subsection{First prototype}
-
-Without the shared code to feed in data, there is no way to test or run the algorithm implementations. In order to speed up my initial development and make sure I failed fast on any badly conceived paths, my first prototype of the shared code was simply the minimum needed to run the Shazam implementation. Getting this shared code working early was very useful in early debugging of the Shazam algorithm implementation.
 
 The shared code consists of two parts, one for registration and one for matching. 
 
-\subsubsection{Registration}
 
-Since the registration half is relatively straightforward, the first prototype's implementation was actually almost complete. It consisted simply of a function which retrieved an array of every audio file in a given folder, and passed each filename to a registration function which is part of the algorithm implementation. It also outputted some progress information to the standard output so that when running the script I could monitor progress.
+\subsection{Registration}
 
-At the start of registering each song, each fingerprinting algorithm also needs to resample the audio to a fixed sample rate, and convert the signal from stereo to a single channel. However, each algorithm may require a different sample rate at this stage, and might require extra processing of some sort. As a result, I didn't include this preprocessing step in the shared code, instead I simply passed the audio file's location and let the algorithm's own registration function handle reading and resampling the audio.
+The registration component is straightforward. Its responsibility is to locate all of the files in the song library, and pass them, one by one, into the registration function of the relevant algorithm. It outputs some progress information as it does this so that the process can be monitored.
 
-In order to avoid duplication of code, I wrote a utility function to resample audio to a monophonic signal at a given sample rate, which was straightforward with the MATLAB Signal Processing Toolbox.
+At the start of registering each song, each fingerprinting algorithm needs to resample the audio to a fixed sample rate, and convert the signal from stereo to a single channel. However, each algorithm may require a different sample rate at this stage, and might require extra processing of some sort. As a result, this preprocessing step is not included in the shared code. Instead it simply passes the audio file's location and lets the algorithm's own registration function deal with reading and resampling the audio at whatever rate is required.
 
-\subsubsection{Matching}
-
-The matching half is more complicated since it includes all of the testing functionality. The first prototype's version was severely limited -- it simply took audio files from a tests folder and ran them against the algorithm's matching function. The tests in this folder were clips from original songs, which I manually cropped from the original files using the free software Audacity \cite{Audacity}. It then printed the returned match result to the MATLAB command line, which I could manually verify.
-
-This testing process was used for very early debugging of the Shazam algorithm implementation but quickly became too laborious for real evaluation.
+One extra feature added to the registration component was the ability to call two more functions, one at the start of the process and another at the end. These are passed in as function handles to the registrar. The purpose was to allow algorithms to run arbitrary code at the start and end of the process, in order to allow them to do things like initialise the database and clean it up at the end. This was mostly needed for an optimisation involving the database indexes, which is discussed in section \ref{section:shazamoptimisations}.
 
 
-\subsection{Full implementation}
+\subsection{Matching}
 
-Once an implementation of the Shazam algorithm was completed, and the prototype shared code was used as a first check that it was working, more features were needed from the shared code to carry out further evaluation that the implementation was working as intended.
+The matching component is more complicated since it includes all of the testing functionality.
 
-The prototype was expanded to include all of the features described in the system design section (\ref{section:systemdesign}). As well as this, I reviewed the code to ensure it was well structured, consistently styled and generic enough to allow use with the second algorithm. 
+The first part of the component is the test producer. The test producer takes songs from pre-defined random subsets of the library, which I term \textit{test sets}. The test producer takes a clip from each of the songs, and saves the clip to a new folder of test clips. Before saving the clip back, it can optionally apply some distortion to the clip. These distortions, and their development, are discussed further in the evaluation (section \ref{evaluation:matching_with_distortion}).
 
-Where I identified issues, I refactored the code. This refactoring step was important for maintainability of the code, since rapid development of the first prototype as well as my lack of experience with MATLAB at the start of the project had left behind badly structured and inconsistently styled code in a few areas. These problem areas were restructured and fixed, leaving a much more manageable codebase.
+The test producer finally passes a list of the test clips it has created to the next step, the tester, which passes each clip in turn to the algorithm's matching function. Each clip outputted by the test producer is tagged with the filename of the original song, in order to allow the tester to determine whether the match returned is correct.
 
+Finally, the proportion of clips matched correctly for the test set is outputted by the tester.
 
-\subsubsection{Registration}
-
-Upgrading the registration process for the full implementation was relatively fast, since most of the functionality was already finished in the prototype phase. However, some refactoring and modification was still required.
-
-For example, the first prototype did not actually support different registration functions -- it was hard coded to call the Shazam algorithm's registration function. Obviously, this would not be sufficient for the full project, and so I refactored the code to take a function handle for the registration function, making it more generic.
-
-In addition, I enabled the registration process to call two more functions, one at the start of the process and another at the end. The purpose of these was to allow algorithms to run arbitrary code at the start and end of the process, to allow them to do things like initialise the database and clean it up at the end. This was most mostly needed for an optimisation involving the database indexes, which is discussed in section \ref{section:shazamoptimisations}.
-
-\subsubsection{Matching}
-
-The matching process was missing more features in the prototype than registration.
-
-First to be added was the test producer (shown in context in Figure \ref{figs:matching_design} on page \pageref{figs:matching_design}). Whilst the prototype required hand-made test clips, the test producer creates them automatically as required from the original library.
-
-To create test clips, the test producer first selects $n$ random songs from the library (where $n$ is specified as part of the test parameters). The test producer takes a clip from each of the songs, and saves the clip to a new folder of test clips. Before saving the clip back, it can optionally apply some distortion to the clip. These distortions, and their development, are discussed further in the evaluation (section \ref{evaluation:matching_with_distortion}).
-
-The test producer finally passes a list of the test clips it has created to the next step, the tester, which passes each clip to the algorithm's matching function in the same way as was described for the prototype.
-
-One important change made to the tester was to add the ability to automatically classify matches as correct or incorrect, by tagging each clip coming out of the test producer with its corresponding correct answer. Test results could then be output directly by the tester as a proportion of correct matches.
+An extra refinement not depicted in the original design diagram is the ability to run batches of tests from multiple test sets sequentially. This is further discussed in the evaluation (section \ref{evaluation:matching_with_distortion}). 
 
 
-\subsection{Final refinements}
+\subsection{Conclusion}
 
 The shared code detailed in the section above was sufficient to verify that the Shazam algorithm was working well and could match the tested undistorted clips with 100\% accuracy.
 
-A few further improvements were made during my implementation of the Philips algorithm. The primary improvement was to allow the matching process to use test sets -- that is, instead of the test producer choosing $n$ random songs each time, random subsets of the library are defined in advance as test sets, and all songs in a test set are used to produce test clips.
-
-I wrote a new script, which produced multiple subsets of the library to draw tests from. It did this by copying songs to new test set folders, and only needed to be run once for each test set to be created. 
-
-The test producer was modified to produce test clips from all songs in a given test set folder. I also added the functionality to run batches of tests from multiple test sets. This testing functionality is further discussed in the evaluation (section \ref{evaluation:matching_with_distortion}). 
 
 
 \section{Implementation of the Shazam algorithm}

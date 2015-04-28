@@ -32,14 +32,19 @@
     \node [database, name=db, right of=matcher, node distance=3.5cm, fill=gray!30] (db) {Database};
 
 
+    % Distorter
+    \node [block, name=distorter, left of=test_producer, node distance=3.5cm, fill=gray!30, minimum height=2em, minimum width=4em] (distorter) {Distorter};
+
+
     % Now we connect the lines
  	\draw [->] (library) -- node {Song audio files} (test_producer);
  	\draw [->] (test_producer) -- node {Test clips} (tester);
  	\draw [->] (tester) -- (output);
 
+    \draw [<->] (distorter) -- (test_producer);
 
- 	\draw [->] (tester.10) -- node {Test clips} (matcher.170);
- 	\draw [<-] (tester.350) -- node[swap] {Matches} (matcher.190);
+ 	\draw [<-] (tester.10) -- node {Test clips} (matcher.170);
+ 	\draw [->] (tester.350) -- node[swap] {Matches} (matcher.190);
 
  	\draw [<->] (matcher) -- (db);
  	\draw [<->] (matcher) -- (fingerprinter);
