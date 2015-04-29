@@ -1,8 +1,11 @@
-function clips = extract_clips(input_foldername, output_foldername, clipstart, clipend, m, transform)
-% Takes every mth song from input_foldername, extracts a clip from
-% clipstart to clipend, runs it through the given transform function and
-% saves it in output_foldername. 
-% transform should take and return some mono 8kHz audio as an array.
+function clips = extract_clips(input_foldername, output_foldername, cliplen, m, transform)
+% Takes every mth song from input_foldername, extracts a random clip of
+% length cliplen, runs it through the given transform function and saves it
+% in output_foldername.  Note that the clip's random location is seeded
+% from the clip name so that this function's output is deterministic.
+%
+% transform should take and return some mono audio as an array at the
+% specified sample rate
 
     input_files = dir([input_foldername '*.mp3']);
 
@@ -22,7 +25,7 @@ function clips = extract_clips(input_foldername, output_foldername, clipstart, c
         disp(['Sampling "' file.name '"...']);
 
         path = testing.take_clip(input_foldername, file, ...
-                                 output_foldername, clipstart, clipend, ...
+                                 output_foldername, cliplen, ...
                                  transform);
 
         i = i + m;
