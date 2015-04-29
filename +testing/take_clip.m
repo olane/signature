@@ -16,16 +16,17 @@ function output_path = take_clip(input_foldername, file, output_foldername, clip
     [~, file_name, ~] = fileparts(input_path);
     
     % Seed for the random number generator based on the sum of the ascii
-    % codes of the file name string
-    rng_seed = mod(sum(double(file.name)), 2^32);
+    % codes of the file name string, and the clip length
+    rng_seed = mod(sum(double(file.name)) + cliplen, 2^32);
     rng(rng_seed, 'twister');
     
     % Get information about the audio file
     inf = audioinfo(input_path);
 
-    % Get the start sample and end sample
+    % Get the start sample and end sample. Clips cannot be from the first
+    % or last 15% of the song.
     cliplen_samples = inf.SampleRate * cliplen;
-    start_sample = floor((inf.TotalSamples - cliplen_samples) * rand);
+    start_sample = floor((inf.TotalSamples - cliplen_samples) * (rand * 0.7 + 0.15));
     end_sample = start_sample + cliplen_samples;
         
                
