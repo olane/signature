@@ -1,7 +1,7 @@
 
 \documentclass[12pt,a4paper,twoside,openright]{report}
 \usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
-\usepackage[margin=25mm]{geometry}  % adjusts page layout
+\usepackage[margin=20mm]{geometry}  % adjusts page layout
 \usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
 \usepackage{verbatim}
 \usepackage{docmute}   % only needed to allow inclusion of proposal.tex
@@ -10,6 +10,9 @@
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage[UKenglish]{babel}
+
+\geometry{bindingoffset=1.5cm} % Different margins on even/odd pages for binding
+\geometry{headsep=1cm}
 
 % Set distance between figures and text
 \setlength\floatsep{2\baselineskip}
@@ -73,6 +76,7 @@ Trinity Hall \\[5mm]
 % Preamble
 
 \pagestyle{plain}
+\cleardoublepage
 \pagenumbering{roman}
 
 \chapter*{Proforma}
@@ -83,7 +87,7 @@ Name:               & \bf Oliver Lane                       \\
 College:            & \bf Trinity Hall                     \\
 Project Title:      & \bf Audio Fingerprinting for Music Recognition \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2015  \\
-Word count:         & \bf 11,390  \\
+Word count:         & \bf 11,486  \\
 Project Originator: & Oliver Lane                    \\
 Supervisor:         & Vaiva Imbrasait\'{e}                    \\ 
 \end{tabular}
@@ -133,7 +137,7 @@ I, Oliver Lane of Trinity Hall, being a candidate for Part II of the Computer Sc
 
 Sincere thanks go to my Supervisor Vaiva Imbrasait\'{e} and my Director of Studies Professor Simon Moore for support and guidance throughout the project.
 
-I would also like to thank my neighbours for tolerating the many hours' worth of music clips I played through their walls. Finally, thanks to my parents for always encouraging me to do what I enjoy, and to Giles Lavelle for proof reading some diabolical tense switches.
+I would also like to thank my neighbours for tolerating the many hours' worth of music clips I played through their walls. Finally, thanks to Giles Lavelle for proof reading some diabolical tense switches.
 
 
 \tableofcontents
@@ -143,7 +147,7 @@ I would also like to thank my neighbours for tolerating the many hours' worth of
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              CHAPTERS
-\newpage
+\cleardoublepage
 \pagestyle{headings}
 \pagenumbering{arabic}
 
@@ -827,9 +831,9 @@ The process for testing robustness of matching is discussed in my implementation
 
 The test clips are drawn from three test sets, each of which is a random subset of the song library. All tests in this section are run once for each test set, and the average and standard deviation of the results are calculated. There are 72 songs in each test set, with each one representing 10\% of the full library of 720. The same test sets are used every time.
 
-Clips are taken from a uniform distribution over the middle 70\% of each song. The first and last 15\% of each song is excluded because of the possibility of silence or extremely sparse audio at the start and end of songs. For example, many of the songs from electronic genres start and end with a kick drum beat at 128 beats per minute. These sections of audio are often indistinguishable between songs even to a human listener.
+Clips are taken from a uniform distribution over the middle 70\% of each song. The first and last 15\% of each song is excluded because of the possibility of silence or extremely sparse audio at the start and end of songs. For example, many of the songs from electronic genres start and end with a section consisting only of a kick drum beat at 128 beats per minute. These sections of audio are often almost indistinguishable between songs, even to a human listener.
 
-Three main categories of test clips were chosen: plain clips, clips with added noise, and re-recorded clips. They are explained in the next three sections, accompanied by the relevant results for each algorithm.
+Three main categories of test clips were chosen: plain clips, clips with added noise, and re-recorded clips. They are explained in the next three sections, accompanied by graphs of the results for each algorithm. Full tables of results are listed in appendix \ref{full_results}.
 
 
 \subsection{Plain clips}
@@ -1024,11 +1028,13 @@ The Shazam algorithm is, in my opinion, a better general purpose recognition alg
 
 \section{Work completed}
 
-I began this project by undertaking a thorough review of the literature that exists around the problem of audio fingerprinting. I selected two of the algorithms that I found, and successfully implemented them in MATLAB.
+I began this project by undertaking a thorough review of the literature that exists around the problem of audio fingerprinting. I selected two of the algorithms that I found, and successfully implemented them in MATLAB. I undertook an investigation into the performance bottlenecks for both algorithms by timing various sections of code during execution, and improved performance by a large margin.
 
 In order to demonstrate and compare their usefulness for song recognition, I gathered a library of songs from diverse genres to test against. I used this library to evaluate both algorithms against a variety of criteria, including robustness to several different types of distortion.
 
-The implementations performed well given the constraints of the technologies used, and my evaluation successfully found strengths and weaknesses in both.
+The implementations performed well given the constraints of the technologies used, and my evaluation successfully found strengths and weaknesses in both. The Philips algorithm was shown to be faster than the Shazam algorithm, but the Shazam algorithm has an advantage in matching accuracy -- particularly when it is allowed to match on longer clip lengths. The Shazam algorithm also has a somewhat smaller memory requirement.
+
+I have found no similar direct comparisons of these algorithms in the literature, so these results represent a contribution to the field.
 
 \section{Lessons learnt}
 
@@ -1056,6 +1062,7 @@ I would also be interesting to attempt to implement a third algorithm which stra
 
 
 \chapter{Full matching test results}
+\label{full_results}
 
 In all tables, clip length is abbreviated as CL and standard deviation as SD.
 
