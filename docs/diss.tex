@@ -87,7 +87,7 @@ Name:               & \bf Oliver Lane                       \\
 College:            & \bf Trinity Hall                     \\
 Project Title:      & \bf Audio Fingerprinting for Music Recognition \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2015  \\
-Word count:         & \bf 11,486  \\
+Word count:         & \bf 11,496  \\
 Project Originator: & Oliver Lane                    \\
 Supervisor:         & Vaiva Imbrasait\'{e}                    \\ 
 \end{tabular}
@@ -703,7 +703,7 @@ Note that although the Shazam algorithm appears to take a very different approac
 
 The next step of the Philips algorithm is to perform a Fourier transform on each frame.
 
-In order to compute the 32-bit sub-fingerprint for each frame, 33 non-overlapping frequency bands are selected. These lie in the 300Hz to 2000Hz range, which is the most relevant range for the human auditory system \cite{Haitsma02}. The human auditory system is based approximately on logarithmically spaced bands -- that is, a sound one octave higher in pitch has double the frequency. As such, the bands in the algorithm are also chosen to be logarithmically spaced.
+In order to compute the 32-bit sub-fingerprint for each frame, 33 non-overlapping frequency bands are selected. These lie in the 300Hz to 2000Hz range, which is the most relevant range for the human auditory system \cite{Haitsma02}. The human auditory system is based approximately on logarithmically spaced bands: a sound one octave higher in pitch has double the frequency, and human discrimination between volume levels is fitted by an exponential function \cite{Jesteadt77}. As such, the bands in the algorithm are also chosen to be logarithmically spaced.
 
 The energy in each frequency band is summed up over a frame to give 33 energy values. The energy of each band is compared with the energy of the band below, and the same two bands in the subsequent frame, to compute a single bit:
 
