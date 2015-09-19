@@ -114,7 +114,7 @@ database_filename       = 'barcoder.db';
 match_file_function     = @algorithms.barcoder.match_file;
 get_song_name_function  = @algorithms.barcoder.get_song_name;
 
-snrs                    = [-9, -6, -3, 0, 3, 6, 9];
+snrs                    = [3, 6, 9];
 lengths                 = [5, 10, 15];
 
 [set, snr, len, succ, tot] = testing.run_gaussian_batch(snrs, ...
